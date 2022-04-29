@@ -20,10 +20,14 @@ protected:
 private:
     void connectButtons();
 
+private Q_SLOTS:
+    void restoreMaximize();
+
 private:
     Ui::AlpaintClass ui;
 
 private:
-    QPoint m_LastPoint; 
+    QByteArray m_CurrentGeometry;
+    QPoint m_LastPoint;
     bool m_Pressed = false;
 };

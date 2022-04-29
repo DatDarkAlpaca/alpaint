@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Alpaint.h"
 
 Alpaint::Alpaint(QWidget *parent)
@@ -47,5 +47,21 @@ bool Alpaint::eventFilter(QObject* object, QEvent* event)
 void Alpaint::connectButtons()
 {
     connect(ui.closeButton, &QPushButton::released, this, &Alpaint::close);
-    connect(ui.resizeButton, &QPushButton::released, this, &Alpaint::showMaximized);
+    connect(ui.resizeButton, &QPushButton::released, this, &Alpaint::restoreMaximize);
+    connect(ui.minimizeButton, &QPushButton::released, this, &Alpaint::showMinimized);
+}
+
+void Alpaint::restoreMaximize()
+{
+    if (isMaximized())
+    {
+        ui.resizeButton->setText(QString::fromUtf8("\uE923"));
+        restoreGeometry(m_CurrentGeometry);
+    }
+    else
+    {
+        ui.resizeButton->setText(QString::fromUtf8("\uE739"));
+        m_CurrentGeometry = saveGeometry();
+        showMaximized();
+    }
 }
