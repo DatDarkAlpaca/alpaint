@@ -68,7 +68,11 @@ void Canvas::keyPressEvent(QKeyEvent* event)
 void Canvas::keyReleaseEvent(QKeyEvent* event)
 {
 	if (event->key() == Qt::Key_Space)
+	{
+		qApp->restoreOverrideCursor();
+		setMouseTracking(false);
 		m_Panning = false;
+	}
 }
 
 void Canvas::paintEvent(QPaintEvent* event)
@@ -94,6 +98,20 @@ void Canvas::resizeEvent(QResizeEvent* event)
 	QWidget::resizeEvent(event);
 }
 
+void Canvas::wheelEvent(QWheelEvent* event)
+{
+	if (event->angleDelta().y() > 0)
+	{
+		m_Scale += 0.1;
+		update();
+	}
+	else if (event->angleDelta().y() < 0)
+	{
+		m_Scale -= 0.1;
+		update();
+	}
+}
+
 void Canvas::drawLine(const QPoint& endPoint)
 {
 	QPainter painter(&m_Image);
@@ -101,8 +119,9 @@ void Canvas::drawLine(const QPoint& endPoint)
 	painter.setRenderHint(QPainter::Antialiasing, true);
 
 	painter.setPen(QPen(m_PenColor, m_PenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-
-	painter.drawLine(m_LastPoint - m_Delta, endPoint - m_Delta);
+	painter.translate(-m_Delta);
+	painter.scale(1 / m_Scale, 1 / m_Scale);
+	painter.drawLine(m_LastPoint, endPoint);
 	int radius = (m_PenWidth / 2) + m_PenWidth * 2;
 
 	update();
