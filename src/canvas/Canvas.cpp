@@ -7,6 +7,10 @@ Canvas::Canvas(QWidget* parent)
 {
 	setAttribute(Qt::WA_StaticContents);
 	setFocus();
+
+	QImage newImage(QSize(600, 600), QImage::Format_ARGB32);
+	newImage.fill(qRgba(255, 255, 255, 255));
+	m_Image = newImage;
 }
 
 void Canvas::mousePressEvent(QMouseEvent* event)
@@ -61,6 +65,12 @@ void Canvas::keyPressEvent(QKeyEvent* event)
 		m_Panning = true;
 }
 
+void Canvas::keyReleaseEvent(QKeyEvent* event)
+{
+	if (event->key() == Qt::Key_Space)
+		m_Panning = false;
+}
+
 void Canvas::paintEvent(QPaintEvent* event)
 {
 	QPainter painter(this);
@@ -68,20 +78,19 @@ void Canvas::paintEvent(QPaintEvent* event)
 	painter.translate(m_Delta);
 
 	QRect dirtyRect = event->rect();
-	painter.drawImage(m_Rect.topLeft(), m_Image, dirtyRect);
+	painter.drawImage(dirtyRect.topLeft(), m_Image, dirtyRect);
 }
 
 void Canvas::resizeEvent(QResizeEvent* event)
 {
-	if (width() > m_Image.width() || height() > m_Image.height())
+	/*if (width() > m_Image.width() || height() > m_Image.height())
 	{
 		int newWidth = qMax(width() + 128, m_Image.width());
 		int newHeight = qMax(height() + 128, m_Image.height());
 		resizeImage(&m_Image, QSize(newWidth, newHeight));
-		std::cout << "Resize Event\n";
 		update();
 	}
-
+	*/
 	QWidget::resizeEvent(event);
 }
 
@@ -104,7 +113,7 @@ void Canvas::drawLine(const QPoint& endPoint)
 
 void Canvas::resizeImage(QImage* image, const QSize& newSize)
 {
-	if (image->size() == newSize)
+	/*if (image->size() == newSize)
 		return;
 
 	QImage newImage(newSize, QImage::Format_ARGB32);
@@ -112,5 +121,5 @@ void Canvas::resizeImage(QImage* image, const QSize& newSize)
 
 	QPainter painter(&newImage);
 	painter.drawImage(QPoint(0, 0), *image);
-	*image = newImage;
+	*image = newImage;*/
 }
