@@ -2,6 +2,7 @@
 *.d
 
 # Compiled Object files
+x64
 *.slo
 *.lo
 *.o
