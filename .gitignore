@@ -2,11 +2,18 @@
 *.d
 
 # Compiled Object files
-x64
 *.slo
 *.lo
 *.o
 *.obj
+
+# Visual Studio files:
+.vs
+
+# Binaries:
+[Bb]in
+[Ii]ntermediate
+x64
 
 # Precompiled Headers
 *.gch

@@ -41,7 +41,7 @@ private:
 	QImage m_Image;
 
 private:
-	qreal m_Scale = 1.0;
+	qreal m_Scale = 18.0;
 	QPointF m_Reference;
 	QPointF m_Delta;
 	QRectF m_Rect;

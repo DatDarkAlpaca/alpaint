@@ -8,7 +8,7 @@ Canvas::Canvas(QWidget* parent)
 	setAttribute(Qt::WA_StaticContents);
 	setFocus();
 
-	QImage newImage(QSize(600, 600), QImage::Format_ARGB32);
+	QImage newImage(QSize(32, 32), QImage::Format_ARGB32);
 	newImage.fill(qRgba(255, 255, 255, 255));
 	m_Image = newImage;
 }
@@ -102,12 +102,12 @@ void Canvas::wheelEvent(QWheelEvent* event)
 {
 	if (event->angleDelta().y() > 0)
 	{
-		m_Scale += 0.1;
+		m_Scale += 1;
 		update();
 	}
 	else if (event->angleDelta().y() < 0)
 	{
-		m_Scale -= 0.1;
+		m_Scale -= 1;
 		update();
 	}
 }
