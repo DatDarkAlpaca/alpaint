@@ -15,14 +15,6 @@ protected:
 
     void mouseMoveEvent(QMouseEvent* event) override;
 
-    bool eventFilter(QObject* object, QEvent* event) override;
-
-private:
-    void connectButtons();
-
-private Q_SLOTS:
-    void restoreMaximize();
-
 private:
     Ui::AlpaintClass ui;
 

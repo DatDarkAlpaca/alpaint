@@ -128,7 +128,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\canvas\Canvas.h" />
-    <ClInclude Include="src\pallete\DarkPallete.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
