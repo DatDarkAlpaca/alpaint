@@ -50,8 +50,11 @@ void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 		return;
 	}
 
-	if (event->buttons() & (Qt::LeftButton | Qt::RightButton) && m_Drawing)
-		drawLine(event->pos(), event->button() == Qt::RightButton);
+	if (!m_Drawing)
+		return;
+
+	if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
+		drawLine(event->pos(), event->buttons() & Qt::RightButton);
 }
 
 void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
@@ -67,7 +70,7 @@ void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
 		return;
 	}
 
-	if (event->buttons() & (Qt::LeftButton | Qt::RightButton) && m_Drawing)
+	if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
 	{
 		drawLine(event->pos(), event->button() == Qt::RightButton);
 		m_Drawing = false;
@@ -114,12 +117,12 @@ void alp::Canvas::wheelEvent(QWheelEvent* event)
 	}
 }
 
-void alp::Canvas::drawLine(const QPoint& endPoint, bool isSecondaryButton = false)
+void alp::Canvas::drawLine(const QPoint& endPoint, bool isSecondaryButton)
 {
 	QPainter painter(&m_Pixmap);
 	painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
 
-	QColor usedColor = (!isSecondaryButton) ? primaryColor : secondaryColor;
+	QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
 	
 	painter.setPen(QPen(usedColor, m_PenWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
 
@@ -127,10 +130,10 @@ void alp::Canvas::drawLine(const QPoint& endPoint, bool isSecondaryButton = fals
 	painter.translate((-rect().width() / 2)  / m_Scale + (m_Pixmap.rect().width() / 2)  / m_Scale,
 					  (-rect().height() / 2) / m_Scale + (m_Pixmap.rect().height() / 2) / m_Scale);
 
-	auto x = endPoint.x() / m_Scale;
-	auto y = endPoint.y() / m_Scale;
+	auto x = std::floor(endPoint.x() / m_Scale);
+	auto y = std::floor(endPoint.y() / m_Scale);
 
-	painter.drawPoint(x, y);
+	painter.drawPoint((int)x, (int)y);
 	
 	update();
 
