@@ -13,8 +13,6 @@ namespace alp
 	public:
 		void resize(const QSize& size);
 
-		void scale(qreal scale);
-
 	protected:
 		void mousePressEvent(QMouseEvent* event) override;
 
@@ -28,8 +26,6 @@ namespace alp
 
 		void paintEvent(QPaintEvent* event) override;
 
-		void resizeEvent(QResizeEvent* event) override;
-
 		void wheelEvent(QWheelEvent* event) override;
 
 	private:
@@ -39,12 +35,12 @@ namespace alp
 
 	private:
 		bool m_Drawing = false, m_Panning = false;
-
+		QSize m_Size;
 		QPoint m_LastPoint;
-		QImage m_Image;
+		QPixmap m_Pixmap;
 
 	private:
-		qreal m_Scale = 18.0;
+		qreal m_Scale = 1.0;
 		QPointF m_Reference;
 		QPointF m_Delta;
 		QRectF m_Rect;

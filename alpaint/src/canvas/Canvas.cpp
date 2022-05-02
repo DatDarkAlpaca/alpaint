@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Canvas.h"
 #include "Data.h"
-#include <iostream>
 
 alp::Canvas::Canvas(QWidget* parent)
 	: QWidget(parent)
@@ -10,20 +9,14 @@ alp::Canvas::Canvas(QWidget* parent)
 	setFocusPolicy(Qt::StrongFocus);
 	setFocus();
 
-	QImage newImage(QSize(32, 32), QImage::Format_ARGB32);
-	newImage.fill(qRgba(255, 255, 255, 255));
-	m_Image = newImage;
+	m_Pixmap.fill(qRgb(255, 255, 255));
 }
 
 void alp::Canvas::resize(const QSize& size)
 {
-	resizeImage(&m_Image, size);
-}
-
-void alp::Canvas::scale(qreal scale)
-{
-	m_Scale = scale;
-	update();
+	m_Size = size;
+	m_Pixmap = QPixmap(size);
+	m_Pixmap.fill(qRgb(255, 255, 255));
 }
 
 void alp::Canvas::mousePressEvent(QMouseEvent* event)
@@ -33,18 +26,14 @@ void alp::Canvas::mousePressEvent(QMouseEvent* event)
 		m_Reference = event->pos();
 		qApp->setOverrideCursor(Qt::ClosedHandCursor);
 		setMouseTracking(true);
+
+		return;
 	}
 	
-	else if (event->button() == Qt::LeftButton)
+	if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
 	{
 		m_LastPoint = event->pos();
-		drawLine(event->pos(), false);
-		m_Drawing = true;
-	}
-	else if (event->button() == Qt::RightButton)
-	{
-		m_LastPoint = event->pos();
-		drawLine(event->pos(), true);
+		drawLine(event->pos(), event->button() == Qt::RightButton);
 		m_Drawing = true;
 	}
 }
@@ -53,20 +42,16 @@ void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 {
 	if (m_Panning)
 	{
-		m_Delta += (event->pos() - m_Reference) * 1.0 / m_Scale;
+		m_Delta += (event->pos() - m_Reference);
 		m_Reference = event->pos();
+
 		update();
+
 		return;
 	}
 
-	if (m_Drawing)
-	{
-		if ((event->buttons() & Qt::LeftButton))
-			drawLine(event->pos(), false);
-
-		else if ((event->buttons() & Qt::LeftButton))
-			drawLine(event->pos(), true);
-	}
+	if (event->buttons() & (Qt::LeftButton | Qt::RightButton) && m_Drawing)
+		drawLine(event->pos(), event->button() == Qt::RightButton);
 }
 
 void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
@@ -76,18 +61,15 @@ void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
 		qApp->restoreOverrideCursor();
 		setMouseTracking(false);
 		m_Panning = false;
+
 		update();
+
+		return;
 	}
 
-	else if (event->button() == Qt::LeftButton && m_Drawing)
+	if (event->buttons() & (Qt::LeftButton | Qt::RightButton) && m_Drawing)
 	{
-		drawLine(event->pos(), false);
-		m_Drawing = false;
-	}
-
-	else if (event->button() == Qt::RightButton && m_Drawing)
-	{
-		drawLine(event->pos(), true);
+		drawLine(event->pos(), event->button() == Qt::RightButton);
 		m_Drawing = false;
 	}
 }
@@ -111,57 +93,47 @@ void alp::Canvas::keyReleaseEvent(QKeyEvent* event)
 void alp::Canvas::paintEvent(QPaintEvent* event)
 {
 	QPainter painter(this);
-	painter.scale(m_Scale, m_Scale);
+	painter.translate(rect().center() - m_Pixmap.rect().center());
 	painter.translate(m_Delta);
 
-	QRect dirtyRect = event->rect();
-	painter.drawImage(dirtyRect.topLeft(), m_Image, dirtyRect);
-}
-
-void alp::Canvas::resizeEvent(QResizeEvent* event)
-{
-	/*if (width() > m_Image.width() || height() > m_Image.height())
-	{
-		int newWidth = qMax(width() + 128, m_Image.width());
-		int newHeight = qMax(height() + 128, m_Image.height());
-		resizeImage(&m_Image, QSize(newWidth, newHeight));
-		update();
-	}
-	*/
-	QWidget::resizeEvent(event);
+	auto dirtyRect = event->rect();
+	painter.drawPixmap(dirtyRect.topLeft(), m_Pixmap.scaled(m_Size * m_Scale), dirtyRect);
 }
 
 void alp::Canvas::wheelEvent(QWheelEvent* event)
 {
-	if (event->angleDelta().y() > 0)
+	if (event->angleDelta().y() > 0 && m_Scale <= 16)
 	{
-		m_Scale += 1;
+		m_Scale *= 2;
 		update();
 	}
-	else if (event->angleDelta().y() < 0)
+	else if (event->angleDelta().y() < 0 && m_Scale >= 2)
 	{
-		m_Scale -= 1;
+		m_Scale /= 2;
 		update();
 	}
 }
 
 void alp::Canvas::drawLine(const QPoint& endPoint, bool isSecondaryButton = false)
 {
-	QPainter painter(&m_Image);
-	painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
-	painter.setRenderHint(QPainter::Antialiasing, true);
+	QPainter painter(&m_Pixmap);
+	painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
 
 	QColor usedColor = (!isSecondaryButton) ? primaryColor : secondaryColor;
-	painter.setPen(QPen(usedColor, m_PenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-		
-	painter.translate(-m_Delta);
-	painter.scale(1 / m_Scale, 1 / m_Scale);
-	painter.drawLine(m_LastPoint, endPoint);
-	int radius = (m_PenWidth / 2) + m_PenWidth * 2;
-
-	update();
-	//update(QRect(m_LastPoint, endPoint).normalized().adjusted(-radius, -radius, radius, radius));
 	
+	painter.setPen(QPen(usedColor, m_PenWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
+
+	painter.translate(-m_Delta / m_Scale);
+	painter.translate((-rect().width() / 2)  / m_Scale + (m_Pixmap.rect().width() / 2)  / m_Scale,
+					  (-rect().height() / 2) / m_Scale + (m_Pixmap.rect().height() / 2) / m_Scale);
+
+	auto x = endPoint.x() / m_Scale;
+	auto y = endPoint.y() / m_Scale;
+
+	painter.drawPoint(x, y);
+	
+	update();
+
 	m_LastPoint = endPoint;
 }
 
@@ -170,8 +142,8 @@ void alp::Canvas::resizeImage(QImage* image, const QSize& newSize)
 	if (image->size() == newSize)
 		return;
 
-	QImage newImage(newSize, QImage::Format_ARGB32);
-	newImage.fill(qRgba(255, 255, 255, 255));
+	QImage newImage(newSize, QImage::Format_RGB32);
+	newImage.fill(qRgb(255, 255, 255));
 
 	QPainter painter(&newImage);
 	painter.drawImage(QPoint(0, 0), *image);
