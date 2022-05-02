@@ -10,17 +10,6 @@ alp::Alpaint::Alpaint(QWidget *parent)
     connectActions();
 }
 
-void alp::Alpaint::mousePressEvent(QMouseEvent* event)
-{
-    m_LastPoint = event->pos();
-}
-
-void alp::Alpaint::mouseMoveEvent(QMouseEvent* event)
-{
-    if (m_Pressed)
-        this->move(mapToParent(event->pos() - m_LastPoint));
-}
-
 void alp::Alpaint::connectActions()
 {
     connect(ui.actionNew, &QAction::triggered, this, &Alpaint::newFileAction);

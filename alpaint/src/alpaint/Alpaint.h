@@ -11,11 +11,6 @@ namespace alp
     public:
         Alpaint(QWidget* parent = Q_NULLPTR);
 
-    protected:
-        void mousePressEvent(QMouseEvent* event) override;
-
-        void mouseMoveEvent(QMouseEvent* event) override;
-
     private:
         void connectActions();
 
@@ -24,10 +19,5 @@ namespace alp
 
     private:
         ::Ui::AlpaintClass ui;
-
-    private:
-        QByteArray m_CurrentGeometry;
-        QPoint m_LastPoint;
-        bool m_Pressed = false;
     };
 }
