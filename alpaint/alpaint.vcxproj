@@ -125,9 +125,15 @@
     </ClCompile>
     <ClCompile Include="src\alpaint\Alpaint.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <QtUic Include="res\NewFileDialog.ui" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="src\tools\ColorPicker.h" />
     <QtMoc Include="src\canvas\Canvas.h" />
+    <QtMoc Include="src\dialogs\NewFileDialog.h" />
+    <QtMoc Include="src\docks\ToolBarDock.h" />
+    <ClInclude Include="src\Data.h" />
+    <ClInclude Include="src\DocumentData.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "Canvas.h"
+#include "Data.h"
 #include <iostream>
 
-Canvas::Canvas(QWidget* parent)
+alp::Canvas::Canvas(QWidget* parent)
 	: QFrame(parent)
 {
 	setAttribute(Qt::WA_StaticContents);
@@ -13,7 +14,7 @@ Canvas::Canvas(QWidget* parent)
 	m_Image = newImage;
 }
 
-void Canvas::mousePressEvent(QMouseEvent* event)
+void alp::Canvas::mousePressEvent(QMouseEvent* event)
 {
 	if (m_Panning)
 	{
@@ -25,24 +26,38 @@ void Canvas::mousePressEvent(QMouseEvent* event)
 	else if (event->button() == Qt::LeftButton)
 	{
 		m_LastPoint = event->pos();
+		drawLine(event->pos(), false);
+		m_Drawing = true;
+	}
+	else if (event->button() == Qt::RightButton)
+	{
+		m_LastPoint = event->pos();
+		drawLine(event->pos(), true);
 		m_Drawing = true;
 	}
 }
 
-void Canvas::mouseMoveEvent(QMouseEvent* event)
+void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 {
 	if (m_Panning)
 	{
 		m_Delta += (event->pos() - m_Reference) * 1.0 / m_Scale;
 		m_Reference = event->pos();
 		update();
+		return;
 	}
 
-	else if ((event->buttons() & Qt::LeftButton) && m_Drawing)
-		drawLine(event->pos());
+	if (m_Drawing)
+	{
+		if ((event->buttons() & Qt::LeftButton))
+			drawLine(event->pos(), false);
+
+		else if ((event->buttons() & Qt::LeftButton))
+			drawLine(event->pos(), true);
+	}
 }
 
-void Canvas::mouseReleaseEvent(QMouseEvent* event)
+void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
 {
 	if (m_Panning)
 	{
@@ -54,18 +69,24 @@ void Canvas::mouseReleaseEvent(QMouseEvent* event)
 
 	else if (event->button() == Qt::LeftButton && m_Drawing)
 	{
-		drawLine(event->pos());
+		drawLine(event->pos(), false);
+		m_Drawing = false;
+	}
+
+	else if (event->button() == Qt::RightButton && m_Drawing)
+	{
+		drawLine(event->pos(), true);
 		m_Drawing = false;
 	}
 }
 
-void Canvas::keyPressEvent(QKeyEvent* event)
+void alp::Canvas::keyPressEvent(QKeyEvent* event)
 {
 	if (event->key() == Qt::Key_Space)
 		m_Panning = true;
 }
 
-void Canvas::keyReleaseEvent(QKeyEvent* event)
+void alp::Canvas::keyReleaseEvent(QKeyEvent* event)
 {
 	if (event->key() == Qt::Key_Space)
 	{
@@ -75,7 +96,7 @@ void Canvas::keyReleaseEvent(QKeyEvent* event)
 	}
 }
 
-void Canvas::paintEvent(QPaintEvent* event)
+void alp::Canvas::paintEvent(QPaintEvent* event)
 {
 	QPainter painter(this);
 	painter.scale(m_Scale, m_Scale);
@@ -85,7 +106,7 @@ void Canvas::paintEvent(QPaintEvent* event)
 	painter.drawImage(dirtyRect.topLeft(), m_Image, dirtyRect);
 }
 
-void Canvas::resizeEvent(QResizeEvent* event)
+void alp::Canvas::resizeEvent(QResizeEvent* event)
 {
 	/*if (width() > m_Image.width() || height() > m_Image.height())
 	{
@@ -98,7 +119,7 @@ void Canvas::resizeEvent(QResizeEvent* event)
 	QWidget::resizeEvent(event);
 }
 
-void Canvas::wheelEvent(QWheelEvent* event)
+void alp::Canvas::wheelEvent(QWheelEvent* event)
 {
 	if (event->angleDelta().y() > 0)
 	{
@@ -112,13 +133,15 @@ void Canvas::wheelEvent(QWheelEvent* event)
 	}
 }
 
-void Canvas::drawLine(const QPoint& endPoint)
+void alp::Canvas::drawLine(const QPoint& endPoint, bool isSecondaryButton = false)
 {
 	QPainter painter(&m_Image);
 	painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
 	painter.setRenderHint(QPainter::Antialiasing, true);
 
-	painter.setPen(QPen(m_PenColor, m_PenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+	QColor usedColor = (!isSecondaryButton) ? primaryColor : secondaryColor;
+	painter.setPen(QPen(usedColor, m_PenWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+		
 	painter.translate(-m_Delta);
 	painter.scale(1 / m_Scale, 1 / m_Scale);
 	painter.drawLine(m_LastPoint, endPoint);
@@ -130,7 +153,7 @@ void Canvas::drawLine(const QPoint& endPoint)
 	m_LastPoint = endPoint;
 }
 
-void Canvas::resizeImage(QImage* image, const QSize& newSize)
+void alp::Canvas::resizeImage(QImage* image, const QSize& newSize)
 {
 	/*if (image->size() == newSize)
 		return;

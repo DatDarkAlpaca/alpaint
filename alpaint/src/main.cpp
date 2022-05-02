@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    Alpaint w;
+    alp::Alpaint w;
     w.show();
 
     return app.exec();
