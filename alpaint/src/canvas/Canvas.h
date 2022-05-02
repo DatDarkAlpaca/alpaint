@@ -3,12 +3,20 @@
 
 namespace alp
 {
-	class Canvas : public QFrame
+	class Canvas : public QWidget
 	{
 		Q_OBJECT
 
 	public:
 		Canvas(QWidget* parent = nullptr);
+
+	public:
+		void resize(const QSize& size);
+
+	public:
+		void keyPressEvent(QKeyEvent* event) override;
+
+		void keyReleaseEvent(QKeyEvent* event) override;
 
 	protected:
 		void mousePressEvent(QMouseEvent* event) override;
@@ -16,10 +24,6 @@ namespace alp
 		void mouseMoveEvent(QMouseEvent* event) override;
 
 		void mouseReleaseEvent(QMouseEvent* event) override;
-
-		void keyPressEvent(QKeyEvent* event) override;
-
-		void keyReleaseEvent(QKeyEvent* event) override;
 
 		void paintEvent(QPaintEvent* event) override;
 

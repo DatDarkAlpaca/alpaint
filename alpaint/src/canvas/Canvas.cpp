@@ -4,14 +4,36 @@
 #include <iostream>
 
 alp::Canvas::Canvas(QWidget* parent)
-	: QFrame(parent)
+	: QWidget(parent)
 {
 	setAttribute(Qt::WA_StaticContents);
+	setFocusPolicy(Qt::StrongFocus);
 	setFocus();
 
 	QImage newImage(QSize(32, 32), QImage::Format_ARGB32);
 	newImage.fill(qRgba(255, 255, 255, 255));
 	m_Image = newImage;
+}
+
+void alp::Canvas::resize(const QSize& size)
+{
+	resizeImage(&m_Image, size);
+}
+
+void alp::Canvas::keyPressEvent(QKeyEvent* event)
+{
+	if (event->key() == Qt::Key_Space)
+		m_Panning = true;
+}
+
+void alp::Canvas::keyReleaseEvent(QKeyEvent* event)
+{
+	if (event->key() == Qt::Key_Space)
+	{
+		qApp->restoreOverrideCursor();
+		setMouseTracking(false);
+		m_Panning = false;
+	}
 }
 
 void alp::Canvas::mousePressEvent(QMouseEvent* event)
@@ -80,22 +102,6 @@ void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
 	}
 }
 
-void alp::Canvas::keyPressEvent(QKeyEvent* event)
-{
-	if (event->key() == Qt::Key_Space)
-		m_Panning = true;
-}
-
-void alp::Canvas::keyReleaseEvent(QKeyEvent* event)
-{
-	if (event->key() == Qt::Key_Space)
-	{
-		qApp->restoreOverrideCursor();
-		setMouseTracking(false);
-		m_Panning = false;
-	}
-}
-
 void alp::Canvas::paintEvent(QPaintEvent* event)
 {
 	QPainter painter(this);
@@ -155,7 +161,7 @@ void alp::Canvas::drawLine(const QPoint& endPoint, bool isSecondaryButton = fals
 
 void alp::Canvas::resizeImage(QImage* image, const QSize& newSize)
 {
-	/*if (image->size() == newSize)
+	if (image->size() == newSize)
 		return;
 
 	QImage newImage(newSize, QImage::Format_ARGB32);
@@ -163,5 +169,5 @@ void alp::Canvas::resizeImage(QImage* image, const QSize& newSize)
 
 	QPainter painter(&newImage);
 	painter.drawImage(QPoint(0, 0), *image);
-	*image = newImage;*/
+	*image = newImage;
 }

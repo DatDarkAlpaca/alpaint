@@ -30,5 +30,4 @@ namespace alp
         QPoint m_LastPoint;
         bool m_Pressed = false;
     };
-
 }
