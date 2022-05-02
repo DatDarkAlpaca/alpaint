@@ -20,20 +20,10 @@ void alp::Canvas::resize(const QSize& size)
 	resizeImage(&m_Image, size);
 }
 
-void alp::Canvas::keyPressEvent(QKeyEvent* event)
+void alp::Canvas::scale(qreal scale)
 {
-	if (event->key() == Qt::Key_Space)
-		m_Panning = true;
-}
-
-void alp::Canvas::keyReleaseEvent(QKeyEvent* event)
-{
-	if (event->key() == Qt::Key_Space)
-	{
-		qApp->restoreOverrideCursor();
-		setMouseTracking(false);
-		m_Panning = false;
-	}
+	m_Scale = scale;
+	update();
 }
 
 void alp::Canvas::mousePressEvent(QMouseEvent* event)
@@ -99,6 +89,22 @@ void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
 	{
 		drawLine(event->pos(), true);
 		m_Drawing = false;
+	}
+}
+
+void alp::Canvas::keyPressEvent(QKeyEvent* event)
+{
+	if (event->key() == Qt::Key_Space)
+		m_Panning = true;
+}
+
+void alp::Canvas::keyReleaseEvent(QKeyEvent* event)
+{
+	if (event->key() == Qt::Key_Space)
+	{
+		qApp->restoreOverrideCursor();
+		setMouseTracking(false);
+		m_Panning = false;
 	}
 }
 

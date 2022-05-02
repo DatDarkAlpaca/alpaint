@@ -28,7 +28,9 @@ namespace alp
 		void createSlot()
 		{
 			data = DocumentData(ui.widthSpinBox->value(), ui.heightSpinBox->value());
-			accept();
+
+			if(data.documentHeight > 0 && data.documentWidth > 0)
+				accept();
 		}
 
 	public:
