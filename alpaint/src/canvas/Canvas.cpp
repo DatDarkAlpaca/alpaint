@@ -8,13 +8,13 @@ alp::Canvas::Canvas(QWidget* parent)
 	setAttribute(Qt::WA_StaticContents);
 	setFocusPolicy(Qt::StrongFocus);
 	setFocus();
+
+	QImage image("res/background-sanity.png");
+	m_Background = QPixmap::fromImage(image);
 }
 
 void alp::Canvas::resetCanvas(const QSize& size)
 {
-	QImage image("res/background-sanity.png");
-	m_Background = QPixmap::fromImage(image);
-
 	m_Size = size;
 	m_Pixmap = QPixmap(size);
 	m_Pixmap.fill(Qt::transparent);
