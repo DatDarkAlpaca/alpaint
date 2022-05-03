@@ -12,7 +12,7 @@ namespace alp
 		Canvas(QWidget* parent = nullptr);
 
 	public:
-		void resize(const QSize& size);
+		void resetCanvas(const QSize& size);
 
 		QPixmap* getSelectedPixmap() { return &m_Pixmap; }
 

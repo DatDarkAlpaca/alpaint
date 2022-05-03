@@ -10,10 +10,10 @@ alp::Canvas::Canvas(QWidget* parent)
 	setFocus();
 }
 
-void alp::Canvas::resize(const QSize& size)
+void alp::Canvas::resetCanvas(const QSize& size)
 {
-	m_Background = QPixmap(size);
-	m_Background.fill(qRgba(100, 100, 100, 255));
+	QImage image("res/background-sanity.png");
+	m_Background = QPixmap::fromImage(image);
 
 	m_Size = size;
 	m_Pixmap = QPixmap(size);
@@ -86,13 +86,17 @@ void alp::Canvas::keyReleaseEvent(QKeyEvent* event)
 
 void alp::Canvas::paintEvent(QPaintEvent* event)
 {
+	auto dirtyRect = event->rect();
+	auto scaledRect = m_Pixmap.scaled(m_Size * m_Scale).rect();
+
 	QPainter painter(this);
 	painter.translate(rect().center() - m_Pixmap.rect().center());
 	painter.translate(m_Delta);
 
-	auto dirtyRect = event->rect();
+	painter.setBrush(m_Background);
+	painter.setBrushOrigin(scaledRect.topLeft().x(), scaledRect.topLeft().y());
+	painter.drawRect(scaledRect);
 
-	painter.drawPixmap(dirtyRect.topLeft(), m_Background.scaled(m_Size * m_Scale), dirtyRect);
 	painter.drawPixmap(dirtyRect.topLeft(), m_Pixmap.scaled(m_Size * m_Scale), dirtyRect);
 }
 
