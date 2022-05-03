@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "Data.h"
 #include "ui_CanvasWidget.h"
 
 namespace alp
@@ -15,6 +16,9 @@ namespace alp
 			ui.setupUi(this);
 			ui.canvas->resize(size);
 		}
+
+	public:
+		Canvas* getCanvas() { return ui.canvas; }
 
 	private:
 		::Ui::CanvasWidget ui;

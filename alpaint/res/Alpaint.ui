@@ -214,6 +214,27 @@
       </widget>
      </item>
      <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="topMargin">
+        <number>5</number>
+       </property>
+       <item>
+        <widget class="QToolButton" name="pencilButton">
+         <property name="text">
+          <string>P</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="eraserButton">
+         <property name="text">
+          <string>E</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -249,7 +270,7 @@
   <customwidget>
    <class>alp::ColorPicker</class>
    <extends>QFrame</extends>
-   <header>tools/ColorPicker.h</header>
+   <header>toolbar/ColorPicker.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -6,3 +6,4 @@
 #include <qpen.h>
 
 #include <iostream>
+#include <memory>

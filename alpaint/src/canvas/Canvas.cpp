@@ -29,13 +29,9 @@ void alp::Canvas::mousePressEvent(QMouseEvent* event)
 
 		return;
 	}
-	
-	if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
-	{
-		m_LastPoint = event->pos();
-		drawLine(event->pos(), event->button() == Qt::RightButton);
-		m_Drawing = true;
-	}
+
+	if(currentTool)
+		currentTool->mousePressEvent(this, event);
 }
 
 void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
@@ -50,11 +46,8 @@ void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 		return;
 	}
 
-	if (!m_Drawing)
-		return;
-
-	if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
-		drawLine(event->pos(), event->buttons() & Qt::RightButton);
+	if (currentTool)
+		currentTool->mouseMoveEvent(this, event);
 }
 
 void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
@@ -70,11 +63,8 @@ void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
 		return;
 	}
 
-	if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
-	{
-		drawLine(event->pos(), event->button() == Qt::RightButton);
-		m_Drawing = false;
-	}
+	if (currentTool)
+		currentTool->mouseReleaseEvent(this, event);
 }
 
 void alp::Canvas::keyPressEvent(QKeyEvent* event)
@@ -115,29 +105,6 @@ void alp::Canvas::wheelEvent(QWheelEvent* event)
 		m_Scale /= 2;
 		update();
 	}
-}
-
-void alp::Canvas::drawLine(const QPoint& endPoint, bool isSecondaryButton)
-{
-	QPainter painter(&m_Pixmap);
-	painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
-
-	QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
-	
-	painter.setPen(QPen(usedColor, m_PenWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
-
-	painter.translate(-m_Delta / m_Scale);
-	painter.translate((-rect().width() / 2)  / m_Scale + (m_Pixmap.rect().width() / 2)  / m_Scale,
-					  (-rect().height() / 2) / m_Scale + (m_Pixmap.rect().height() / 2) / m_Scale);
-
-	auto x = std::floor(endPoint.x() / m_Scale);
-	auto y = std::floor(endPoint.y() / m_Scale);
-
-	painter.drawPoint((int)x, (int)y);
-	
-	update();
-
-	m_LastPoint = endPoint;
 }
 
 void alp::Canvas::resizeImage(QImage* image, const QSize& newSize)

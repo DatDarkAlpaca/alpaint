@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "tools/Tool.h"
 
 namespace alp
 {
@@ -12,6 +13,12 @@ namespace alp
 
 	public:
 		void resize(const QSize& size);
+
+		QPixmap* getSelectedPixmap() { return &m_Pixmap; }
+
+		qreal getScale() const { return m_Scale; }
+
+		QPointF getDelta() const { return m_Delta; }
 
 	protected:
 		void mousePressEvent(QMouseEvent* event) override;
@@ -29,23 +36,17 @@ namespace alp
 		void wheelEvent(QWheelEvent* event) override;
 
 	private:
-		void drawLine(const QPoint& endPoint, bool isSecondaryButton);
-
 		void resizeImage(QImage* image, const QSize& newSize);
 
 	private:
-		bool m_Drawing = false, m_Panning = false;
-		QSize m_Size;
-		QPoint m_LastPoint;
 		QPixmap m_Pixmap;
+		QSize m_Size;
 
 	private:
+		QPointF m_Reference, m_Delta;
 		qreal m_Scale = 1.0;
-		QPointF m_Reference;
-		QPointF m_Delta;
 		QRectF m_Rect;
 
-	private:
-		int m_PenWidth = 1;
+		bool m_Panning = false;
 	};
 }

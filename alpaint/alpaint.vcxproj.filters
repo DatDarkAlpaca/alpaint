@@ -51,10 +51,16 @@
     <ClInclude Include="src\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Data.h">
+    <ClInclude Include="src\DocumentData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DocumentData.h">
+    <ClInclude Include="src\tools\Tool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tools\PencilTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -68,10 +74,10 @@
     <QtMoc Include="src\docks\ToolBarDock.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\tools\ColorPicker.h">
+    <QtMoc Include="src\canvas\CanvasWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\canvas\CanvasWidget.h">
+    <QtMoc Include="src\toolbar\ColorPicker.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
