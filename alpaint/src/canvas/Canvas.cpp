@@ -12,6 +12,9 @@ alp::Canvas::Canvas(QWidget* parent)
 
 void alp::Canvas::resize(const QSize& size)
 {
+	m_Background = QPixmap(size);
+	m_Background.fill(qRgba(100, 100, 100, 255));
+
 	m_Size = size;
 	m_Pixmap = QPixmap(size);
 	m_Pixmap.fill(Qt::transparent);
@@ -88,6 +91,8 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 	painter.translate(m_Delta);
 
 	auto dirtyRect = event->rect();
+
+	painter.drawPixmap(dirtyRect.topLeft(), m_Background.scaled(m_Size * m_Scale), dirtyRect);
 	painter.drawPixmap(dirtyRect.topLeft(), m_Pixmap.scaled(m_Size * m_Scale), dirtyRect);
 }
 

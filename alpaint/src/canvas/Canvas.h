@@ -36,7 +36,7 @@ namespace alp
 		void wheelEvent(QWheelEvent* event) override;
 
 	private:
-		QPixmap m_Pixmap;
+		QPixmap m_Background, m_Pixmap;
 		QSize m_Size;
 
 	private:
