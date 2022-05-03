@@ -9,4 +9,12 @@ namespace alp
 
 	inline std::unordered_map<std::string, Tool*> tools;
 	inline Tool* currentTool;
+
+	inline void setTool(const std::string& name)
+	{
+		if (tools.find(name) == tools.end())
+			return;
+
+		currentTool = tools[name];
+	}
 }

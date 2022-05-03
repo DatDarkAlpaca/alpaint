@@ -223,11 +223,17 @@
          <property name="text">
           <string>P</string>
          </property>
+         <property name="shortcut">
+          <string>B</string>
+         </property>
         </widget>
        </item>
        <item>
         <widget class="QToolButton" name="eraserButton">
          <property name="text">
+          <string>E</string>
+         </property>
+         <property name="shortcut">
           <string>E</string>
          </property>
         </widget>

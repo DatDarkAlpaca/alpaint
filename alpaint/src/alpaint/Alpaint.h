@@ -16,6 +16,8 @@ namespace alp
     private:
         void initializeTools();
 
+        void connectTools();
+
     private:
         void connectActions();
 

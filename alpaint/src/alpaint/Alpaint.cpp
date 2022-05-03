@@ -15,6 +15,8 @@ alp::Alpaint::Alpaint(QWidget *parent)
     connectActions();
 
     initializeTools();
+
+    connectTools();
 }
 
 void alp::Alpaint::initializeTools()
@@ -23,6 +25,12 @@ void alp::Alpaint::initializeTools()
     tools["eraser"] = new EraserTool();
 
     currentTool = tools["pencil"];
+}
+
+void alp::Alpaint::connectTools()
+{
+    connect(ui.pencilButton, &QToolButton::clicked, this, [&]() { setTool("pencil"); });
+    connect(ui.eraserButton, &QToolButton::clicked, this, [&]() { setTool("eraser"); });
 }
 
 void alp::Alpaint::connectActions()
