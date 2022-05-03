@@ -16,6 +16,13 @@ namespace alp
 		return QPoint(x, y);
 	}
 
+	inline void adjustPainterPosition(const QPixmap& pixmap, qreal scale, QRect canvasRect, QPointF delta, QPainter* painter)
+	{
+		painter->translate(-delta / scale);
+		painter->translate((-canvasRect.width() / 2) / scale + (pixmap.rect().width() / 2) / scale,
+			(-canvasRect.height() / 2) / scale + (pixmap.rect().height() / 2) / scale);
+	}
+
 	class Tool
 	{
 	public:

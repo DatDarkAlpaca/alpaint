@@ -1,7 +1,10 @@
 ﻿#include "pch.h"
 #include "Data.h"
 #include "Alpaint.h"
+
 #include "tools/PencilTool.h"
+#include "tools/EraserTool.h"
+
 #include "dialogs/NewFileDialog.h"
 
 alp::Alpaint::Alpaint(QWidget *parent)
@@ -16,7 +19,10 @@ alp::Alpaint::Alpaint(QWidget *parent)
 
 void alp::Alpaint::initializeTools()
 {
-    currentTool = new PencilTool();
+    tools["pencil"] = new PencilTool();
+    tools["eraser"] = new EraserTool();
+
+    currentTool = tools["pencil"];
 }
 
 void alp::Alpaint::connectActions()

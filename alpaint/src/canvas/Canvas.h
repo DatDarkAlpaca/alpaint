@@ -36,9 +36,6 @@ namespace alp
 		void wheelEvent(QWheelEvent* event) override;
 
 	private:
-		void resizeImage(QImage* image, const QSize& newSize);
-
-	private:
 		QPixmap m_Pixmap;
 		QSize m_Size;
 

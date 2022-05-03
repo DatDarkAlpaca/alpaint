@@ -5,11 +5,11 @@
 #include "canvas/Canvas.h"
 
 namespace alp
-{ 
-	class PencilTool : public Tool
+{
+	class EraserTool : public Tool
 	{
 	public:
-		virtual void mousePressEvent(Canvas* canvas, QMouseEvent* event) override 
+		virtual void mousePressEvent(Canvas* canvas, QMouseEvent* event) override
 		{
 			if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
 			{
@@ -37,24 +37,21 @@ namespace alp
 		}
 
 	private:
-		void draw(Canvas* canvas, QPoint endPoint, bool isSecondaryButton) 
+		void draw(Canvas* canvas, QPoint endPoint, bool isSecondaryButton)
 		{
 			if (!canvas)
 				return;
 
 			QPainter painter(canvas->getSelectedPixmap());
-			painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
-
-			QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
-			painter.setPen(QPen(usedColor, pencilWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
+			painter.setCompositionMode(QPainter::CompositionMode_Clear);
 
 			adjustPainterPosition(*canvas->getSelectedPixmap(), canvas->getScale(), canvas->rect(), canvas->getDelta(), &painter);
 
 			auto x = std::floor(endPoint.x() / canvas->getScale());
 			auto y = std::floor(endPoint.y() / canvas->getScale());
 
-			painter.drawPoint(x, y);
-			
+			painter.eraseRect(QRect(x, y, pencilWidth, pencilWidth));
+
 			canvas->update();
 		}
 

@@ -8,15 +8,13 @@ alp::Canvas::Canvas(QWidget* parent)
 	setAttribute(Qt::WA_StaticContents);
 	setFocusPolicy(Qt::StrongFocus);
 	setFocus();
-
-	m_Pixmap.fill(qRgb(255, 255, 255));
 }
 
 void alp::Canvas::resize(const QSize& size)
 {
 	m_Size = size;
 	m_Pixmap = QPixmap(size);
-	m_Pixmap.fill(qRgb(255, 255, 255));
+	m_Pixmap.fill(Qt::transparent);
 }
 
 void alp::Canvas::mousePressEvent(QMouseEvent* event)
@@ -105,17 +103,4 @@ void alp::Canvas::wheelEvent(QWheelEvent* event)
 		m_Scale /= 2;
 		update();
 	}
-}
-
-void alp::Canvas::resizeImage(QImage* image, const QSize& newSize)
-{
-	if (image->size() == newSize)
-		return;
-
-	QImage newImage(newSize, QImage::Format_RGB32);
-	newImage.fill(qRgb(255, 255, 255));
-
-	QPainter painter(&newImage);
-	painter.drawImage(QPoint(0, 0), *image);
-	*image = newImage;
 }
