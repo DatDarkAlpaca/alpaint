@@ -25,6 +25,10 @@ namespace alp
 
 		bool enabledPixelGrid() { return m_EnableGrid; }
 
+		void toggleSanityBackground(bool enable) { m_EnableSanityBackground = enable; }
+
+		bool enabledSanityBackground() { return m_EnableSanityBackground; }
+
 		qreal getScale() const { return m_Scale; }
 
 		QPointF getDelta() const { return m_Delta; }
@@ -56,6 +60,6 @@ namespace alp
 		bool m_Panning = false;
 
 	private:
-		bool m_EnableGrid = true;
+		bool m_EnableGrid = true, m_EnableSanityBackground = true;
 	};
 }

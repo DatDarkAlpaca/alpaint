@@ -63,11 +63,18 @@ void alp::Alpaint::connectTools()
 void alp::Alpaint::connectActions()
 {
     connect(ui.actionNew, &QAction::triggered, this, &Alpaint::newFileAction);
-    connect(ui.actionShow_pixel_grid, &QAction::triggered, this, [&]() {
+    connect(ui.actionShowPixelGrid, &QAction::triggered, this, [&]() {
         if (m_CanvasWidget)
         {
             auto canvas = m_CanvasWidget->getCanvas();
             canvas->togglePixelGrid(!canvas->enabledPixelGrid());
+        }
+    });
+    connect(ui.actionShowBackground, &QAction::triggered, this, [&]() {
+        if (m_CanvasWidget)
+        {
+            auto canvas = m_CanvasWidget->getCanvas();
+            canvas->toggleSanityBackground(!canvas->enabledSanityBackground());
         }
     });
 }

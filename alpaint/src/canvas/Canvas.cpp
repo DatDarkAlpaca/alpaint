@@ -104,19 +104,24 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 	painter.translate(rect().center());
 	painter.translate(m_Delta);
 
-	painter.setBrush(m_Background);
-	painter.setBrushOrigin(scaledPixmap.rect().topLeft());
-	painter.drawRect(scaledPixmap.rect());
-
+	if (m_EnableSanityBackground)
+	{
+		painter.setBrush(m_Background);
+		painter.setBrushOrigin(scaledPixmap.rect().topLeft());
+		painter.drawRect(scaledPixmap.rect());
+	}
+	
 	if (m_EnableGrid && m_Scale > 2)
 	{
-		painter.setPen(QPen(QColor(100, 100, 100, 50), 0));
+		QPen pen(QColor(100, 100, 100, 50), 0);
+		pen.setCosmetic(true);
+		painter.setPen(pen);
 
 		for (int x = 0; x < scaledPixmap.width(); x += m_Scale)
-			painter.drawRect(x, 0, 1, scaledPixmap.height());
+			painter.drawRect(x, 0, 0, scaledPixmap.height());
 
 		for (int y = 0; y < scaledPixmap.height(); y += m_Scale)
-			painter.drawRect(0, y, scaledPixmap.height(), 1);
+			painter.drawRect(0, y, scaledPixmap.height(), 0);
 	}
 
 	painter.drawPixmap(rect().topLeft(), scaledPixmap, scaledPixmap.rect());
