@@ -58,7 +58,7 @@ namespace alp
 
 	private:
 		QPixmap m_Background, m_Pixmap, m_OldPixmap;
-		bool m_Drawing = false, m_DrawingShape = false;
+		bool m_Drawing = false, m_DrawingLine = false;
 		QUndoStack* m_UndoStack;
 		QSize m_Size;
 

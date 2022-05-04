@@ -66,6 +66,9 @@ void alp::Canvas::mousePressEvent(QMouseEvent* event)
 
 		m_OldPixmap = m_Pixmap.copy();
 		m_Drawing = true;
+
+		if (currentTool->type == ToolType::Pencil)
+			m_DrawingLine = true;
 	}
 }
 
@@ -85,7 +88,14 @@ void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 	{
 		if (currentTool->type == ToolType::Line)
 		{
-			currentTool->setEndPoint(event->pos());
+			if(m_DrawingLine)
+			{
+				currentTool->setStartPoint(event->pos());
+				m_DrawingLine = false;
+			}
+			else
+				currentTool->setEndPoint(event->pos());
+
 			m_Pixmap = m_OldPixmap;
 		}
 

@@ -21,6 +21,8 @@ namespace alp
 	
 		virtual void setEndPoint(const QPoint& point) { endPoint = point; }
 
+		QPoint getStartPoint() const { return startPoint; }
+
 	public:
 		virtual void draw(Canvas* canvas, const QPoint& endPoint, bool isSecondaryButton) = 0;
 
