@@ -7,7 +7,6 @@
 
 namespace alp
 {
-
 	class EraserTool : public Tool
 	{
 	public:

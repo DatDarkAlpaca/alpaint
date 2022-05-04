@@ -88,18 +88,18 @@ void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 	{
 		if (currentTool->type == ToolType::Line)
 		{
-			if(m_DrawingLine)
+			if (m_DrawingLine)
 			{
 				tools["pencil"]->draw(this, event->pos(), event->buttons() & Qt::RightButton);
 				m_OldPixmap = m_Pixmap.copy();
 				currentTool->setStartPoint(event->pos());
 				m_DrawingLine = false;
 			}
-			else
-			{
-				currentTool->setEndPoint(event->pos());
-				m_Pixmap = m_OldPixmap;
-			}
+		}
+		if (currentTool->type == ToolType::Line || currentTool->type == ToolType::Ellipse || currentTool->type == ToolType::Rect)
+		{
+			currentTool->setEndPoint(event->pos());
+			m_Pixmap = m_OldPixmap;
 		}
 
 		currentTool->draw(this, event->pos(), event->buttons() & Qt::RightButton);

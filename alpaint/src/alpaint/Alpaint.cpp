@@ -48,8 +48,8 @@ void alp::Alpaint::initializeTools()
     tools["pencil"] = new PencilTool();
     tools["eraser"] = new EraserTool();
     tools["line"] = new LineTool();
-    /*tools["rect"] = new RectTool();
-    tools["ellipse"] = new EllipseTool();*/
+    tools["rect"] = new RectTool();
+    tools["ellipse"] = new EllipseTool();
 
     currentTool = tools["pencil"];
 }
