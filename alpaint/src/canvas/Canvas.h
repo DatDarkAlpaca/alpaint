@@ -22,7 +22,7 @@ namespace alp
 
 		QPointF getDelta() const { return m_Delta; }
 
-	protected:
+	public:
 		void mousePressEvent(QMouseEvent* event) override;
 
 		void mouseMoveEvent(QMouseEvent* event) override;

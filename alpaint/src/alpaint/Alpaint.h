@@ -1,8 +1,10 @@
 #pragma once
 #include "pch.h"
+#include "Data.h"
 #include "ui_Alpaint.h"
-#include "tools/Tool.h"
+#include "tools/Tools.h"
 #include "canvas/CanvasWidget.h"
+#include "dialogs/NewFileDialog.h"
 
 namespace alp
 {
@@ -15,6 +17,8 @@ namespace alp
 
     protected:
         void keyPressEvent(QKeyEvent* event) override;
+
+        void keyReleaseEvent(QKeyEvent* event) override;
 
     private:
         void initializeTools();
@@ -29,6 +33,7 @@ namespace alp
 
     private:
         CanvasWidget* m_CanvasWidget = nullptr;
+
         ::Ui::AlpaintClass ui;
     };
 }

@@ -6,8 +6,6 @@ alp::Canvas::Canvas(QWidget* parent)
 	: QWidget(parent)
 {
 	setAttribute(Qt::WA_StaticContents);
-	setFocusPolicy(Qt::StrongFocus);
-	setFocus();
 
 	QImage image("res/background-sanity.png");
 	m_Background = QPixmap::fromImage(image);
@@ -71,7 +69,10 @@ void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
 void alp::Canvas::keyPressEvent(QKeyEvent* event)
 {
 	if (event->key() == Qt::Key_Space)
+	{
 		m_Panning = true;
+		event->accept();
+	}
 }
 
 void alp::Canvas::keyReleaseEvent(QKeyEvent* event)
@@ -81,6 +82,7 @@ void alp::Canvas::keyReleaseEvent(QKeyEvent* event)
 		qApp->restoreOverrideCursor();
 		setMouseTracking(false);
 		m_Panning = false;
+		event->accept();
 	}
 }
 

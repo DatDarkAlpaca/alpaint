@@ -1,32 +1,40 @@
 ﻿#include "pch.h"
-#include "Data.h"
 #include "Alpaint.h"
-
-#include "tools/Tools.h"
-
-#include "dialogs/NewFileDialog.h"
 
 alp::Alpaint::Alpaint(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
 
+    setFocusPolicy(Qt::StrongFocus);
+    setFocus();
+
     connectActions();
 
     initializeTools();
 
-    connectTools();
+    connectTools();    
 }
 
 void alp::Alpaint::keyPressEvent(QKeyEvent* event)
 {
-    if (currentTool->name != "pencil")
+    if (!m_CanvasWidget)
         return;
 
-    if(event->key() == Qt::Key_Shift)
-        currentTool = tools["line"];
-    else
-        currentTool = tools["pencil"];
+    m_CanvasWidget->getCanvas()->keyPressEvent(event);
+
+    if (currentTool->name == "pencil" || currentTool->name == "line")
+    {
+        if (event->key() == Qt::Key_Shift)
+            currentTool = tools["line"];
+        else
+            currentTool = tools["pencil"];
+    }
+}
+
+void alp::Alpaint::keyReleaseEvent(QKeyEvent* event)
+{
+    m_CanvasWidget->getCanvas()->keyReleaseEvent(event);
 }
 
 void alp::Alpaint::initializeTools()
