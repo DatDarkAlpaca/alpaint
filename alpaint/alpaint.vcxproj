@@ -133,6 +133,7 @@
     <ClInclude Include="src\Data.h" />
     <ClInclude Include="src\tools\DrawCommand.h" />
     <ClInclude Include="src\tools\EllipseTool.h" />
+    <ClInclude Include="src\tools\FillTool.h" />
     <ClInclude Include="src\tools\ToolUtils.h" />
     <QtMoc Include="src\docks\InformationBarDock.h" />
     <ClInclude Include="src\tools\EraserTool.h" />

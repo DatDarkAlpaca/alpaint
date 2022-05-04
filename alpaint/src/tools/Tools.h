@@ -4,3 +4,4 @@
 #include "LineTool.h"
 #include "RectTool.h"
 #include "EllipseTool.h"
+#include "FillTool.h"

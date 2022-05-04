@@ -21,7 +21,7 @@ void alp::Canvas::resetCanvasLayers(const QSize& size)
 
 	m_Size = size;
 	m_Pixmap = QPixmap(size);
-	m_Pixmap.fill(Qt::transparent);
+	m_Pixmap.fill(Qt::red);
 }
 
 void alp::Canvas::resetCanvasTransform()

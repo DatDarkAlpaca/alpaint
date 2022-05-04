@@ -50,14 +50,15 @@ void alp::Alpaint::initializeTools()
     tools["line"] = new LineTool();
     tools["rect"] = new RectTool();
     tools["ellipse"] = new EllipseTool();
+    tools["fill"] = new FillTool();
 
-    currentTool = tools["pencil"];
+    currentTool = tools["fill"];
 }
 
 void alp::Alpaint::connectTools()
 {
     connect(ui.pencilButton,  &QToolButton::clicked, this, [&]() { setTool("pencil");  });
-    connect(ui.eraserButton,  &QToolButton::clicked, this, [&]() { setTool("eraser");  });
+    connect(ui.eraserButton,  &QToolButton::clicked, this, [&]() { setTool("fill");  });
     connect(ui.rectButton,    &QToolButton::clicked, this, [&]() { setTool("rect");    });
     connect(ui.ellipseButton, &QToolButton::clicked, this, [&]() { setTool("ellipse"); });
 }
