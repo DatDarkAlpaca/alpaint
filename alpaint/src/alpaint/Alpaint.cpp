@@ -18,9 +18,6 @@ alp::Alpaint::Alpaint(QWidget *parent)
 
 void alp::Alpaint::keyPressEvent(QKeyEvent* event)
 {
-    if (m_CanvasWidget)
-        m_CanvasWidget->getCanvas()->keyPressEvent(event);
-
     if (event->key() == Qt::Key_Q && m_CanvasWidget)
         m_CanvasWidget->getCanvas()->resetCanvasTransform();
 
@@ -29,6 +26,9 @@ void alp::Alpaint::keyPressEvent(QKeyEvent* event)
         if (currentTool->type == ToolType::Pencil)
             currentTool = tools["line"];
     }
+
+    if (m_CanvasWidget)
+        m_CanvasWidget->getCanvas()->keyPressEvent(event);
 }
 
 void alp::Alpaint::keyReleaseEvent(QKeyEvent* event)
