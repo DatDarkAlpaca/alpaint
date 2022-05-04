@@ -42,6 +42,7 @@ void alp::Alpaint::initializeTools()
     tools["pencil"] = new PencilTool();
     tools["eraser"] = new EraserTool();
     tools["line"] = new LineTool();
+    tools["rect"] = new RectTool();
 
     currentTool = tools["pencil"];
 }
