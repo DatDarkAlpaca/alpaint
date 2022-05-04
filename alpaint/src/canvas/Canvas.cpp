@@ -108,6 +108,17 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 	painter.setBrushOrigin(scaledPixmap.rect().topLeft());
 	painter.drawRect(scaledPixmap.rect());
 
+	if (m_EnableGrid && m_Scale > 2)
+	{
+		painter.setPen(QPen(QColor(100, 100, 100, 50), 0));
+
+		for (int x = 0; x < scaledPixmap.width(); x += m_Scale)
+			painter.drawRect(x, 0, 1, scaledPixmap.height());
+
+		for (int y = 0; y < scaledPixmap.height(); y += m_Scale)
+			painter.drawRect(0, y, scaledPixmap.height(), 1);
+	}
+
 	painter.drawPixmap(rect().topLeft(), scaledPixmap, scaledPixmap.rect());
 }
 
