@@ -48,8 +48,6 @@ namespace alp
 			if (!canvas)
 				return;
 
-			std::cout << m_StartPoint.x() << " " << m_StartPoint.y() << '\n';
-
 			QPainter painter(canvas->getSelectedPixmap());
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
 

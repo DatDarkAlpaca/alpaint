@@ -18,23 +18,26 @@ alp::Alpaint::Alpaint(QWidget *parent)
 
 void alp::Alpaint::keyPressEvent(QKeyEvent* event)
 {
-    if (!m_CanvasWidget)
-        return;
+    if (m_CanvasWidget)
+        m_CanvasWidget->getCanvas()->keyPressEvent(event);
 
-    m_CanvasWidget->getCanvas()->keyPressEvent(event);
-
-    if (currentTool->name == "pencil" || currentTool->name == "line")
+    if (event->key() == Qt::Key_Shift)
     {
-        if (event->key() == Qt::Key_Shift)
+        if (currentTool->name == "pencil")
             currentTool = tools["line"];
-        else
-            currentTool = tools["pencil"];
     }
 }
 
 void alp::Alpaint::keyReleaseEvent(QKeyEvent* event)
 {
-    m_CanvasWidget->getCanvas()->keyReleaseEvent(event);
+    if (event->key() == Qt::Key_Shift)
+    {
+        if(currentTool->name == "line")
+            currentTool = tools["pencil"];
+    }
+
+    if (m_CanvasWidget)
+        m_CanvasWidget->getCanvas()->keyReleaseEvent(event);    
 }
 
 void alp::Alpaint::initializeTools()
@@ -51,6 +54,7 @@ void alp::Alpaint::connectTools()
 {
     connect(ui.pencilButton, &QToolButton::clicked, this, [&]() { setTool("pencil"); });
     connect(ui.eraserButton, &QToolButton::clicked, this, [&]() { setTool("eraser"); });
+    connect(ui.rectButton,   &QToolButton::clicked, this, [&]() { setTool("rect");   });
 }
 
 void alp::Alpaint::connectActions()
