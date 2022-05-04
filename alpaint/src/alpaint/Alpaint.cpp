@@ -2,8 +2,7 @@
 #include "Data.h"
 #include "Alpaint.h"
 
-#include "tools/PencilTool.h"
-#include "tools/EraserTool.h"
+#include "tools/Tools.h"
 
 #include "dialogs/NewFileDialog.h"
 
@@ -19,10 +18,22 @@ alp::Alpaint::Alpaint(QWidget *parent)
     connectTools();
 }
 
+void alp::Alpaint::keyPressEvent(QKeyEvent* event)
+{
+    if (currentTool->name != "pencil")
+        return;
+
+    if(event->key() == Qt::Key_Shift)
+        currentTool = tools["line"];
+    else
+        currentTool = tools["pencil"];
+}
+
 void alp::Alpaint::initializeTools()
 {
     tools["pencil"] = new PencilTool();
     tools["eraser"] = new EraserTool();
+    tools["line"] = new LineTool();
 
     currentTool = tools["pencil"];
 }

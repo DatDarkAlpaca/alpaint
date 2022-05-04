@@ -14,6 +14,8 @@ namespace alp
 	public:
 		void resetCanvas(const QSize& size);
 
+		void setCurrentLayerPixmap(QPixmap pixmap) { m_Pixmap = pixmap; }
+
 		QPixmap* getSelectedPixmap() { return &m_Pixmap; }
 
 		qreal getScale() const { return m_Scale; }

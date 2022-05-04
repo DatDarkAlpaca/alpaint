@@ -13,6 +13,9 @@ namespace alp
     public:
         Alpaint(QWidget* parent = Q_NULLPTR);
 
+    protected:
+        void keyPressEvent(QKeyEvent* event) override;
+
     private:
         void initializeTools();
 

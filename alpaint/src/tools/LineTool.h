@@ -1,22 +1,23 @@
 #pragma once
 #include "pch.h"
-#include "Tool.h"
 #include "Data.h"
+#include "Tool.h"
 #include "canvas/Canvas.h"
 
 namespace alp
-{ 
-	class PencilTool : public Tool
+{
+	class LineTool : public Tool
 	{
 	public:
-		PencilTool() : Tool("pencil") { }
+		LineTool() : Tool("line") { }
 
 	public:
-		virtual void mousePressEvent(Canvas* canvas, QMouseEvent* event) override 
+		virtual void mousePressEvent(Canvas* canvas, QMouseEvent* event) override
 		{
 			if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
 			{
-				draw(canvas, event->pos(), event->button() == Qt::RightButton);
+				m_StartPoint = (event->pos() - canvas->rect().center() - canvas->getDelta()) / canvas->getScale();
+				m_PixmapCopy = *canvas->getSelectedPixmap();
 				m_Drawing = true;
 			}
 		}
@@ -25,6 +26,8 @@ namespace alp
 		{
 			if (!m_Drawing)
 				return;
+
+			canvas->setCurrentLayerPixmap(m_PixmapCopy);
 
 			if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
 				draw(canvas, event->pos(), event->buttons() & Qt::RightButton);
@@ -40,10 +43,12 @@ namespace alp
 		}
 
 	private:
-		void draw(Canvas* canvas, QPoint endPoint, bool isSecondaryButton) 
+		void draw(Canvas* canvas, QPointF endPoint, bool isSecondaryButton)
 		{
 			if (!canvas)
 				return;
+
+			std::cout << m_StartPoint.x() << " " << m_StartPoint.y() << '\n';
 
 			QPainter painter(canvas->getSelectedPixmap());
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
@@ -51,13 +56,16 @@ namespace alp
 			QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
 			painter.setPen(QPen(usedColor, pencilWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
 
-			auto point = (endPoint - canvas->rect().center() - canvas->getDelta()) / canvas->getScale();
-			painter.drawPoint(point);
+			endPoint = (endPoint - canvas->rect().center() - canvas->getDelta()) / canvas->getScale();
 			
+			painter.drawLine(m_StartPoint, endPoint);
+
 			canvas->update();
 		}
 
 	private:
+		QPixmap m_PixmapCopy;
+		QPointF m_StartPoint;
 		bool m_Drawing = false;
 	};
 }

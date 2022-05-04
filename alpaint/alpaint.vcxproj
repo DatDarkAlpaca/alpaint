@@ -131,8 +131,10 @@
   <ItemGroup>
     <ClInclude Include="src\Data.h" />
     <ClInclude Include="src\tools\EraserTool.h" />
+    <ClInclude Include="src\tools\LineTool.h" />
     <ClInclude Include="src\tools\PencilTool.h" />
     <ClInclude Include="src\tools\Tool.h" />
+    <ClInclude Include="src\tools\Tools.h" />
     <QtMoc Include="src\toolbar\ColorPicker.h" />
     <QtMoc Include="src\canvas\Canvas.h" />
     <QtMoc Include="src\dialogs\NewFileDialog.h" />

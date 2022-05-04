@@ -9,6 +9,9 @@ namespace alp
 	class EraserTool : public Tool
 	{
 	public:
+		EraserTool() : Tool("eraser") { }
+
+	public:
 		virtual void mousePressEvent(Canvas* canvas, QMouseEvent* event) override
 		{
 			if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
