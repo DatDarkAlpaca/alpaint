@@ -129,7 +129,9 @@
     <QtUic Include="res\NewFileDialog.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\Data.h" />
+    <ClInclude Include="src\tools\DrawCommand.h" />
     <ClInclude Include="src\tools\EllipseTool.h" />
     <ClInclude Include="src\tools\ToolUtils.h" />
     <QtMoc Include="src\docks\InformationBarDock.h" />

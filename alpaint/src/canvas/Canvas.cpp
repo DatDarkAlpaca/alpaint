@@ -1,6 +1,7 @@
 #include "pch.h"
-#include "Canvas.h"
 #include "Data.h"
+#include "Canvas.h"
+#include "tools/DrawCommand.h"
 
 alp::Canvas::Canvas(QWidget* parent)
 	: QWidget(parent)
@@ -9,6 +10,9 @@ alp::Canvas::Canvas(QWidget* parent)
 
 	QImage image("res/background-sanity.png");
 	m_Background = QPixmap::fromImage(image);
+
+	m_UndoStack = new QUndoStack();
+	m_UndoStack->setUndoLimit(UndoLimit);
 }
 
 void alp::Canvas::resetCanvasLayers(const QSize& size)
@@ -27,6 +31,24 @@ void alp::Canvas::resetCanvasTransform()
 	update();
 }
 
+void alp::Canvas::onUndo()
+{
+	if (!m_UndoStack->canUndo())
+		return;
+
+	m_UndoStack->undo();
+	update();
+}
+
+void alp::Canvas::onRedo()
+{
+	if (!m_UndoStack->canRedo())
+		return;
+
+	m_UndoStack->redo();
+	update();
+}
+
 void alp::Canvas::mousePressEvent(QMouseEvent* event)
 {
 	if (m_Panning)
@@ -38,8 +60,13 @@ void alp::Canvas::mousePressEvent(QMouseEvent* event)
 		return;
 	}
 
-	if(currentTool)
-		currentTool->mousePressEvent(this, event);
+	if (currentTool)
+	{
+		currentTool->setStartPoint(event->pos());
+
+		m_OldPixmap = m_Pixmap.copy();
+		m_Drawing = true;
+	}
 }
 
 void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
@@ -54,8 +81,16 @@ void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 		return;
 	}
 
-	if (currentTool)
-		currentTool->mouseMoveEvent(this, event);
+	if (currentTool && m_Drawing)
+	{
+		if (currentTool->type == ToolType::Line)
+		{
+			currentTool->setEndPoint(event->pos());
+			m_Pixmap = m_OldPixmap;
+		}
+
+		currentTool->draw(this, event->pos(), event->buttons() & Qt::RightButton);
+	}
 }
 
 void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
@@ -72,7 +107,17 @@ void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
 	}
 
 	if (currentTool)
-		currentTool->mouseReleaseEvent(this, event);
+	{
+		if (currentTool->type == ToolType::Line)
+			currentTool->setEndPoint(event->pos());
+
+		currentTool->draw(this, event->pos(), event->button() == Qt::RightButton);
+					
+		m_Drawing = false;
+
+		if (m_OldPixmap.toImage() != m_Pixmap.toImage())
+			saveDrawCommand();
+	}
 }
 
 void alp::Canvas::keyPressEvent(QKeyEvent* event)
@@ -139,4 +184,10 @@ void alp::Canvas::wheelEvent(QWheelEvent* event)
 		m_Scale -= 1;
 		update();
 	}
+}
+
+void alp::Canvas::saveDrawCommand()
+{
+	DrawCommand* command = new DrawCommand(m_OldPixmap, &m_Pixmap);
+	m_UndoStack->push(command);
 }

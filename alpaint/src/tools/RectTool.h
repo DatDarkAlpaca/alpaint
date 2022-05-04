@@ -7,7 +7,7 @@
 
 namespace alp
 {
-	class RectTool : public Tool
+	/*class RectTool : public Tool
 	{
 	public:
 		RectTool() : Tool("rect") { }
@@ -69,5 +69,5 @@ namespace alp
 		QPixmap m_PixmapCopy;
 		QPointF m_StartPoint;
 		bool m_Drawing = false;
-	};
+	};*/
 }

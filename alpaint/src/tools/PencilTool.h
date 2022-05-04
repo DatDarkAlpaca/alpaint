@@ -10,38 +10,10 @@ namespace alp
 	class PencilTool : public Tool
 	{
 	public:
-		PencilTool() : Tool("pencil") { }
+		PencilTool() : Tool(ToolType::Pencil) { }
 
 	public:
-		virtual void mousePressEvent(Canvas* canvas, QMouseEvent* event) override 
-		{
-			if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
-			{
-				draw(canvas, event->pos(), event->button() == Qt::RightButton);
-				m_Drawing = true;
-			}
-		}
-
-		virtual void mouseMoveEvent(Canvas* canvas, QMouseEvent* event) override
-		{
-			if (!m_Drawing)
-				return;
-
-			if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
-				draw(canvas, event->pos(), event->buttons() & Qt::RightButton);
-		}
-
-		virtual void mouseReleaseEvent(Canvas* canvas, QMouseEvent* event) override
-		{
-			if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
-			{
-				draw(canvas, event->pos(), event->button() == Qt::RightButton);
-				m_Drawing = false;
-			}
-		}
-
-	private:
-		void draw(Canvas* canvas, QPoint endPoint, bool isSecondaryButton) 
+		virtual void draw(Canvas* canvas, const QPoint& endPoint, bool isSecondaryButton) override
 		{
 			if (!canvas)
 				return;
@@ -50,15 +22,12 @@ namespace alp
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
 
 			QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
-			painter.setPen(QPen(usedColor, pencilWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
+			painter.setPen(QPen(usedColor, pencilWidth, pencilStyle, Qt::PenCapStyle::SquareCap));
 
-			auto point = getLayerPoint(canvas, endPoint);			
+			auto point = getLayerPoint(canvas, endPoint);
 			painter.drawPoint(point);
-			
+
 			canvas->update();
 		}
-
-	private:
-		bool m_Drawing = false;
 	};
 }

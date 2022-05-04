@@ -7,7 +7,7 @@
 
 namespace alp
 {
-	class EllipseTool : public Tool
+	/*class EllipseTool : public Tool
 	{
 	public:
 		EllipseTool() : Tool("ellipse") { }
@@ -69,5 +69,5 @@ namespace alp
 		QPixmap m_PixmapCopy;
 		QPointF m_StartPoint;
 		bool m_Drawing = false;
-	};
+	};*/
 }

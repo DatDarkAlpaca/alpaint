@@ -16,6 +16,11 @@ namespace alp
 
 		void resetCanvasTransform();
 
+	public slots:
+		void onUndo();
+
+		void onRedo();
+
 	public:
 		void setCurrentLayerPixmap(const QPixmap& pixmap) { m_Pixmap = pixmap; }
 
@@ -49,7 +54,12 @@ namespace alp
 		void wheelEvent(QWheelEvent* event) override;
 
 	private:
-		QPixmap m_Background, m_Pixmap;
+		void saveDrawCommand();
+
+	private:
+		QPixmap m_Background, m_Pixmap, m_OldPixmap;
+		bool m_Drawing = false, m_DrawingShape = false;
+		QUndoStack* m_UndoStack;
 		QSize m_Size;
 
 	private:

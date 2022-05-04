@@ -1,23 +1,33 @@
 #pragma once
 #include "pch.h"
+#include "Constants.h"
 
 namespace alp
 {
 	class Canvas;
 
-	class Tool
+	class Tool : public QPen
 	{
 	public:
-		Tool(const std::string& name) : name(name) { }
+		Tool(ToolType type) : type(type) { }
+		virtual ~Tool() = default;
 
 	public:
-		virtual void mousePressEvent(Canvas* canvas, QMouseEvent* event) = 0;
-
-		virtual void mouseMoveEvent(Canvas* canvas, QMouseEvent* event) = 0;
-
-		virtual void mouseReleaseEvent(Canvas* canvas, QMouseEvent* event) = 0;
+		Tool& operator=(const Tool&) = delete;
+		Tool(const Tool&) = delete;
+		
+	public:
+		virtual void setStartPoint(const QPoint& point) { startPoint = point; }
+	
+		virtual void setEndPoint(const QPoint& point) { endPoint = point; }
 
 	public:
-		std::string name;
+		virtual void draw(Canvas* canvas, const QPoint& endPoint, bool isSecondaryButton) = 0;
+
+	public:
+		ToolType type;
+
+	protected:
+		QPoint startPoint, endPoint;
 	};
 }

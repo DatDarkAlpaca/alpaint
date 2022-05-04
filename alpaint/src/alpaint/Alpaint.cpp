@@ -26,7 +26,7 @@ void alp::Alpaint::keyPressEvent(QKeyEvent* event)
 
     if (event->key() == Qt::Key_Shift)
     {
-        if (currentTool->name == "pencil")
+        if (currentTool->type == ToolType::Pencil)
             currentTool = tools["line"];
     }
 }
@@ -35,12 +35,12 @@ void alp::Alpaint::keyReleaseEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_Shift)
     {
-        if(currentTool->name == "line")
+        if (currentTool->type == ToolType::Line)
             currentTool = tools["pencil"];
     }
 
     if (m_CanvasWidget)
-        m_CanvasWidget->getCanvas()->keyReleaseEvent(event);    
+        m_CanvasWidget->getCanvas()->keyReleaseEvent(event);
 }
 
 void alp::Alpaint::initializeTools()
@@ -48,8 +48,8 @@ void alp::Alpaint::initializeTools()
     tools["pencil"] = new PencilTool();
     tools["eraser"] = new EraserTool();
     tools["line"] = new LineTool();
-    tools["rect"] = new RectTool();
-    tools["ellipse"] = new EllipseTool();
+    /*tools["rect"] = new RectTool();
+    tools["ellipse"] = new EllipseTool();*/
 
     currentTool = tools["pencil"];
 }
@@ -77,6 +77,22 @@ void alp::Alpaint::connectActions()
         {
             auto canvas = m_CanvasWidget->getCanvas();
             canvas->toggleSanityBackground(!canvas->enabledSanityBackground());
+        }
+    });
+
+    connect(ui.actionUndo, &QAction::triggered, this, [&]() {
+        if (m_CanvasWidget)
+        {
+            auto canvas = m_CanvasWidget->getCanvas();
+            canvas->onUndo();
+        }
+    });
+
+    connect(ui.actionRedo, &QAction::triggered, this, [&]() {
+        if (m_CanvasWidget)
+        {
+            auto canvas = m_CanvasWidget->getCanvas();
+            canvas->onRedo();
         }
     });
 }
