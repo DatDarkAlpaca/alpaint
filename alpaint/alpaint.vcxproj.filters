@@ -92,6 +92,9 @@
     <QtMoc Include="src\toolbar\ColorPicker.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="src\docks\InformationBarDock.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="res\NewFileDialog.ui">

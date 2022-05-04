@@ -11,11 +11,20 @@ alp::Canvas::Canvas(QWidget* parent)
 	m_Background = QPixmap::fromImage(image);
 }
 
-void alp::Canvas::resetCanvas(const QSize& size)
+void alp::Canvas::resetCanvasLayers(const QSize& size)
 {
+	m_Scale = int(std::min(size.width(), size.height()) / 4);
+
 	m_Size = size;
 	m_Pixmap = QPixmap(size);
 	m_Pixmap.fill(Qt::transparent);
+}
+
+void alp::Canvas::resetCanvasTransform()
+{
+	m_Delta = QPointF(0, 0);
+	m_Scale = int(std::min(m_Pixmap.size().width(), m_Pixmap.size().height()) / 4);;
+	update();
 }
 
 void alp::Canvas::mousePressEvent(QMouseEvent* event)

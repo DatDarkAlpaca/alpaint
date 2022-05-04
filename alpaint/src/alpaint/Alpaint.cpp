@@ -21,6 +21,9 @@ void alp::Alpaint::keyPressEvent(QKeyEvent* event)
     if (m_CanvasWidget)
         m_CanvasWidget->getCanvas()->keyPressEvent(event);
 
+    if (event->key() == Qt::Key_Q && m_CanvasWidget)
+        m_CanvasWidget->getCanvas()->resetCanvasTransform();
+
     if (event->key() == Qt::Key_Shift)
     {
         if (currentTool->name == "pencil")

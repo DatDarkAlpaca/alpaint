@@ -14,7 +14,7 @@ namespace alp
 			: QWidget(parent)
 		{
 			ui.setupUi(this);
-			ui.canvas->resetCanvas(size);
+			ui.canvas->resetCanvasLayers(size);
 		}
 
 	public:

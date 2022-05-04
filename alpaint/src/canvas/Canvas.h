@@ -12,9 +12,12 @@ namespace alp
 		Canvas(QWidget* parent = nullptr);
 
 	public:
-		void resetCanvas(const QSize& size);
+		void resetCanvasLayers(const QSize& size);
 
-		void setCurrentLayerPixmap(QPixmap pixmap) { m_Pixmap = pixmap; }
+		void resetCanvasTransform();
+
+	public:
+		void setCurrentLayerPixmap(const QPixmap& pixmap) { m_Pixmap = pixmap; }
 
 		QPixmap* getSelectedPixmap() { return &m_Pixmap; }
 
