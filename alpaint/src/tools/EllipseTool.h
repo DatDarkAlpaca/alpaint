@@ -7,10 +7,10 @@
 
 namespace alp
 {
-	class RectTool : public Tool
+	class EllipseTool : public Tool
 	{
 	public:
-		RectTool() : Tool("rect") { }
+		EllipseTool() : Tool("ellipse") { }
 
 	public:
 		virtual void mousePressEvent(Canvas* canvas, QMouseEvent* event) override
@@ -58,7 +58,7 @@ namespace alp
 			auto point = getLayerPoint(canvas, endPoint);
 
 			if (m_StartPoint != endPoint)
-				painter.drawRect(QRectF(m_StartPoint, point));
+				painter.drawEllipse(QRectF(m_StartPoint, point));
 			else
 				painter.drawPoint(m_StartPoint);
 

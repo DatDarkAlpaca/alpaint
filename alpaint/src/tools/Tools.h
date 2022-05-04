@@ -3,3 +3,4 @@
 #include "EraserTool.h"
 #include "LineTool.h"
 #include "RectTool.h"
+#include "EllipseTool.h"
