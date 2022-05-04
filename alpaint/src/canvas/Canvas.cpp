@@ -87,29 +87,29 @@ void alp::Canvas::keyReleaseEvent(QKeyEvent* event)
 void alp::Canvas::paintEvent(QPaintEvent* event)
 {
 	auto dirtyRect = event->rect();
-	auto scaledRect = m_Pixmap.scaled(m_Size * m_Scale).rect();
+	auto scaledPixmap = m_Pixmap.scaled(m_Size * m_Scale);
 
 	QPainter painter(this);
-	painter.translate(rect().center() - m_Pixmap.rect().center());
+	painter.translate(rect().center());
 	painter.translate(m_Delta);
 
 	painter.setBrush(m_Background);
-	painter.setBrushOrigin(scaledRect.topLeft().x(), scaledRect.topLeft().y());
-	painter.drawRect(scaledRect);
+	painter.setBrushOrigin(scaledPixmap.rect().topLeft());
+	painter.drawRect(scaledPixmap.rect());
 
-	painter.drawPixmap(dirtyRect.topLeft(), m_Pixmap.scaled(m_Size * m_Scale), dirtyRect);
+	painter.drawPixmap(rect().topLeft(), scaledPixmap, scaledPixmap.rect());
 }
 
 void alp::Canvas::wheelEvent(QWheelEvent* event)
 {
-	if (event->angleDelta().y() > 0 && m_Scale <= 16)
+	if (event->angleDelta().y() > 0 && m_Scale - 1 <= 16)
 	{
-		m_Scale *= 2;
+		m_Scale += 1;
 		update();
 	}
-	else if (event->angleDelta().y() < 0 && m_Scale >= 2)
+	else if (event->angleDelta().y() < 0 && m_Scale - 1 >= 1)
 	{
-		m_Scale /= 2;
+		m_Scale -= 1;
 		update();
 	}
 }

@@ -45,12 +45,8 @@ namespace alp
 			QPainter painter(canvas->getSelectedPixmap());
 			painter.setCompositionMode(QPainter::CompositionMode_Clear);
 
-			adjustPainterPosition(*canvas->getSelectedPixmap(), canvas->getScale(), canvas->rect(), canvas->getDelta(), &painter);
-
-			auto x = std::floor(endPoint.x() / canvas->getScale());
-			auto y = std::floor(endPoint.y() / canvas->getScale());
-
-			painter.eraseRect(QRect(x, y, pencilWidth, pencilWidth));
+			auto point = (endPoint - canvas->rect().center() - canvas->getDelta()) / canvas->getScale();
+			painter.eraseRect(QRect(point.x(), point.y(), pencilWidth, pencilWidth));
 
 			canvas->update();
 		}

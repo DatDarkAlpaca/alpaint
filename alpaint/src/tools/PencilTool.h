@@ -48,12 +48,8 @@ namespace alp
 			QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
 			painter.setPen(QPen(usedColor, pencilWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
 
-			adjustPainterPosition(*canvas->getSelectedPixmap(), canvas->getScale(), canvas->rect(), canvas->getDelta(), &painter);
-
-			auto x = std::floor(endPoint.x() / canvas->getScale());
-			auto y = std::floor(endPoint.y() / canvas->getScale());
-
-			painter.drawPoint(x, y);
+			auto point = (endPoint - canvas->rect().center() - canvas->getDelta()) / canvas->getScale();
+			painter.drawPoint(point);
 			
 			canvas->update();
 		}
