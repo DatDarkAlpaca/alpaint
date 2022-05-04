@@ -1,7 +1,8 @@
 #pragma once
 #include "pch.h"
-#include "Tool.h"
 #include "Data.h"
+#include "Tool.h"
+#include "ToolUtils.h"
 #include "canvas/Canvas.h"
 
 namespace alp
@@ -48,7 +49,7 @@ namespace alp
 			QPainter painter(canvas->getSelectedPixmap());
 			painter.setCompositionMode(QPainter::CompositionMode_Clear);
 
-			auto point = (endPoint - canvas->rect().center() - canvas->getDelta()) / canvas->getScale();
+			auto point = getLayerPoint(canvas, endPoint);
 			painter.eraseRect(QRect(point.x(), point.y(), pencilWidth, pencilWidth));
 
 			canvas->update();

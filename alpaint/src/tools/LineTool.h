@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "Data.h"
 #include "Tool.h"
+#include "ToolUtils.h"
 #include "canvas/Canvas.h"
 
 namespace alp
@@ -43,7 +44,7 @@ namespace alp
 		}
 
 	private:
-		void draw(Canvas* canvas, QPointF endPoint, bool isSecondaryButton)
+		void draw(Canvas* canvas, QPoint endPoint, bool isSecondaryButton)
 		{
 			if (!canvas)
 				return;
@@ -54,9 +55,8 @@ namespace alp
 			QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
 			painter.setPen(QPen(usedColor, pencilWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
 
-			endPoint = (endPoint - canvas->rect().center() - canvas->getDelta()) / canvas->getScale();
-			
-			painter.drawLine(m_StartPoint, endPoint);
+			auto point = getLayerPoint(canvas, endPoint);
+			painter.drawLine(m_StartPoint, point);
 
 			canvas->update();
 		}

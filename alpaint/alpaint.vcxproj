@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Data.h" />
+    <ClInclude Include="src\tools\ToolUtils.h" />
     <QtMoc Include="src\docks\InformationBarDock.h" />
     <ClInclude Include="src\tools\EraserTool.h" />
     <ClInclude Include="src\tools\LineTool.h" />

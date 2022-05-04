@@ -1,7 +1,8 @@
 #pragma once
 #include "pch.h"
-#include "Tool.h"
 #include "Data.h"
+#include "Tool.h"
+#include "ToolUtils.h"
 #include "canvas/Canvas.h"
 
 namespace alp
@@ -51,8 +52,8 @@ namespace alp
 			QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
 			painter.setPen(QPen(usedColor, pencilWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
 
-			auto point = (endPoint - canvas->rect().center() - canvas->getDelta()) / canvas->getScale();
-			painter.drawPoint(point);
+			auto pointF = getLayerPoint(canvas, endPoint);
+			painter.drawPoint(pointF);
 			
 			canvas->update();
 		}

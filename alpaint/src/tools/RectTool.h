@@ -16,7 +16,7 @@ namespace alp
 		{
 			if (event->buttons() & (Qt::LeftButton | Qt::RightButton))
 			{
-				m_StartPoint = (event->pos() - canvas->rect().center() - canvas->getDelta()) / canvas->getScale();
+				m_StartPoint = getLayerPoint(canvas, event->pos());
 				m_PixmapCopy = *canvas->getSelectedPixmap();
 				m_Drawing = true;
 			}
@@ -43,7 +43,7 @@ namespace alp
 		}
 
 	private:
-		void draw(Canvas* canvas, QPointF endPoint, bool isSecondaryButton)
+		void draw(Canvas* canvas, QPoint endPoint, bool isSecondaryButton)
 		{
 			if (!canvas)
 				return;
@@ -54,13 +54,10 @@ namespace alp
 			QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
 			painter.setPen(QPen(usedColor, pencilWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
 
-			endPoint = (endPoint - canvas->rect().center() - canvas->getDelta()) / canvas->getScale();
+			auto point = getLayerPoint(canvas, endPoint);
 
 			if (m_StartPoint != endPoint)
-			{
-				QPointF fixedPoint = QPoint(endPoint.x() - 1, endPoint.y() - 1);
-				painter.drawRect(QRectF(m_StartPoint, fixedPoint));
-			}
+				painter.drawRect(QRectF(m_StartPoint, point));
 			else
 				painter.drawPoint(m_StartPoint);
 
