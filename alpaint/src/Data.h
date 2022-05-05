@@ -18,4 +18,6 @@ namespace alp
 
 		currentTool = tools[name];
 	}
+
+	inline bool enableGrid = true, enableSanityBackground = true;
 }

@@ -52,13 +52,13 @@ void alp::Alpaint::initializeTools()
     tools["ellipse"] = new EllipseTool();
     tools["fill"] = new FillTool();
 
-    currentTool = tools["fill"];
+    currentTool = tools["pencil"];
 }
 
 void alp::Alpaint::connectTools()
 {
     connect(ui.pencilButton,  &QToolButton::clicked, this, [&]() { setTool("pencil");  });
-    connect(ui.eraserButton,  &QToolButton::clicked, this, [&]() { setTool("fill");  });
+    connect(ui.eraserButton,  &QToolButton::clicked, this, [&]() { setTool("eraser");  });
     connect(ui.rectButton,    &QToolButton::clicked, this, [&]() { setTool("rect");    });
     connect(ui.ellipseButton, &QToolButton::clicked, this, [&]() { setTool("ellipse"); });
 }
@@ -67,18 +67,10 @@ void alp::Alpaint::connectActions()
 {
     connect(ui.actionNew, &QAction::triggered, this, &Alpaint::newFileAction);
     connect(ui.actionShowPixelGrid, &QAction::triggered, this, [&]() {
-        if (m_CanvasWidget)
-        {
-            auto canvas = m_CanvasWidget->getCanvas();
-            canvas->togglePixelGrid(!canvas->enabledPixelGrid());
-        }
+        enableGrid = !enableGrid;
     });
     connect(ui.actionShowBackground, &QAction::triggered, this, [&]() {
-        if (m_CanvasWidget)
-        {
-            auto canvas = m_CanvasWidget->getCanvas();
-            canvas->toggleSanityBackground(!canvas->enabledSanityBackground());
-        }
+        enableSanityBackground = !enableSanityBackground;
     });
 
     connect(ui.actionUndo, &QAction::triggered, this, [&]() {

@@ -26,14 +26,6 @@ namespace alp
 
 		QPixmap* getSelectedPixmap() { return &m_Pixmap; }
 
-		void togglePixelGrid(bool enable) { m_EnableGrid = enable; }
-
-		bool enabledPixelGrid() { return m_EnableGrid; }
-
-		void toggleSanityBackground(bool enable) { m_EnableSanityBackground = enable; }
-
-		bool enabledSanityBackground() { return m_EnableSanityBackground; }
-
 		qreal getScale() const { return m_Scale; }
 
 		QPointF getDelta() const { return m_Delta; }
@@ -68,8 +60,5 @@ namespace alp
 		QRectF m_Rect;
 
 		bool m_Panning = false;
-
-	private:
-		bool m_EnableGrid = true, m_EnableSanityBackground = true;
 	};
 }

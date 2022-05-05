@@ -21,7 +21,7 @@ void alp::Canvas::resetCanvasLayers(const QSize& size)
 
 	m_Size = size;
 	m_Pixmap = QPixmap(size);
-	m_Pixmap.fill(Qt::red);
+	m_Pixmap.fill(Qt::transparent);
 }
 
 void alp::Canvas::resetCanvasTransform()
@@ -162,14 +162,14 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 	painter.translate(rect().center());
 	painter.translate(m_Delta);
 
-	if (m_EnableSanityBackground)
+	if (enableSanityBackground)
 	{
 		painter.setBrush(m_Background);
 		painter.setBrushOrigin(scaledPixmap.rect().topLeft());
 		painter.drawRect(scaledPixmap.rect());
 	}
 	
-	if (m_EnableGrid && m_Scale > 2)
+	if (enableGrid && m_Scale > 2)
 	{
 		QPen pen(QColor(100, 100, 100, 50), 0);
 		pen.setCosmetic(true);
