@@ -2,7 +2,6 @@
 #include "pch.h"
 #include "Data.h"
 #include "Tool.h"
-#include "ToolUtils.h"
 #include "canvas/Canvas.h"
 
 namespace alp
@@ -13,23 +12,15 @@ namespace alp
 		LineTool() : Tool(ToolType::Line) { }
 
 	public:
-		virtual void draw(Canvas* canvas, const QPoint&, bool isSecondaryButton) override
+		virtual void draw(QPixmap& pixmap, const QPoint&, bool isSecondaryButton) override
 		{
-			if (!canvas)
-				return;
-
-			QPainter painter(canvas->getSelectedPixmap());
+			QPainter painter(&pixmap);
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
 
 			QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
 			painter.setPen(QPen(usedColor, pencilWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
 
-			auto fixedStartPoint = getLayerPoint(canvas, startPoint);
-			auto fixedEndPoint = getLayerPoint(canvas, this->endPoint);
-
-			painter.drawLine(fixedStartPoint, fixedEndPoint);
-
-			canvas->update();
+			painter.drawLine(startPoint, this->endPoint);
 		}
 	};
 }

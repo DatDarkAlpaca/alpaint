@@ -3,13 +3,13 @@
 
 namespace alp
 {
-	inline QPointF getLayerPoint(Canvas* canvas, QPoint point)
+	inline QPoint getLayerPoint(const QPoint& point, const QRect& canvasRect, const QPointF& delta, qreal scale)
 	{
-		auto result = (point - canvas->rect().center() - canvas->getDelta()) / canvas->getScale();
+		auto result = (point - canvasRect.center() - delta) / scale;
 		result.setX(std::ceil(result.x()) - 1);
 		result.setY(std::ceil(result.y()) - 1);
 
-		return result;
+		return result.toPoint();
 	}
 
 	inline bool isValid(std::vector<QPoint>&& visited, const QSize& pixmapSize, const QPoint& point)
@@ -27,9 +27,9 @@ namespace alp
 		return true;
 	}
 
-	inline void fill(const QPoint& point, QRgb oldColor, QPainter& painter, Canvas* canvas)
+	inline void fill(const QPoint& point, QRgb oldColor, QPainter& painter, QPixmap& pixmap)
 	{
-		QImage image = canvas->getSelectedPixmap()->toImage();
+		QImage image = pixmap.toImage();
 
 		std::vector<QPoint> visited;
 
@@ -41,7 +41,7 @@ namespace alp
 			auto currentPos = queue.front();
 			queue.pop_front();
 
-			if (!isValid(std::move(visited), canvas->getSelectedPixmap()->size(), currentPos))
+			if (!isValid(std::move(visited), pixmap.size(), currentPos))
 				continue;
 
 			if (image.pixel(currentPos) == oldColor)

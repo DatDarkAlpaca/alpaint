@@ -2,7 +2,6 @@
 #include "pch.h"
 #include "Data.h"
 #include "Tool.h"
-#include "ToolUtils.h"
 #include "canvas/Canvas.h"
 
 namespace alp
@@ -13,21 +12,15 @@ namespace alp
 		PencilTool() : Tool(ToolType::Pencil) { }
 
 	public:
-		virtual void draw(Canvas* canvas, const QPoint& endPoint, bool isSecondaryButton) override
+		virtual void draw(QPixmap& pixmap, const QPoint& endPoint, bool isSecondaryButton) override
 		{
-			if (!canvas)
-				return;
-
-			QPainter painter(canvas->getSelectedPixmap());
+			QPainter painter(&pixmap);
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
 
 			QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
 			painter.setPen(QPen(usedColor, pencilWidth, pencilStyle, Qt::PenCapStyle::SquareCap));
 
-			auto point = getLayerPoint(canvas, endPoint);
-			painter.drawPoint(point);
-
-			canvas->update();
+			painter.drawPoint(endPoint);
 		}
 	};
 }

@@ -2,7 +2,6 @@
 #include "pch.h"
 #include "Data.h"
 #include "Tool.h"
-#include "ToolUtils.h"
 #include "canvas/Canvas.h"
 
 namespace alp
@@ -13,18 +12,12 @@ namespace alp
 		EraserTool() : Tool(ToolType::Eraser) { }
 
 	public:
-		virtual void draw(Canvas* canvas, const QPoint& endPoint, bool isSecondaryButton) override
+		virtual void draw(QPixmap& pixmap, const QPoint& endPoint, bool isSecondaryButton) override
 		{
-			if (!canvas)
-				return;
-
-			QPainter painter(canvas->getSelectedPixmap());
+			QPainter painter(&pixmap);
 			painter.setCompositionMode(QPainter::CompositionMode_Clear);
 
-			auto point = getLayerPoint(canvas, endPoint);
-			painter.eraseRect(QRect(point.x(), point.y(), pencilWidth, pencilWidth));
-
-			canvas->update();
+			painter.eraseRect(QRect(endPoint.x(), endPoint.y(), pencilWidth, pencilWidth));
 		}
 	};
 }

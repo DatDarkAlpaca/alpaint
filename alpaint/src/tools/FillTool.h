@@ -13,25 +13,18 @@ namespace alp
 		FillTool() : Tool(ToolType::Fill) { }
 
 	public:
-		virtual void draw(Canvas* canvas, const QPoint& endPoint, bool isSecondaryButton) override
+		virtual void draw(QPixmap& pixmap, const QPoint& endPoint, bool isSecondaryButton) override
 		{
-			if (!canvas)
-				return;
-
-			QPainter painter(canvas->getSelectedPixmap());
+			QPainter painter(&pixmap);
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
 
 			QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
 			painter.setPen(QPen(usedColor, pencilWidth, pencilStyle, Qt::PenCapStyle::SquareCap));
 
-			auto fixedEndPoint = getLayerPoint(canvas, endPoint);
-			
-			QRgb oldColor(canvas->getSelectedPixmap()->toImage().pixel(fixedEndPoint.toPoint()));
+			QRgb oldColor(pixmap.toImage().pixel(endPoint));
 	
 			if (usedColor.rgb() != oldColor)
-				fill(fixedEndPoint.toPoint(), oldColor, painter, canvas);
-
-			canvas->update();
+				fill(endPoint, oldColor, painter, pixmap);
 		}
 	};
 }

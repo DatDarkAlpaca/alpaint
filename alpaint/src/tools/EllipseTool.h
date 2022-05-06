@@ -2,7 +2,6 @@
 #include "pch.h"
 #include "Data.h"
 #include "Tool.h"
-#include "ToolUtils.h"
 #include "canvas/Canvas.h"
 
 namespace alp
@@ -13,26 +12,18 @@ namespace alp
 		EllipseTool() : Tool(ToolType::Ellipse) { }
 
 	public:
-		virtual void draw(Canvas* canvas, const QPoint& endPoint, bool isSecondaryButton) override
+		virtual void draw(QPixmap& pixmap, const QPoint& endPoint, bool isSecondaryButton) override
 		{
-			if (!canvas)
-				return;
-
-			QPainter painter(canvas->getSelectedPixmap());
+			QPainter painter(&pixmap);
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
 
 			QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
 			painter.setPen(QPen(usedColor, pencilWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
 
-			auto fixedStartPoint = getLayerPoint(canvas, startPoint);
-			auto fixedEndPoint = getLayerPoint(canvas, endPoint);
-
 			if (startPoint != endPoint)
-				painter.drawEllipse(QRectF(fixedStartPoint, fixedEndPoint));
+				painter.drawEllipse(QRectF(startPoint, endPoint));
 			else
-				painter.drawPoint(fixedStartPoint);
-
-			canvas->update();
+				painter.drawPoint(startPoint);
 		}
 	};
 }
