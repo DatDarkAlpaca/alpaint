@@ -6,8 +6,10 @@ namespace alp
 {
 	class Canvas;
 
-	class Tool : public QPen
+	class Tool : public QObject
 	{
+		Q_OBJECT
+
 	public:
 		Tool(ToolType type) : type(type) { }
 		virtual ~Tool() = default;
