@@ -68,10 +68,12 @@ void alp::Alpaint::initializeTools()
 
 void alp::Alpaint::connectTools()
 {
-    connect(ui.pencilButton,  &QToolButton::clicked, this, [&]() { setTool("pencil");  });
-    connect(ui.eraserButton,  &QToolButton::clicked, this, [&]() { setTool("picker");  });
-    connect(ui.rectButton,    &QToolButton::clicked, this, [&]() { setTool("rect");    });
-    connect(ui.ellipseButton, &QToolButton::clicked, this, [&]() { setTool("ellipse"); });
+    connect(ui.pencilButton,      &QToolButton::clicked, this, [&]() { setTool("pencil");  });
+    connect(ui.eraserButton,      &QToolButton::clicked, this, [&]() { setTool("eraser");  });
+    connect(ui.rectButton,        &QToolButton::clicked, this, [&]() { setTool("rect");    });
+    connect(ui.ellipseButton,     &QToolButton::clicked, this, [&]() { setTool("ellipse"); });
+    connect(ui.colorPickerButton, &QToolButton::clicked, this, [&]() { setTool("picker");  });
+    connect(ui.fillButton,        &QToolButton::clicked, this, [&]() { setTool("fill");    });
 
     connect(tools["picker"], &Tool::colorUpdated, this, [&]() {
         ui.primaryColor->updatePanelColors();
