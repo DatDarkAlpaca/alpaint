@@ -73,10 +73,12 @@ void alp::Alpaint::connectActions()
     connect(ui.actionResizeCanvas, &QAction::triggered, this, &Alpaint::resizeCanvasAction);
 
     connect(ui.actionShowPixelGrid, &QAction::triggered, this, [&]() {
-        enableGrid = !enableGrid;
+        if (m_CanvasWidget)
+            m_CanvasWidget->getCanvas()->toggleGrid();
     });
     connect(ui.actionShowBackground, &QAction::triggered, this, [&]() {
-        enableSanityBackground = !enableSanityBackground;
+        if (m_CanvasWidget)
+            m_CanvasWidget->getCanvas()->toggleBackground();
     });
 
     connect(ui.actionUndo, &QAction::triggered, this, [&]() {

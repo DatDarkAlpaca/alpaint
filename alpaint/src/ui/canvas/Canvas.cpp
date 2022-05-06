@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "Data.h"
 #include "Canvas.h"
 #include "ToolHandler.h"
 #include "tools/ToolUtils.h"
@@ -13,8 +12,9 @@ alp::Canvas::Canvas(QWidget* parent)
 	QImage image("res/background-sanity.png");
 	m_Background = QPixmap::fromImage(image);
 
-	m_UndoStack = new QUndoStack();
-	m_UndoStack->setUndoLimit(100);
+	loadSettings();
+
+	initializeUndoStack();
 }
 
 void alp::Canvas::resetCanvasLayers(const QSize& size)
@@ -190,14 +190,14 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 	painter.translate(rect().center());
 	painter.translate(m_Delta);
 
-	if (enableSanityBackground)
+	if (m_EnableSanityBackground)
 	{
 		painter.setBrush(m_Background);
 		painter.setBrushOrigin(scaledPixmap.rect().topLeft());
 		painter.drawRect(scaledPixmap.rect());
 	}
 	
-	if (enableGrid && m_Scale > 2)
+	if (m_EnableGrid && m_Scale > 2)
 	{
 		QPen pen(QColor(100, 100, 100, 50), 0);
 		pen.setCosmetic(true);
@@ -209,7 +209,7 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 		for (int y = 0; y < scaledPixmap.height(); y += m_Scale)
 			painter.drawRect(0, y, scaledPixmap.height(), 0);
 	}
-
+	
 	painter.drawPixmap(rect().topLeft(), scaledPixmap, scaledPixmap.rect());
 }
 
@@ -227,8 +227,24 @@ void alp::Canvas::wheelEvent(QWheelEvent* event)
 	}
 }
 
+void alp::Canvas::initializeUndoStack()
+{
+	m_UndoStack = new QUndoStack();
+	m_UndoStack->setUndoLimit(m_UndoLimit);
+}
+
 void alp::Canvas::saveDrawCommand()
 {
 	DrawCommand* command = new DrawCommand(m_OldPixmap, &m_Pixmap);
 	m_UndoStack->push(command);
+}
+
+void alp::Canvas::loadSettings()
+{
+	QSettings settings;
+	settings.beginGroup("canvas");
+	m_EnableGrid = settings.value("enableGrid", false).toBool();
+	m_EnableSanityBackground = settings.value("enableBackground", false).toBool();
+	m_UndoLimit = settings.value("undoLimit", 100).toInt();
+	settings.endGroup();
 }

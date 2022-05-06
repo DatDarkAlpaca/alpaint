@@ -18,6 +18,25 @@ namespace alp
 
 		void resizeCanvas(const QSize& size);
 
+	public:
+		void toggleGrid()
+		{
+			QSettings settings;
+			m_EnableGrid = !m_EnableGrid;
+			settings.beginGroup("canvas");
+			settings.setValue("enableGrid", m_EnableGrid);
+			settings.endGroup();
+		}
+
+		void toggleBackground()
+		{
+			QSettings settings;
+			m_EnableSanityBackground = !m_EnableSanityBackground;
+			settings.beginGroup("canvas");
+			settings.setValue("enableBackground", m_EnableSanityBackground);
+			settings.endGroup();
+		}
+
 	public slots:
 		void onUndo();
 
@@ -48,7 +67,11 @@ namespace alp
 		void wheelEvent(QWheelEvent* event) override;
 
 	private:
+		void initializeUndoStack();
+
 		void saveDrawCommand();
+
+		void loadSettings();
 
 	private:
 		QPixmap m_Background, m_Pixmap, m_OldPixmap;
@@ -62,5 +85,9 @@ namespace alp
 		QRectF m_Rect;
 
 		bool m_Panning = false;
+
+	private:
+		bool m_EnableGrid, m_EnableSanityBackground;
+		int m_UndoLimit;
 	};
 }

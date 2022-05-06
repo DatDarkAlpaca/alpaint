@@ -1,6 +1,5 @@
 #pragma once
 #include "pch.h"
-#include "Data.h"
 #include "ui_Alpaint.h"
 #include "tools/Tools.h"
 #include "canvas/CanvasWidget.h"
