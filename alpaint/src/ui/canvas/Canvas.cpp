@@ -14,7 +14,7 @@ alp::Canvas::Canvas(QWidget* parent)
 	m_Background = QPixmap::fromImage(image);
 
 	m_UndoStack = new QUndoStack();
-	m_UndoStack->setUndoLimit(UndoLimit);
+	m_UndoStack->setUndoLimit(100);
 }
 
 void alp::Canvas::resetCanvasLayers(const QSize& size)
