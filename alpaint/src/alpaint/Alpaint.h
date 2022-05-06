@@ -4,7 +4,9 @@
 #include "ui_Alpaint.h"
 #include "tools/Tools.h"
 #include "canvas/CanvasWidget.h"
+
 #include "dialogs/NewFileDialog.h"
+#include "dialogs/ResizeCanvasDialog.h"
 
 namespace alp
 {
@@ -30,6 +32,8 @@ namespace alp
 
     private:
         void newFileAction();
+
+        void resizeCanvasAction();
 
     private:
         CanvasWidget* m_CanvasWidget = nullptr;

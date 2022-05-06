@@ -32,6 +32,23 @@ void alp::Canvas::resetCanvasTransform()
 	update();
 }
 
+void alp::Canvas::resizeCanvas(const QSize& size)
+{
+	QPixmap copy = m_Pixmap.copy();
+
+	m_Size = size;
+	m_Pixmap = QPixmap(size);
+	m_Pixmap.fill(Qt::transparent);
+
+	QPainter painter(&m_Pixmap);
+	painter.setPen(Qt::NoPen);
+	painter.setBrush(copy);
+	painter.setBrushOrigin(m_Pixmap.rect().topLeft());
+	painter.drawRect(copy.rect());
+
+	resetCanvasTransform();
+}
+
 void alp::Canvas::onUndo()
 {
 	if (!m_UndoStack->canUndo())
@@ -186,7 +203,7 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 		painter.setPen(pen);
 
 		for (int x = 0; x < scaledPixmap.width(); x += m_Scale)
-			painter.drawRect(x, 0, 0, scaledPixmap.height());
+			painter.drawRect(x, 0, 0, scaledPixmap.width());
 
 		for (int y = 0; y < scaledPixmap.height(); y += m_Scale)
 			painter.drawRect(0, y, scaledPixmap.height(), 0);

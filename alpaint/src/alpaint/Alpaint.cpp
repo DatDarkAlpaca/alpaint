@@ -84,6 +84,8 @@ void alp::Alpaint::connectTools()
 void alp::Alpaint::connectActions()
 {
     connect(ui.actionNew, &QAction::triggered, this, &Alpaint::newFileAction);
+    connect(ui.actionResizeCanvas, &QAction::triggered, this, &Alpaint::resizeCanvasAction);
+
     connect(ui.actionShowPixelGrid, &QAction::triggered, this, [&]() {
         enableGrid = !enableGrid;
     });
@@ -124,4 +126,21 @@ void alp::Alpaint::newFileAction()
     m_CanvasWidget = new CanvasWidget(this, size);
 
     ui.centralWidget->layout()->addWidget(m_CanvasWidget);
+}
+
+void alp::Alpaint::resizeCanvasAction()
+{
+    if (!m_CanvasWidget)
+        return;
+
+    auto canvas = m_CanvasWidget->getCanvas();
+    auto pixmap = canvas->getSelectedPixmap();
+
+    ResizeCanvasDialog dialog(this, pixmap->width(), pixmap->height());
+
+    if (!dialog.exec())
+        return;
+
+    QSize size{ dialog.width, dialog.height };
+    canvas->resizeCanvas(size);
 }

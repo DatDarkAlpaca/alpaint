@@ -75,7 +75,14 @@
     <addaction name="actionShowPixelGrid"/>
     <addaction name="actionShowBackground"/>
    </widget>
+   <widget class="QMenu" name="menuDocument">
+    <property name="title">
+     <string>Document</string>
+    </property>
+    <addaction name="actionResizeCanvas"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuDocument"/>
    <addaction name="menuView"/>
   </widget>
   <widget class="alp::ToolBarDock" name="toolBar">
@@ -414,6 +421,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionResizeCanvas">
+   <property name="text">
+    <string>Resize canvas...</string>
    </property>
   </action>
  </widget>

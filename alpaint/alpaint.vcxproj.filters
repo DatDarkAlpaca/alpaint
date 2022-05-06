@@ -113,12 +113,18 @@
     <QtMoc Include="src\tools\Tool.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="src\dialogs\ResizeCanvasDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="res\NewFileDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="res\CanvasWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="res\ResizeCanvasDialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

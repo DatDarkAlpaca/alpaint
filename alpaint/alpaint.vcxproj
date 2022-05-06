@@ -127,10 +127,12 @@
     <ClCompile Include="src\main.cpp" />
     <QtUic Include="res\CanvasWidget.ui" />
     <QtUic Include="res\NewFileDialog.ui" />
+    <QtUic Include="res\ResizeCanvasDialog.ui" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\Data.h" />
+    <QtMoc Include="src\dialogs\ResizeCanvasDialog.h" />
     <ClInclude Include="src\tools\ColorPickerTool.h" />
     <ClInclude Include="src\tools\DrawCommand.h" />
     <ClInclude Include="src\tools\EllipseTool.h" />

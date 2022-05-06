@@ -16,6 +16,8 @@ namespace alp
 
 		void resetCanvasTransform();
 
+		void resizeCanvas(const QSize& size);
+
 	public slots:
 		void onUndo();
 
