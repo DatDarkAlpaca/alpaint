@@ -3,7 +3,6 @@
 #include "Data.h"
 #include "Tool.h"
 #include "ToolUtils.h"
-#include "canvas/Canvas.h"
 
 namespace alp
 {
