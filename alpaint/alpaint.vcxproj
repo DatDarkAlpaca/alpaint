@@ -57,12 +57,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir);$(ProjectDir)src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)src;$(ProjectDir)src/ui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
-    <IncludePath>$(ProjectDir);$(ProjectDir)src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir);$(ProjectDir)src;$(ProjectDir)src/ui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -113,8 +113,9 @@
   <ItemGroup>
     <QtRcc Include="res\Alpaint.qrc" />
     <QtUic Include="res\Alpaint.ui" />
-    <QtMoc Include="src\alpaint\Alpaint.h" />
-    <ClCompile Include="src\canvas\Canvas.cpp" />
+    <QtMoc Include="src\ui\alpaint\Alpaint.h" />
+    <ClCompile Include="src\ToolHandler.cpp" />
+    <ClCompile Include="src\ui\canvas\Canvas.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -123,7 +124,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="src\alpaint\Alpaint.cpp" />
+    <ClCompile Include="src\ui\alpaint\Alpaint.cpp" />
     <ClCompile Include="src\main.cpp" />
     <QtUic Include="res\CanvasWidget.ui" />
     <QtUic Include="res\NewFileDialog.ui" />
@@ -132,24 +133,26 @@
   <ItemGroup>
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\Data.h" />
-    <QtMoc Include="src\dialogs\ResizeCanvasDialog.h" />
+    <QtMoc Include="src\ui\dialogs\ResizeCanvasDialog.h" />
+    <ClInclude Include="src\ToolHandler.h" />
     <ClInclude Include="src\tools\ColorPickerTool.h" />
     <ClInclude Include="src\tools\DrawCommand.h" />
     <ClInclude Include="src\tools\EllipseTool.h" />
     <ClInclude Include="src\tools\FillTool.h" />
+    <ClInclude Include="src\tools\ToolType.h" />
     <ClInclude Include="src\tools\ToolUtils.h" />
-    <QtMoc Include="src\docks\InformationBarDock.h" />
+    <QtMoc Include="src\ui\docks\InformationBarDock.h" />
     <ClInclude Include="src\tools\EraserTool.h" />
     <ClInclude Include="src\tools\LineTool.h" />
     <ClInclude Include="src\tools\PencilTool.h" />
     <ClInclude Include="src\tools\RectTool.h" />
     <QtMoc Include="src\tools\Tool.h" />
     <ClInclude Include="src\tools\Tools.h" />
-    <QtMoc Include="src\toolbar\ColorPicker.h" />
-    <QtMoc Include="src\canvas\Canvas.h" />
-    <QtMoc Include="src\dialogs\NewFileDialog.h" />
-    <QtMoc Include="src\docks\ToolBarDock.h" />
-    <QtMoc Include="src\canvas\CanvasWidget.h" />
+    <QtMoc Include="src\ui\toolbar\ColorPicker.h" />
+    <QtMoc Include="src\ui\canvas\Canvas.h" />
+    <QtMoc Include="src\ui\dialogs\NewFileDialog.h" />
+    <QtMoc Include="src\ui\docks\ToolBarDock.h" />
+    <QtMoc Include="src\ui\canvas\CanvasWidget.h" />
     <ClInclude Include="src\DocumentData.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>

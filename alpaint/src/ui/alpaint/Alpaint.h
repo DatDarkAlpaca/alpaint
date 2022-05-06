@@ -23,8 +23,6 @@ namespace alp
         void keyReleaseEvent(QKeyEvent* event) override;
 
     private:
-        void initializeTools();
-
         void connectTools();
 
     private:

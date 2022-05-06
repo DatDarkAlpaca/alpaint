@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "Data.h"
 #include "Tool.h"
+#include "ToolHandler.h"
 
 namespace alp
 {
@@ -16,9 +17,12 @@ namespace alp
 			auto color = pixmap.toImage().pixelColor(endPoint);
 
 			if (!isSecondaryButton)
-				primaryColor = color;
+				ToolHandler::primaryColor = color;
 			else
-				secondaryColor = color;
+				ToolHandler::secondaryColor = color;
+
+			if (ToolHandler::tools["picker"])
+				ToolHandler::setTool("pencil");
 
 			emit colorUpdated();
 		}

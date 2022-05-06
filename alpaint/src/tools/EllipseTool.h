@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "Data.h"
 #include "Tool.h"
+#include "ToolHandler.h"
 
 namespace alp
 {
@@ -16,8 +17,8 @@ namespace alp
 			QPainter painter(&pixmap);
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
 
-			QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
-			painter.setPen(QPen(usedColor, pencilWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
+			QColor usedColor = isSecondaryButton ? ToolHandler::secondaryColor : ToolHandler::primaryColor;
+			painter.setPen(QPen(usedColor, ToolHandler::pencilWidth, Qt::SolidLine, Qt::PenCapStyle::SquareCap));
 
 			if (startPoint != endPoint)
 				painter.drawEllipse(QRectF(startPoint, endPoint));

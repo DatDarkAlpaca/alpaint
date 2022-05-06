@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "Data.h"
 #include "Canvas.h"
-#include "tools/DrawCommand.h"
+#include "ToolHandler.h"
 #include "tools/ToolUtils.h"
+#include "tools/DrawCommand.h"
 
 alp::Canvas::Canvas(QWidget* parent)
 	: QWidget(parent)
@@ -78,15 +79,15 @@ void alp::Canvas::mousePressEvent(QMouseEvent* event)
 		return;
 	}
 
-	if (!currentTool)
+	if (!ToolHandler::currentTool)
 		return;
 
-	currentTool->setStartPoint(getLayerPoint(event->pos(), rect(), m_Delta, m_Scale));
+	ToolHandler::currentTool->setStartPoint(getLayerPoint(event->pos(), rect(), m_Delta, m_Scale));
 
 	m_OldPixmap = m_Pixmap.copy();
 	m_Drawing = true;
 
-	if (currentTool->type == ToolType::Pencil)
+	if (ToolHandler::currentTool->type == ToolType::Pencil)
 		m_DrawingLine = true;
 
 	update();
@@ -104,28 +105,28 @@ void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 		return;
 	}
 
-	if (!currentTool || !m_Drawing)
+	if (!ToolHandler::currentTool || !m_Drawing)
 		return;
 
 	auto point = getLayerPoint(event->pos(), rect(), m_Delta, m_Scale);
 
-	if (currentTool->type == ToolType::Line)
+	if (ToolHandler::currentTool->type == ToolType::Line)
 	{
 		if (m_DrawingLine)
 		{
-			tools["pencil"]->draw(m_Pixmap, point, event->buttons() & Qt::RightButton);
+			ToolHandler::tools["pencil"]->draw(m_Pixmap, point, event->buttons() & Qt::RightButton);
 			m_OldPixmap = m_Pixmap.copy();
-			currentTool->setStartPoint(point);
+			ToolHandler::currentTool->setStartPoint(point);
 			m_DrawingLine = false;
 		}
 	}
-	if (currentTool->type == ToolType::Line || currentTool->type == ToolType::Ellipse || currentTool->type == ToolType::Rect)
+	if (ToolHandler::currentTool->type == ToolType::Line || ToolHandler::currentTool->type == ToolType::Ellipse || ToolHandler::currentTool->type == ToolType::Rect)
 	{
-		currentTool->setEndPoint(point);
+		ToolHandler::currentTool->setEndPoint(point);
 		m_Pixmap = m_OldPixmap;
 	}
 
-	currentTool->draw(m_Pixmap, point, event->buttons() & Qt::RightButton);
+	ToolHandler::currentTool->draw(m_Pixmap, point, event->buttons() & Qt::RightButton);
 	update();
 }
 
@@ -142,15 +143,15 @@ void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
 		return;
 	}
 
-	if (!currentTool)
+	if (!ToolHandler::currentTool)
 		return;
 
 	auto point = getLayerPoint(event->pos(), rect(), m_Delta, m_Scale);
 
-	if (currentTool->type == ToolType::Line)
-		currentTool->setEndPoint(point);
+	if (ToolHandler::currentTool->type == ToolType::Line)
+		ToolHandler::currentTool->setEndPoint(point);
 
-	currentTool->draw(m_Pixmap, point, event->button() == Qt::RightButton);
+	ToolHandler::currentTool->draw(m_Pixmap, point, event->button() == Qt::RightButton);
 
 	m_Drawing = false;
 

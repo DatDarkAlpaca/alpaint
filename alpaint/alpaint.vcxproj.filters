@@ -29,10 +29,10 @@
     <QtUic Include="res\Alpaint.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtMoc Include="src\alpaint\Alpaint.h">
+    <QtMoc Include="src\ui\alpaint\Alpaint.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClCompile Include="src\alpaint\Alpaint.cpp">
+    <ClCompile Include="src\ui\alpaint\Alpaint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -43,7 +43,10 @@
     <ClCompile Include="src\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\canvas\Canvas.cpp">
+    <ClCompile Include="src\ui\canvas\Canvas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ToolHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -90,30 +93,36 @@
     <ClInclude Include="src\tools\ColorPickerTool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ToolHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tools\ToolType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="src\canvas\Canvas.h">
+    <QtMoc Include="src\ui\canvas\Canvas.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\dialogs\NewFileDialog.h">
+    <QtMoc Include="src\ui\dialogs\NewFileDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\docks\ToolBarDock.h">
+    <QtMoc Include="src\ui\docks\ToolBarDock.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\canvas\CanvasWidget.h">
+    <QtMoc Include="src\ui\canvas\CanvasWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\toolbar\ColorPicker.h">
+    <QtMoc Include="src\ui\toolbar\ColorPicker.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\docks\InformationBarDock.h">
+    <QtMoc Include="src\ui\docks\InformationBarDock.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="src\tools\Tool.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\dialogs\ResizeCanvasDialog.h">
+    <QtMoc Include="src\ui\dialogs\ResizeCanvasDialog.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "Data.h"
 #include "Tool.h"
+#include "ToolHandler.h"
 
 namespace alp
 {
@@ -16,7 +17,7 @@ namespace alp
 			QPainter painter(&pixmap);
 			painter.setCompositionMode(QPainter::CompositionMode_Clear);
 
-			painter.eraseRect(QRect(endPoint.x(), endPoint.y(), pencilWidth, pencilWidth));
+			painter.eraseRect(QRect(endPoint.x(), endPoint.y(), ToolHandler::pencilWidth, ToolHandler::pencilWidth));
 		}
 	};
 }

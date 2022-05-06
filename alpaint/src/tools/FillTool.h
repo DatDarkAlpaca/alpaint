@@ -17,8 +17,8 @@ namespace alp
 			QPainter painter(&pixmap);
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
 
-			QColor usedColor = isSecondaryButton ? secondaryColor : primaryColor;
-			painter.setPen(QPen(usedColor, pencilWidth, pencilStyle, Qt::PenCapStyle::SquareCap));
+			QColor usedColor = isSecondaryButton ? ToolHandler::secondaryColor : ToolHandler::primaryColor;
+			painter.setPen(QPen(usedColor, ToolHandler::pencilWidth, ToolHandler::pencilStyle, Qt::PenCapStyle::SquareCap));
 
 			QRgb oldColor(pixmap.toImage().pixel(endPoint));
 	

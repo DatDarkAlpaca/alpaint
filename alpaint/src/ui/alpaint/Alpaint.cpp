@@ -1,5 +1,6 @@
 ﻿#include "pch.h"
 #include "Alpaint.h"
+#include "ToolHandler.h"
 
 alp::Alpaint::Alpaint(QWidget *parent)
     : QMainWindow(parent)
@@ -11,9 +12,7 @@ alp::Alpaint::Alpaint(QWidget *parent)
 
     connectActions();
 
-    initializeTools();
-
-    connectTools();    
+    connectTools();
 }
 
 void alp::Alpaint::keyPressEvent(QKeyEvent* event)
@@ -23,13 +22,13 @@ void alp::Alpaint::keyPressEvent(QKeyEvent* event)
 
     if (event->key() == Qt::Key_Shift)
     {
-        if (currentTool->type == ToolType::Pencil)
-            currentTool = tools["line"];
+        if (ToolHandler::ToolHandler::currentTool->type == ToolType::Pencil)
+            ToolHandler::setTool("line");
     }
     else if (event->key() == Qt::Key_Alt)
     {
-        if (currentTool->type == ToolType::Pencil)
-            currentTool = tools["picker"];
+        if (ToolHandler::ToolHandler::currentTool->type == ToolType::Pencil)
+            ToolHandler::setTool("picker");
     }
 
     if (m_CanvasWidget)
@@ -40,42 +39,29 @@ void alp::Alpaint::keyReleaseEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_Shift)
     {
-        if (currentTool->type == ToolType::Line)
-            currentTool = tools["pencil"];
+        if (ToolHandler::currentTool->type == ToolType::Line)
+            ToolHandler::setTool("pencil");
     }
     else if (event->key() == Qt::Key_Alt)
     {
-        if (currentTool->type == ToolType::ColorPicker)
-            currentTool = tools["pencil"];
+        if (ToolHandler::currentTool->type == ToolType::ColorPicker)
+            ToolHandler::setTool("pencil");
     }
 
     if (m_CanvasWidget)
         m_CanvasWidget->getCanvas()->keyReleaseEvent(event);
 }
 
-void alp::Alpaint::initializeTools()
-{
-    tools["pencil"] = new PencilTool();
-    tools["eraser"] = new EraserTool();
-    tools["line"] = new LineTool();
-    tools["rect"] = new RectTool();
-    tools["ellipse"] = new EllipseTool();
-    tools["fill"] = new FillTool();
-    tools["picker"] = new ColorPickerTool();
-
-    currentTool = tools["pencil"];
-}
-
 void alp::Alpaint::connectTools()
 {
-    connect(ui.pencilButton,      &QToolButton::clicked, this, [&]() { setTool("pencil");  });
-    connect(ui.eraserButton,      &QToolButton::clicked, this, [&]() { setTool("eraser");  });
-    connect(ui.rectButton,        &QToolButton::clicked, this, [&]() { setTool("rect");    });
-    connect(ui.ellipseButton,     &QToolButton::clicked, this, [&]() { setTool("ellipse"); });
-    connect(ui.colorPickerButton, &QToolButton::clicked, this, [&]() { setTool("picker");  });
-    connect(ui.fillButton,        &QToolButton::clicked, this, [&]() { setTool("fill");    });
+    connect(ui.pencilButton,      &QToolButton::clicked, this, [&]() { ToolHandler::setTool("pencil");  });
+    connect(ui.eraserButton,      &QToolButton::clicked, this, [&]() { ToolHandler::setTool("eraser");  });
+    connect(ui.rectButton,        &QToolButton::clicked, this, [&]() { ToolHandler::setTool("rect");    });
+    connect(ui.ellipseButton,     &QToolButton::clicked, this, [&]() { ToolHandler::setTool("ellipse"); });
+    connect(ui.colorPickerButton, &QToolButton::clicked, this, [&]() { ToolHandler::setTool("picker");  });
+    connect(ui.fillButton,        &QToolButton::clicked, this, [&]() { ToolHandler::setTool("fill");    });
 
-    connect(tools["picker"], &Tool::colorUpdated, this, [&]() {
+    connect(ToolHandler::tools["picker"].get(), &Tool::colorUpdated, this, [&]() {
         ui.primaryColor->updatePanelColors();
         ui.secondaryColor->updatePanelColors();
     });
