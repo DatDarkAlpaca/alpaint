@@ -12,22 +12,33 @@ namespace alp
 		ColorPicker(QWidget* parent)
 			: QFrame(parent) { }
 
+	public:
+		void updatePanelColors()
+		{
+			auto color = objectName() == "primaryColor" ? primaryColor : secondaryColor;
+			QString style = "background-color: rgb(%1, %2, %3);";
+			setStyleSheet(style.arg(color.red()).arg(color.green()).arg(color.blue()));
+		}
+
 	protected:
 		void mousePressEvent(QMouseEvent* event) override
 		{
 			if (event->button() != Qt::LeftButton)
 				return;
 
-			QColor color = QColorDialog::getColor(primaryColor, nullptr, "Select Color");
+			QColor color;
+			if (objectName() == "primaryColor")
+			{
+				color = QColorDialog::getColor(primaryColor, nullptr, "Select Color");
+				primaryColor = color;
+			}
+			else if (objectName() == "primaryColor")
+			{
+				color = QColorDialog::getColor(secondaryColor, nullptr, "Select Color");
+				secondaryColor = color;
+			}
 
-			// Todo: Try something less hacky:
-			if (this->objectName() == "primaryColor")
-				alp::primaryColor = color;
-			else if (this->objectName() == "secondaryColor")
-				alp::secondaryColor = color;
-
-			QString style = "background-color: rgb(%1, %2, %3);";
-			this->setStyleSheet(style.arg(color.red()).arg(color.green()).arg(color.blue()));
+			updatePanelColors();
 		}
 	};
 }

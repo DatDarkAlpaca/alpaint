@@ -18,6 +18,9 @@ namespace alp
 		Tool& operator=(const Tool&) = delete;
 		Tool(const Tool&) = delete;
 		
+	signals:
+		void colorUpdated();
+
 	public:
 		virtual void setStartPoint(const QPoint& point) { startPoint = point; }
 	

@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\Data.h" />
+    <ClInclude Include="src\tools\ColorPickerTool.h" />
     <ClInclude Include="src\tools\DrawCommand.h" />
     <ClInclude Include="src\tools\EllipseTool.h" />
     <ClInclude Include="src\tools\FillTool.h" />
