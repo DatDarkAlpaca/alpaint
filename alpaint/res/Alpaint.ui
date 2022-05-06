@@ -281,11 +281,17 @@
          <property name="text">
           <string>C</string>
          </property>
+         <property name="shortcut">
+          <string>Ctrl+S</string>
+         </property>
         </widget>
        </item>
        <item>
         <widget class="QToolButton" name="fillButton">
          <property name="text">
+          <string>F</string>
+         </property>
+         <property name="shortcut">
           <string>F</string>
          </property>
         </widget>

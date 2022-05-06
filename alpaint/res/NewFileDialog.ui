@@ -55,6 +55,9 @@
        <property name="styleSheet">
         <string notr="true">color:white;</string>
        </property>
+       <property name="maximum">
+        <number>5000</number>
+       </property>
       </widget>
      </item>
     </layout>
@@ -78,6 +81,9 @@
       <widget class="QSpinBox" name="heightSpinBox">
        <property name="styleSheet">
         <string notr="true">color:white;</string>
+       </property>
+       <property name="maximum">
+        <number>5000</number>
        </property>
       </widget>
      </item>
