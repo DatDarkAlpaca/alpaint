@@ -14,14 +14,14 @@ namespace alp
 
 	inline bool isValid(std::vector<QPoint>&& visited, const QSize& pixmapSize, const QPoint& point)
 	{
-		for (const auto visitedPoint : visited)
+		for (const auto& visitedPoint : visited)
 		{
 			if (point == visitedPoint)
 				return false;
 		}
 
-		if (point.x() < 0 || point.x() > pixmapSize.width() ||
-			point.y() < 0 || point.y() > pixmapSize.height())
+		if (point.x() < 0 || point.x() >= pixmapSize.width() ||
+			point.y() < 0 || point.y() >= pixmapSize.height())
 			return false;
 
 		return true;
