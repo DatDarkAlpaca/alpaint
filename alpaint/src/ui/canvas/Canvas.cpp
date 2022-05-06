@@ -204,10 +204,10 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 		painter.setPen(pen);
 
 		for (int x = 0; x < scaledPixmap.width(); x += m_Scale)
-			painter.drawRect(x, 0, 0, scaledPixmap.width());
+			painter.drawRect(x, 0, 0, scaledPixmap.height());
 
 		for (int y = 0; y < scaledPixmap.height(); y += m_Scale)
-			painter.drawRect(0, y, scaledPixmap.height(), 0);
+			painter.drawRect(0, y, scaledPixmap.width(), 0);
 	}
 	
 	painter.drawPixmap(rect().topLeft(), scaledPixmap, scaledPixmap.rect());
