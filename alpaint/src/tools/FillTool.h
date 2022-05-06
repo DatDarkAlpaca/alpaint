@@ -22,8 +22,8 @@ namespace alp
 
 			QRgb oldColor(pixmap.toImage().pixel(endPoint));
 	
-			if (usedColor.rgb() != oldColor)
-				fill(endPoint, oldColor, painter, pixmap);
+			//if (usedColor.rgb() != oldColor)
+			fill(endPoint, oldColor, painter, pixmap);
 		}
 	};
 }

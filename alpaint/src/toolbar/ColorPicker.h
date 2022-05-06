@@ -39,6 +39,9 @@ namespace alp
 			}
 
 			updatePanelColors();
+
+			if(tools["pencil"])
+				currentTool = tools["pencil"];
 		}
 	};
 }
