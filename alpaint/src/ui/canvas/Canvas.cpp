@@ -192,12 +192,11 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 	painter.scale(m_Scale, m_Scale);
 
 	if (m_EnableSanityBackground)
-	{
-		// Play with composition mode.
+	{	
 		painter.setPen(Qt::NoPen);
 		painter.setBrush(m_Background);
 		painter.setBrushOrigin(rect().topLeft());
-		painter.drawRect(rect());
+		painter.drawRect(m_CurrentLayer.rect());
 	}
 	
 	if (m_EnableGrid && m_Scale > 2)
