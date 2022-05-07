@@ -9,8 +9,7 @@ alp::Canvas::Canvas(QWidget* parent, QSize size)
 {
 	setAttribute(Qt::WA_StaticContents);
 
-	QImage image("res/background-sanity.png");
-	m_Background = QPixmap::fromImage(image);
+	m_Background = QImage("res/background-sanity.png");
 
 	resetCanvasLayers(size);
 	resetCanvasTransform();
@@ -25,29 +24,28 @@ void alp::Canvas::resetCanvasLayers(const QSize& size)
 	m_Scale = int(std::min(size.width(), size.height()) / 4);
 
 	m_Size = size;
-	m_Pixmap = QPixmap(size);
-	m_Pixmap.fill(Qt::transparent);
+	m_CurrentLayer = QImage(size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
+	m_CurrentLayer.fill(Qt::transparent);
 }
 
 void alp::Canvas::resetCanvasTransform()
 {
 	m_Delta = QPointF(0, 0);
-	m_Scale = int(std::min(m_Pixmap.size().width(), m_Pixmap.size().height()) / 4);;
+	m_Scale = int(std::min(m_CurrentLayer.size().width(), m_CurrentLayer.size().height()) / 4);;
 	update();
 }
 
 void alp::Canvas::resizeCanvas(const QSize& size)
 {
-	QPixmap copy = m_Pixmap.copy();
+	QImage copy = m_CurrentLayer.copy();
 
 	m_Size = size;
-	m_Pixmap = QPixmap(size);
-	//m_Pixmap.fill(Qt::transparent);
+	m_CurrentLayer = QImage(size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
 
-	QPainter painter(&m_Pixmap);
+	QPainter painter(&m_CurrentLayer);
 	painter.setPen(Qt::NoPen);
 	painter.setBrush(copy);
-	painter.setBrushOrigin(m_Pixmap.rect().topLeft());
+	painter.setBrushOrigin(m_CurrentLayer.rect().topLeft());
 	painter.drawRect(copy.rect());
 
 	resetCanvasTransform();
@@ -87,7 +85,7 @@ void alp::Canvas::mousePressEvent(QMouseEvent* event)
 
 	ToolHandler::currentTool->setStartPoint(getLayerPoint(event->pos(), rect(), m_Delta, m_Scale));
 
-	m_OldPixmap = m_Pixmap.copy();
+	m_OldLayer = m_CurrentLayer.copy();
 	m_Drawing = true;
 
 	if (ToolHandler::currentTool->type == ToolType::Pencil)
@@ -117,8 +115,8 @@ void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 	{
 		if (m_DrawingLine)
 		{
-			ToolHandler::tools["pencil"]->draw(m_Pixmap, point, event->buttons() & Qt::RightButton);
-			m_OldPixmap = m_Pixmap.copy();
+			ToolHandler::tools["pencil"]->draw(m_CurrentLayer, point, event->buttons() & Qt::RightButton);
+			m_OldLayer = m_CurrentLayer.copy();
 			ToolHandler::currentTool->setStartPoint(point);
 			m_DrawingLine = false;
 		}
@@ -126,10 +124,10 @@ void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 	if (ToolHandler::currentTool->type == ToolType::Line || ToolHandler::currentTool->type == ToolType::Ellipse || ToolHandler::currentTool->type == ToolType::Rect)
 	{
 		ToolHandler::currentTool->setEndPoint(point);
-		m_Pixmap = m_OldPixmap;
+		m_CurrentLayer = m_OldLayer;
 	}
 
-	ToolHandler::currentTool->draw(m_Pixmap, point, event->buttons() & Qt::RightButton);
+	ToolHandler::currentTool->draw(m_CurrentLayer, point, event->buttons() & Qt::RightButton);
 	update();
 }
 
@@ -154,11 +152,11 @@ void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
 	if (ToolHandler::currentTool->type == ToolType::Line)
 		ToolHandler::currentTool->setEndPoint(point);
 
-	ToolHandler::currentTool->draw(m_Pixmap, point, event->button() == Qt::RightButton);
+	ToolHandler::currentTool->draw(m_CurrentLayer, point, event->button() == Qt::RightButton);
 
 	m_Drawing = false;
 
-	if (m_OldPixmap.toImage() != m_Pixmap.toImage())
+	if (m_OldLayer != m_CurrentLayer)
 		saveDrawCommand();
 
 	update();
@@ -187,7 +185,7 @@ void alp::Canvas::keyReleaseEvent(QKeyEvent* event)
 void alp::Canvas::paintEvent(QPaintEvent* event)
 {
 	auto dirtyRect = event->rect();
-	auto scaledPixmap = m_Pixmap.scaled(m_Size * m_Scale);
+	auto scaledLayer = m_CurrentLayer.scaled(m_Size * m_Scale);
 
 	QPainter painter(this);
 	painter.translate(rect().center());
@@ -196,8 +194,8 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 	if (m_EnableSanityBackground)
 	{
 		painter.setBrush(m_Background);
-		painter.setBrushOrigin(scaledPixmap.rect().topLeft());
-		painter.drawRect(scaledPixmap.rect());
+		painter.setBrushOrigin(scaledLayer.rect().topLeft());
+		painter.drawRect(scaledLayer.rect());
 	}
 	
 	if (m_EnableGrid && m_Scale > 2)
@@ -206,14 +204,14 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 		pen.setCosmetic(true);
 		painter.setPen(pen);
 
-		for (int x = 0; x < scaledPixmap.width(); x += m_Scale)
-			painter.drawRect(x, 0, 0, scaledPixmap.height());
+		for (int x = 0; x < scaledLayer.width(); x += m_Scale)
+			painter.drawRect(x, 0, 0, scaledLayer.height());
 
-		for (int y = 0; y < scaledPixmap.height(); y += m_Scale)
-			painter.drawRect(0, y, scaledPixmap.width(), 0);
+		for (int y = 0; y < scaledLayer.height(); y += m_Scale)
+			painter.drawRect(0, y, scaledLayer.width(), 0);
 	}
 	
-	painter.drawPixmap(rect().topLeft(), scaledPixmap, scaledPixmap.rect());
+	painter.drawImage(rect().topLeft(), scaledLayer, scaledLayer.rect());
 }
 
 void alp::Canvas::wheelEvent(QWheelEvent* event)
@@ -238,7 +236,7 @@ void alp::Canvas::initializeUndoStack()
 
 void alp::Canvas::saveDrawCommand()
 {
-	DrawCommand* command = new DrawCommand(m_OldPixmap, &m_Pixmap);
+	DrawCommand* command = new DrawCommand(m_OldLayer, &m_CurrentLayer);
 	m_UndoStack->push(command);
 }
 

@@ -29,7 +29,7 @@ namespace alp
 		QPoint getStartPoint() const { return startPoint; }
 
 	public:
-		virtual void draw(QPixmap& pixmap, const QPoint& endPoint, bool isSecondaryButton) = 0;
+		virtual void draw(QImage& pixmap, const QPoint& endPoint, bool isSecondaryButton) = 0;
 
 	public:
 		ToolType type;

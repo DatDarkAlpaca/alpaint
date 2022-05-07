@@ -11,9 +11,9 @@ namespace alp
 		PencilTool() : Tool(ToolType::Pencil) { }
 
 	public:
-		virtual void draw(QPixmap& pixmap, const QPoint& endPoint, bool isSecondaryButton) override
+		virtual void draw(QImage& image, const QPoint& endPoint, bool isSecondaryButton) override
 		{
-			QPainter painter(&pixmap);
+			QPainter painter(&image);
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
 
 			QColor usedColor = isSecondaryButton ? ToolHandler::secondaryColor : ToolHandler::primaryColor;

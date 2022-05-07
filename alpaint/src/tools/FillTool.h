@@ -11,18 +11,18 @@ namespace alp
 		FillTool() : Tool(ToolType::Fill) { }
 
 	public:
-		virtual void draw(QPixmap& pixmap, const QPoint& endPoint, bool isSecondaryButton) override
+		virtual void draw(QImage& image, const QPoint& endPoint, bool isSecondaryButton) override
 		{
-			QPainter painter(&pixmap);
+			QPainter painter(&image);
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
 
 			QColor usedColor = isSecondaryButton ? ToolHandler::secondaryColor : ToolHandler::primaryColor;
 			painter.setPen(QPen(usedColor, ToolHandler::pencilWidth, ToolHandler::pencilStyle, Qt::PenCapStyle::SquareCap));
 
-			QRgb oldColor(pixmap.toImage().pixel(endPoint));
+			QRgb oldColor(image.pixel(endPoint));
 	
 			if (usedColor.rgb() != oldColor)
-				fill(endPoint, oldColor, painter, pixmap);
+				fill(endPoint, oldColor, painter, image);
 		}
 	};
 }

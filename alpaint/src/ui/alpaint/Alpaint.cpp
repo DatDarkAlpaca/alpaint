@@ -116,9 +116,9 @@ void alp::Alpaint::resizeCanvasAction()
     if (!m_Canvas)
         return;
 
-    auto pixmap = m_Canvas->getSelectedPixmap();
+    auto image = m_Canvas->getSelectedLayer();
 
-    ResizeCanvasDialog dialog(this, pixmap->width(), pixmap->height());
+    ResizeCanvasDialog dialog(this, image->width(), image->height());
 
     if (!dialog.exec())
         return;

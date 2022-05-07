@@ -20,12 +20,13 @@ namespace alp
 
 		void openImage(const QString& filepath)
 		{
-			QPixmap loadedImage;
-			if (!loadedImage.load(filepath))
-				return;
+			QImageReader reader(filepath);
 
-			m_Pixmap = loadedImage;
-			resizeCanvas(loadedImage.size());
+			m_CurrentLayer = reader.read();
+			m_Size = m_CurrentLayer.size();
+			m_Scale = int(std::min(m_CurrentLayer.size().width(), m_CurrentLayer.size().height()) / 4);;
+			m_Delta = QPointF(0, 0);
+			update();
 		}
 
 		void saveImage(const QByteArray& fileFormat)
@@ -41,7 +42,7 @@ namespace alp
 			if (fileName.isEmpty())
 				return;
 
-			m_Pixmap.save(fileName, fileFormat);
+			m_CurrentLayer.save(fileName, fileFormat);
 		}
 
 	public:
@@ -69,9 +70,9 @@ namespace alp
 		void onRedo();
 
 	public:
-		void setCurrentLayerPixmap(const QPixmap& pixmap) { m_Pixmap = pixmap; }
+		void setCurrentLayer(const QImage& pixmap) { m_CurrentLayer = pixmap; }
 
-		QPixmap* getSelectedPixmap() { return &m_Pixmap; }
+		QImage* getSelectedLayer() { return &m_CurrentLayer; }
 
 		qreal getScale() const { return m_Scale; }
 
@@ -100,7 +101,7 @@ namespace alp
 		void loadSettings();
 
 	private:
-		QPixmap m_Background, m_Pixmap, m_OldPixmap;
+		QImage m_Background, m_CurrentLayer, m_OldLayer;
 		bool m_Drawing = false, m_DrawingLine = false;
 		QUndoStack* m_UndoStack;
 		QSize m_Size;

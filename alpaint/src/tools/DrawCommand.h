@@ -6,7 +6,7 @@ namespace alp
 	class DrawCommand : public QUndoCommand
 	{
 	public:
-		DrawCommand(const QPixmap& oldPixmap, QPixmap* pixmap, QUndoCommand* parent = nullptr)
+		DrawCommand(const QImage& oldPixmap, QImage* pixmap, QUndoCommand* parent = nullptr)
 			: QUndoCommand(parent)
 		{
 			this->m_Pixmap = pixmap;
@@ -26,7 +26,7 @@ namespace alp
 		}
 
 	private:
-		QPixmap* m_Pixmap;
-		QPixmap m_OldPixmap, m_NewPixmap;
+		QImage* m_Pixmap;
+		QImage m_OldPixmap, m_NewPixmap;
 	};
 }

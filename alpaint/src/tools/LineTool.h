@@ -11,9 +11,9 @@ namespace alp
 		LineTool() : Tool(ToolType::Line) { }
 
 	public:
-		virtual void draw(QPixmap& pixmap, const QPoint&, bool isSecondaryButton) override
+		virtual void draw(QImage& image, const QPoint&, bool isSecondaryButton) override
 		{
-			QPainter painter(&pixmap);
+			QPainter painter(&image);
 			painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, 0);
 
 			QColor usedColor = isSecondaryButton ? ToolHandler::secondaryColor : ToolHandler::primaryColor;

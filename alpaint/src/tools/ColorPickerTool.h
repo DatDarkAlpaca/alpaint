@@ -11,9 +11,9 @@ namespace alp
 		ColorPickerTool() : Tool(ToolType::ColorPicker) { }
 
 	public:
-		virtual void draw(QPixmap& pixmap, const QPoint& endPoint, bool isSecondaryButton) override
+		virtual void draw(QImage& image, const QPoint& endPoint, bool isSecondaryButton) override
 		{
-			auto color = pixmap.toImage().pixelColor(endPoint);
+			auto color = image.pixelColor(endPoint);
 
 			if (!isSecondaryButton)
 				ToolHandler::primaryColor = color;

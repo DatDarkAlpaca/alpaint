@@ -11,9 +11,9 @@ namespace alp
 		EraserTool() : Tool(ToolType::Eraser) { }
 
 	public:
-		virtual void draw(QPixmap& pixmap, const QPoint& endPoint, bool isSecondaryButton) override
+		virtual void draw(QImage& image, const QPoint& endPoint, bool isSecondaryButton) override
 		{
-			QPainter painter(&pixmap);
+			QPainter painter(&image);
 			painter.setCompositionMode(QPainter::CompositionMode_Clear);
 
 			painter.eraseRect(QRect(endPoint.x(), endPoint.y(), ToolHandler::pencilWidth, ToolHandler::pencilWidth));
