@@ -63,6 +63,8 @@ namespace alp
 
 		bool isDefault() const { return m_IsDefault; }
 
+		bool modified() const { return m_Modified; }
+
 	private:
 		inline static size_t unnamedCount = 0;
 		bool m_IsDefault = true, m_Modified = true;

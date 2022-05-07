@@ -48,6 +48,7 @@ void alp::Alpaint::connectActions()
     connect(ui.actionOpen, &QAction::triggered, this, &Alpaint::openProjectAction);
     connect(ui.actionSave, &QAction::triggered, this, &Alpaint::saveProjectAction);
     connect(ui.actionSaveAs, &QAction::triggered, this, &Alpaint::saveAsProjectAction);
+    connect(ui.actionClose, &QAction::triggered, this, &Alpaint::closeProjectAction);
 
     connect(ui.actionResizeCanvas, &QAction::triggered, this, &Alpaint::resizeCanvasAction);
 
@@ -127,6 +128,18 @@ void alp::Alpaint::saveAsProjectAction()
         return;
 
     m_CurrentProject->saveNewProject();
+}
+
+void alp::Alpaint::closeProjectAction()
+{
+    if(!m_CurrentProject->modified())
+        m_CurrentProject->close();
+    else
+    {
+        // Todo: dialog for 'Do you want to save changes to ProjectName?'
+        // Save || Discard || Cancel
+        m_CurrentProject->close();
+    }
 }
 
 void alp::Alpaint::resizeCanvasAction()

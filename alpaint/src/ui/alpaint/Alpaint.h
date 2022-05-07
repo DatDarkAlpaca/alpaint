@@ -36,6 +36,9 @@ namespace alp
 
         void saveAsProjectAction();
 
+        void closeProjectAction();
+
+    private:
         void resizeCanvasAction();
 
     private:
