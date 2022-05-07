@@ -8,6 +8,7 @@ alp::Alpaint::Alpaint(QWidget *parent)
     ui.setupUi(this);
 
     setFocusPolicy(Qt::StrongFocus);
+    setDockNestingEnabled(true);
     setFocus();
 
     connectActions();
@@ -16,14 +17,14 @@ alp::Alpaint::Alpaint(QWidget *parent)
 
 void alp::Alpaint::keyPressEvent(QKeyEvent* event)
 {
-    if(m_Canvas)
-        ToolHandler::keyPressEvent(event, m_Canvas);
+    if(m_CurrentProject)
+        ToolHandler::keyPressEvent(event, getFocusedCanvas());
 }
 
 void alp::Alpaint::keyReleaseEvent(QKeyEvent* event)
 {
-    if (m_Canvas)
-        ToolHandler::keyReleaseEvent(event, m_Canvas);
+    if (m_CurrentProject)
+        ToolHandler::keyReleaseEvent(event, getFocusedCanvas());
 }
 
 void alp::Alpaint::connectTools()
@@ -43,37 +44,35 @@ void alp::Alpaint::connectTools()
 
 void alp::Alpaint::connectActions()
 {
-    connect(ui.actionNew, &QAction::triggered, this, &Alpaint::newFileAction);
-    connect(ui.actionOpen, &QAction::triggered, this, &Alpaint::openFileAction);
-    connect(ui.actionSave, &QAction::triggered, this, &Alpaint::saveFileAction);
+    connect(ui.actionNew, &QAction::triggered, this, &Alpaint::newProjectAction);
+    connect(ui.actionOpen, &QAction::triggered, this, &Alpaint::openProjectAction);
+    connect(ui.actionSave, &QAction::triggered, this, &Alpaint::saveProjectAction);
+    connect(ui.actionSaveAs, &QAction::triggered, this, &Alpaint::saveAsProjectAction);
 
     connect(ui.actionResizeCanvas, &QAction::triggered, this, &Alpaint::resizeCanvasAction);
 
     connect(ui.actionShowPixelGrid, &QAction::triggered, this, [&]() {
-        if (m_Canvas)
-            m_Canvas->toggleGrid();
-    });
+        if (m_CurrentProject)
+            getFocusedCanvas()->toggleGrid();
+        });
     connect(ui.actionShowBackground, &QAction::triggered, this, [&]() {
-        if (m_Canvas)
-            m_Canvas->toggleBackground();
-    });
+        if (m_CurrentProject)
+            getFocusedCanvas()->toggleBackground();
+        });
 
     connect(ui.actionUndo, &QAction::triggered, this, [&]() {
-        if (m_Canvas)
-            m_Canvas->onUndo();
-    });
+        if (m_CurrentProject)
+            getFocusedCanvas()->onUndo();
+        });
 
     connect(ui.actionRedo, &QAction::triggered, this, [&]() {
-        if (m_Canvas)
-            m_Canvas->onRedo();
+        if (m_CurrentProject)
+            getFocusedCanvas()->onRedo();
     });
 }
 
-void alp::Alpaint::newFileAction()
+void alp::Alpaint::newProjectAction()
 {
-    if (m_Canvas)
-        return;
-
     NewFileDialog dialog(this);
     
     if (!dialog.exec())
@@ -81,26 +80,23 @@ void alp::Alpaint::newFileAction()
 
     auto data = dialog.data;
 
-    QSize size{ data.documentWidth, data.documentHeight };
-    m_Canvas = new Canvas(this, size);
+    m_ProjectList.push_back(new ProjectDock(this, new Canvas(this, data.documentSize)));
+    auto project = m_ProjectList.back();
+    m_CurrentProject = project;
 
-    setDockNestingEnabled(true);
-
-    m_CanvasWidget = new QDockWidget(this);
-    m_CanvasWidget->setWindowTitle("Untitled - 0");
-    m_CanvasWidget->setBaseSize(width(), height());
-    m_CanvasWidget->setWidget(m_Canvas);
-
-    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    m_CanvasWidget->setSizePolicy(sizePolicy);
-    m_CanvasWidget->setAllowedAreas(Qt::AllDockWidgetAreas);
-
-    addDockWidget(Qt::RightDockWidgetArea, m_CanvasWidget);
+    if (m_ProjectList.size() == 1)
+        addDockWidget(Qt::RightDockWidgetArea, project);
+    else
+    {
+        tabifyDockWidget(m_ProjectList[0], project);
+        project->show();
+        project->raise();
+    }
 }
 
-void alp::Alpaint::openFileAction()
+void alp::Alpaint::openProjectAction()
 {
-    auto filepath = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::currentPath());
+    /*auto filepath = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::currentPath());
     
     if (filepath.length() <= 0)
         return;
@@ -111,23 +107,34 @@ void alp::Alpaint::openFileAction()
         ui.centralWidget->layout()->addWidget(m_Canvas);
     }
     
-    m_Canvas->openImage(filepath);
+    m_Canvas->openImage(filepath);*/
 }
 
-void alp::Alpaint::saveFileAction()
+void alp::Alpaint::saveProjectAction()
 {
-    if (!m_Canvas)
+    if (!m_CurrentProject)
         return;
 
-    m_Canvas->saveImage("png");
+    if (m_CurrentProject->isDefault())
+        m_CurrentProject->saveNewProject();
+    else
+        m_CurrentProject->saveChanges();
+}
+
+void alp::Alpaint::saveAsProjectAction()
+{
+    if (!m_CurrentProject)
+        return;
+
+    m_CurrentProject->saveNewProject();
 }
 
 void alp::Alpaint::resizeCanvasAction()
 {
-    if (!m_Canvas)
+    if (!m_CurrentProject)
         return;
 
-    auto image = m_Canvas->getSelectedLayer();
+    auto image = getFocusedCanvas()->getSelectedLayer();
 
     ResizeCanvasDialog dialog(this, image->width(), image->height());
 
@@ -135,5 +142,16 @@ void alp::Alpaint::resizeCanvasAction()
         return;
 
     QSize size{ dialog.width, dialog.height };
-    m_Canvas->resizeCanvas(size);
+    getFocusedCanvas()->resizeCanvas(size);
+}
+
+alp::Canvas* alp::Alpaint::getFocusedCanvas()
+{
+    for (auto dockProject : m_ProjectList)
+    {
+        if (!dockProject->visibleRegion().isEmpty())
+            return dockProject->getCanvas();
+    }
+
+    return nullptr;
 }

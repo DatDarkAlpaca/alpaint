@@ -130,6 +130,7 @@
     <QtUic Include="res\ResizeCanvasDialog.ui" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="src\ui\docks\ProjectDock.h" />
     <QtMoc Include="src\ui\dialogs\ResizeCanvasDialog.h" />
     <ClInclude Include="src\ToolHandler.h" />
     <ClInclude Include="src\tools\ColorPickerTool.h" />

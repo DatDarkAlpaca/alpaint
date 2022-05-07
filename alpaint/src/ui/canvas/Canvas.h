@@ -29,9 +29,9 @@ namespace alp
 			update();
 		}
 
-		void saveImage(const QByteArray& fileFormat)
+		void saveNewImage(const QString& projectName, const QByteArray& fileFormat)
 		{
-			QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
+			/*QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
 
 			QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
 				initialPath,
@@ -42,7 +42,7 @@ namespace alp
 			if (fileName.isEmpty())
 				return;
 
-			m_CurrentLayer.save(fileName, fileFormat);
+			m_CurrentLayer.save(fileName, fileFormat);*/
 		}
 
 	public:
@@ -77,6 +77,9 @@ namespace alp
 		qreal getScale() const { return m_Scale; }
 
 		QPointF getDelta() const { return m_Delta; }
+
+		// Preparations the layer blending modes in the future:
+		QImage getPreparedImage() const { return m_CurrentLayer; }
 
 	public:
 		void mousePressEvent(QMouseEvent* event) override;

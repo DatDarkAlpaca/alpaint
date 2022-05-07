@@ -27,9 +27,10 @@ namespace alp
 	private Q_SLOTS:
 		void createSlot()
 		{
-			data = DocumentData(ui.widthSpinBox->value(), ui.heightSpinBox->value());
+			data = DocumentData(QSize(ui.widthSpinBox->value(), ui.heightSpinBox->value()));
 
-			if(data.documentHeight > 0 && data.documentWidth > 0)
+			if(data.documentSize.width() > 0 && data.documentSize.height() > 0 &&
+			   data.documentSize.width() <= 2048 && data.documentSize.height() <= 2048)
 				accept();
 		}
 

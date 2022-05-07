@@ -2,8 +2,8 @@
 #include "pch.h"
 #include "ui_Alpaint.h"
 #include "tools/Tools.h"
-#include "canvas/Canvas.h"
 
+#include "docks/ProjectDock.h"
 #include "dialogs/NewFileDialog.h"
 #include "dialogs/ResizeCanvasDialog.h"
 
@@ -20,7 +20,7 @@ namespace alp
         void keyPressEvent(QKeyEvent* event) override;
 
         void keyReleaseEvent(QKeyEvent* event) override;
-
+        
     private:
         void connectTools();
 
@@ -28,17 +28,22 @@ namespace alp
         void connectActions();
 
     private:
-        void newFileAction();
+        void newProjectAction();
 
-        void openFileAction();
+        void openProjectAction();
 
-        void saveFileAction();
+        void saveProjectAction();
+
+        void saveAsProjectAction();
 
         void resizeCanvasAction();
 
     private:
-        QDockWidget *m_CanvasWidget = nullptr;
-        Canvas* m_Canvas = nullptr;
+        Canvas* getFocusedCanvas();
+
+    private:
+        QList<ProjectDock*> m_ProjectList;
+        ProjectDock* m_CurrentProject = nullptr;
 
         ::Ui::AlpaintClass ui;
     };

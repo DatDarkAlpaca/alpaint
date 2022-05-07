@@ -4,10 +4,10 @@ namespace alp
 {
 	struct DocumentData
 	{
-		DocumentData(int width, int height)
-			: documentWidth(width), documentHeight(height) { }
+		DocumentData(QSize size)
+			: documentSize(size) { }
 		DocumentData() = default;
 
-		int documentWidth, documentHeight;
+		QSize documentSize;
 	};
 }
