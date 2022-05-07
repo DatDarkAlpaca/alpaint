@@ -123,6 +123,7 @@
      <string notr="true">QWidget#toolBarContents
 {
 	background-color: rgb(83, 83, 83);
+	border: 1px solid rgb(56, 56, 56);
 }</string>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -233,12 +234,43 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <property name="topMargin">
-        <number>5</number>
+        <number>9</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
        </property>
        <item>
         <widget class="QToolButton" name="pencilButton">
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QToolButton
+{
+	background-color: rgb(50, 50, 50);
+	border: 1px solid rgb(45, 45, 45);
+	border-radius: 3px;
+}
+QToolButton:hover
+{
+	background-color: rgb(70, 70, 70);
+};</string>
+         </property>
          <property name="text">
-          <string>P</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>icons/pencil.png</normaloff>icons/pencil.png</iconset>
          </property>
          <property name="shortcut">
           <string>B</string>
@@ -247,8 +279,37 @@
        </item>
        <item>
         <widget class="QToolButton" name="eraserButton">
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QToolButton
+{
+	background-color: rgb(50, 50, 50);
+	border: 1px solid rgb(45, 45, 45);
+	border-radius: 3px;
+	color: white;
+}
+QToolButton:hover
+{
+	background-color: rgb(70, 70, 70);
+};</string>
+         </property>
          <property name="text">
           <string>E</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>icons/eraser.png</normaloff>icons/eraser.png</iconset>
          </property>
          <property name="shortcut">
           <string>E</string>
@@ -264,15 +325,73 @@
        </property>
        <item>
         <widget class="QToolButton" name="rectButton">
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QToolButton
+{
+	background-color: rgb(50, 50, 50);
+	border: 1px solid rgb(45, 45, 45);
+	border-radius: 3px;
+	color: white;
+}
+QToolButton:hover
+{
+	background-color: rgb(70, 70, 70);
+};</string>
+         </property>
          <property name="text">
           <string>R</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>icons/rect.png</normaloff>icons/rect.png</iconset>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QToolButton" name="ellipseButton">
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QToolButton
+{
+	background-color: rgb(50, 50, 50);
+	border: 1px solid rgb(45, 45, 45);
+	border-radius: 3px;
+	color: white;
+}
+QToolButton:hover
+{
+	background-color: rgb(70, 70, 70);
+};</string>
+         </property>
          <property name="text">
           <string>O</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>icons/ellipse.png</normaloff>icons/ellipse.png</iconset>
          </property>
         </widget>
        </item>
@@ -285,8 +404,37 @@
        </property>
        <item>
         <widget class="QToolButton" name="colorPickerButton">
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QToolButton
+{
+	background-color: rgb(50, 50, 50);
+	border: 1px solid rgb(45, 45, 45);
+	border-radius: 3px;
+	color: white;
+}
+QToolButton:hover
+{
+	background-color: rgb(70, 70, 70);
+};</string>
+         </property>
          <property name="text">
-          <string>C</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>icons/pipette.png</normaloff>icons/pipette.png</iconset>
          </property>
          <property name="shortcut">
           <string>Ctrl+S</string>
@@ -295,8 +443,37 @@
        </item>
        <item>
         <widget class="QToolButton" name="fillButton">
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QToolButton
+{
+	background-color: rgb(50, 50, 50);
+	border: 1px solid rgb(45, 45, 45);
+	border-radius: 3px;
+	color: white;
+}
+QToolButton:hover
+{
+	background-color: rgb(70, 70, 70);
+};</string>
+         </property>
          <property name="text">
-          <string>F</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>icons/fill.png</normaloff>icons/fill.png</iconset>
          </property>
          <property name="shortcut">
           <string>F</string>
