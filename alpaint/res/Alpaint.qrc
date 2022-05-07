@@ -1,4 +1,16 @@
 <RCC>
-    <qresource prefix="Alpaint">
+    <qresource prefix="/icons">
+        <file>icons/dither.png</file>
+        <file>icons/ellipse.png</file>
+        <file>icons/eraser.png</file>
+        <file>icons/fill.png</file>
+        <file>icons/line.png</file>
+        <file>icons/move.png</file>
+        <file>icons/pencil.png</file>
+        <file>icons/pipette.png</file>
+        <file>icons/rect.png</file>
+    </qresource>
+    <qresource prefix="/background">
+        <file>background/background.png</file>
     </qresource>
 </RCC>

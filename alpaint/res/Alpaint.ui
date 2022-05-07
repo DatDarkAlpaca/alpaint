@@ -293,8 +293,8 @@ QToolButton:hover
           <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>icons/pencil.png</normaloff>icons/pencil.png</iconset>
+          <iconset resource="Alpaint.qrc">
+           <normaloff>:/icons/icons/line.png</normaloff>:/icons/icons/line.png</iconset>
          </property>
          <property name="shortcut">
           <string>B</string>
@@ -329,11 +329,11 @@ QToolButton:hover
 };</string>
          </property>
          <property name="text">
-          <string>E</string>
+          <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>icons/eraser.png</normaloff>icons/eraser.png</iconset>
+          <iconset resource="Alpaint.qrc">
+           <normaloff>:/icons/icons/eraser.png</normaloff>:/icons/icons/eraser.png</iconset>
          </property>
          <property name="shortcut">
           <string>E</string>
@@ -375,11 +375,11 @@ QToolButton:hover
 };</string>
          </property>
          <property name="text">
-          <string>R</string>
+          <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>icons/rect.png</normaloff>icons/rect.png</iconset>
+          <iconset resource="Alpaint.qrc">
+           <normaloff>:/icons/icons/rect.png</normaloff>:/icons/icons/rect.png</iconset>
          </property>
         </widget>
        </item>
@@ -411,11 +411,11 @@ QToolButton:hover
 };</string>
          </property>
          <property name="text">
-          <string>O</string>
+          <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>icons/ellipse.png</normaloff>icons/ellipse.png</iconset>
+          <iconset resource="Alpaint.qrc">
+           <normaloff>:/icons/icons/ellipse.png</normaloff>:/icons/icons/ellipse.png</iconset>
          </property>
         </widget>
        </item>
@@ -457,8 +457,8 @@ QToolButton:hover
           <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>icons/pipette.png</normaloff>icons/pipette.png</iconset>
+          <iconset resource="Alpaint.qrc">
+           <normaloff>:/icons/icons/pipette.png</normaloff>:/icons/icons/pipette.png</iconset>
          </property>
          <property name="shortcut">
           <string>Ctrl+S</string>
@@ -496,8 +496,8 @@ QToolButton:hover
           <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>icons/fill.png</normaloff>icons/fill.png</iconset>
+          <iconset resource="Alpaint.qrc">
+           <normaloff>:/icons/icons/fill.png</normaloff>:/icons/icons/fill.png</iconset>
          </property>
          <property name="shortcut">
           <string>F</string>
