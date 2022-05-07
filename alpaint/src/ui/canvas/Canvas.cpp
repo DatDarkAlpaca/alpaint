@@ -185,17 +185,19 @@ void alp::Canvas::keyReleaseEvent(QKeyEvent* event)
 void alp::Canvas::paintEvent(QPaintEvent* event)
 {
 	auto dirtyRect = event->rect();
-	auto scaledLayer = m_CurrentLayer.scaled(m_Size * m_Scale);
 
 	QPainter painter(this);
 	painter.translate(rect().center());
 	painter.translate(m_Delta);
+	painter.scale(m_Scale, m_Scale);
 
 	if (m_EnableSanityBackground)
 	{
+		// Play with composition mode.
+		painter.setPen(Qt::NoPen);
 		painter.setBrush(m_Background);
-		painter.setBrushOrigin(scaledLayer.rect().topLeft());
-		painter.drawRect(scaledLayer.rect());
+		painter.setBrushOrigin(rect().topLeft());
+		painter.drawRect(rect());
 	}
 	
 	if (m_EnableGrid && m_Scale > 2)
@@ -204,14 +206,14 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 		pen.setCosmetic(true);
 		painter.setPen(pen);
 
-		for (int x = 0; x < scaledLayer.width(); x += m_Scale)
-			painter.drawRect(x, 0, 0, scaledLayer.height());
+		for (int x = 0; x < m_CurrentLayer.width(); ++x)
+			painter.drawRect(x, 0, 0, m_CurrentLayer.height());
 
-		for (int y = 0; y < scaledLayer.height(); y += m_Scale)
-			painter.drawRect(0, y, scaledLayer.width(), 0);
+		for (int y = 0; y < m_CurrentLayer.height(); ++y)
+			painter.drawRect(0, y, m_CurrentLayer.width(), 0);
 	}
 	
-	painter.drawImage(rect().topLeft(), scaledLayer, scaledLayer.rect());
+	painter.drawImage(rect().topLeft(), m_CurrentLayer, m_CurrentLayer.rect());
 }
 
 void alp::Canvas::wheelEvent(QWheelEvent* event)
