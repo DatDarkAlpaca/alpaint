@@ -89,13 +89,17 @@ void alp::Alpaint::newFileAction()
 
 void alp::Alpaint::openFileAction()
 {
+    auto filepath = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::currentPath());
+    
+    if (filepath.length() <= 0)
+        return;
+
     if (!m_Canvas)
     {
         m_Canvas = new Canvas(this);
         ui.centralWidget->layout()->addWidget(m_Canvas);
     }
-
-    auto filepath = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::currentPath());
+    
     m_Canvas->openImage(filepath);
 }
 

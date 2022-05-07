@@ -18,21 +18,17 @@ namespace alp
 
 		void resizeCanvas(const QSize& size);
 
-		bool openImage(const QString& filepath)
+		void openImage(const QString& filepath)
 		{
 			QPixmap loadedImage;
 			if (!loadedImage.load(filepath))
-				return false;
+				return;
 
 			m_Pixmap = loadedImage;
 			resizeCanvas(loadedImage.size());
-			//resetCanvasLayers(loadedImage.size());
-			//resetCanvasTransform();
-
-			return true;
 		}
 
-		bool saveImage(const QByteArray& fileFormat)
+		void saveImage(const QByteArray& fileFormat)
 		{
 			QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
 
@@ -43,7 +39,7 @@ namespace alp
 				.arg(QString::fromLatin1(fileFormat)));
 
 			if (fileName.isEmpty())
-				return false;
+				return;
 
 			m_Pixmap.save(fileName, fileFormat);
 		}
