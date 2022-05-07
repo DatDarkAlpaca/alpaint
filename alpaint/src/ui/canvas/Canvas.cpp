@@ -217,14 +217,14 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 
 void alp::Canvas::wheelEvent(QWheelEvent* event)
 {
-	if (event->angleDelta().y() > 0 && m_Scale - 1 <= 16)
+	if (event->angleDelta().y() > 0 && m_Scale / 2 <= 128)
 	{
-		m_Scale += 1;
+		m_Scale *= 2;
 		update();
 	}
-	else if (event->angleDelta().y() < 0 && m_Scale - 1 >= 1)
+	else if (event->angleDelta().y() < 0 && m_Scale * 2 >= 1)
 	{
-		m_Scale -= 1;
+		m_Scale /= 2;
 		update();
 	}
 }
