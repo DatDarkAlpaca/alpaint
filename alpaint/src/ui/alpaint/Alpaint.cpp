@@ -16,14 +16,14 @@ alp::Alpaint::Alpaint(QWidget *parent)
 
 void alp::Alpaint::keyPressEvent(QKeyEvent* event)
 {
-    if(m_CanvasWidget)
-        ToolHandler::keyPressEvent(event, m_CanvasWidget->getCanvas());
+    if(m_Canvas)
+        ToolHandler::keyPressEvent(event, m_Canvas);
 }
 
 void alp::Alpaint::keyReleaseEvent(QKeyEvent* event)
 {
-    if (m_CanvasWidget)
-        ToolHandler::keyReleaseEvent(event, m_CanvasWidget->getCanvas());
+    if (m_Canvas)
+        ToolHandler::keyReleaseEvent(event, m_Canvas);
 }
 
 void alp::Alpaint::connectTools()
@@ -47,34 +47,28 @@ void alp::Alpaint::connectActions()
     connect(ui.actionResizeCanvas, &QAction::triggered, this, &Alpaint::resizeCanvasAction);
 
     connect(ui.actionShowPixelGrid, &QAction::triggered, this, [&]() {
-        if (m_CanvasWidget)
-            m_CanvasWidget->getCanvas()->toggleGrid();
+        if (m_Canvas)
+            m_Canvas->toggleGrid();
     });
     connect(ui.actionShowBackground, &QAction::triggered, this, [&]() {
-        if (m_CanvasWidget)
-            m_CanvasWidget->getCanvas()->toggleBackground();
+        if (m_Canvas)
+            m_Canvas->toggleBackground();
     });
 
     connect(ui.actionUndo, &QAction::triggered, this, [&]() {
-        if (m_CanvasWidget)
-        {
-            auto canvas = m_CanvasWidget->getCanvas();
-            canvas->onUndo();
-        }
+        if (m_Canvas)
+            m_Canvas->onUndo();
     });
 
     connect(ui.actionRedo, &QAction::triggered, this, [&]() {
-        if (m_CanvasWidget)
-        {
-            auto canvas = m_CanvasWidget->getCanvas();
-            canvas->onRedo();
-        }
+        if (m_Canvas)
+            m_Canvas->onRedo();
     });
 }
 
 void alp::Alpaint::newFileAction()
 {
-    if (m_CanvasWidget)
+    if (m_Canvas)
         return;
 
     NewFileDialog dialog(this);
@@ -85,18 +79,17 @@ void alp::Alpaint::newFileAction()
     auto data = dialog.data;
 
     QSize size{ data.documentWidth, data.documentHeight };
-    m_CanvasWidget = new CanvasWidget(this, size);
+    m_Canvas = new Canvas(this, size);
 
-    ui.centralWidget->layout()->addWidget(m_CanvasWidget);
+    ui.centralWidget->layout()->addWidget(m_Canvas);
 }
 
 void alp::Alpaint::resizeCanvasAction()
 {
-    if (!m_CanvasWidget)
+    if (!m_Canvas)
         return;
 
-    auto canvas = m_CanvasWidget->getCanvas();
-    auto pixmap = canvas->getSelectedPixmap();
+    auto pixmap = m_Canvas->getSelectedPixmap();
 
     ResizeCanvasDialog dialog(this, pixmap->width(), pixmap->height());
 
@@ -104,5 +97,5 @@ void alp::Alpaint::resizeCanvasAction()
         return;
 
     QSize size{ dialog.width, dialog.height };
-    canvas->resizeCanvas(size);
+    m_Canvas->resizeCanvas(size);
 }

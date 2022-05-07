@@ -126,7 +126,6 @@
     </ClCompile>
     <ClCompile Include="src\ui\alpaint\Alpaint.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <QtUic Include="res\CanvasWidget.ui" />
     <QtUic Include="res\NewFileDialog.ui" />
     <QtUic Include="res\ResizeCanvasDialog.ui" />
   </ItemGroup>
@@ -150,7 +149,6 @@
     <QtMoc Include="src\ui\canvas\Canvas.h" />
     <QtMoc Include="src\ui\dialogs\NewFileDialog.h" />
     <QtMoc Include="src\ui\docks\ToolBarDock.h" />
-    <QtMoc Include="src\ui\canvas\CanvasWidget.h" />
     <ClInclude Include="src\DocumentData.h" />
     <ClInclude Include="src\pch.h" />
   </ItemGroup>

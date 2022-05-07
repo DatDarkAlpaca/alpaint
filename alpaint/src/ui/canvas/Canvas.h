@@ -9,7 +9,7 @@ namespace alp
 		Q_OBJECT
 
 	public:
-		Canvas(QWidget* parent = nullptr);
+		Canvas(QWidget* parent = nullptr, QSize size = QSize());
 
 	public:
 		void resetCanvasLayers(const QSize& size);

@@ -104,9 +104,6 @@
     <QtMoc Include="src\ui\docks\ToolBarDock.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\ui\canvas\CanvasWidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="src\ui\toolbar\ColorPicker.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -122,9 +119,6 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="res\NewFileDialog.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-    <QtUic Include="res\CanvasWidget.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="res\ResizeCanvasDialog.ui">

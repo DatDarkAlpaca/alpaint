@@ -4,13 +4,16 @@
 #include "tools/ToolUtils.h"
 #include "tools/DrawCommand.h"
 
-alp::Canvas::Canvas(QWidget* parent)
+alp::Canvas::Canvas(QWidget* parent, QSize size)
 	: QWidget(parent)
 {
 	setAttribute(Qt::WA_StaticContents);
 
 	QImage image("res/background-sanity.png");
 	m_Background = QPixmap::fromImage(image);
+
+	resetCanvasLayers(size);
+	resetCanvasTransform();
 
 	loadSettings();
 
