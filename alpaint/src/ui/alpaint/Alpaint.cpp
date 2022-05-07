@@ -44,6 +44,9 @@ void alp::Alpaint::connectTools()
 void alp::Alpaint::connectActions()
 {
     connect(ui.actionNew, &QAction::triggered, this, &Alpaint::newFileAction);
+    connect(ui.actionOpen, &QAction::triggered, this, &Alpaint::openFileAction);
+    connect(ui.actionSave, &QAction::triggered, this, &Alpaint::saveFileAction);
+
     connect(ui.actionResizeCanvas, &QAction::triggered, this, &Alpaint::resizeCanvasAction);
 
     connect(ui.actionShowPixelGrid, &QAction::triggered, this, [&]() {
@@ -82,6 +85,26 @@ void alp::Alpaint::newFileAction()
     m_Canvas = new Canvas(this, size);
 
     ui.centralWidget->layout()->addWidget(m_Canvas);
+}
+
+void alp::Alpaint::openFileAction()
+{
+    if (!m_Canvas)
+    {
+        m_Canvas = new Canvas(this);
+        ui.centralWidget->layout()->addWidget(m_Canvas);
+    }
+
+    auto filepath = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::currentPath());
+    m_Canvas->openImage(filepath);
+}
+
+void alp::Alpaint::saveFileAction()
+{
+    if (!m_Canvas)
+        return;
+
+    m_Canvas->saveImage("png");
 }
 
 void alp::Alpaint::resizeCanvasAction()

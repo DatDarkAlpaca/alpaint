@@ -18,6 +18,36 @@ namespace alp
 
 		void resizeCanvas(const QSize& size);
 
+		bool openImage(const QString& filepath)
+		{
+			QPixmap loadedImage;
+			if (!loadedImage.load(filepath))
+				return false;
+
+			m_Pixmap = loadedImage;
+			resizeCanvas(loadedImage.size());
+			//resetCanvasLayers(loadedImage.size());
+			//resetCanvasTransform();
+
+			return true;
+		}
+
+		bool saveImage(const QByteArray& fileFormat)
+		{
+			QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
+
+			QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
+				initialPath,
+				tr("%1 Files (*.%2);;All Files (*)")
+				.arg(QString::fromLatin1(fileFormat.toUpper()))
+				.arg(QString::fromLatin1(fileFormat)));
+
+			if (fileName.isEmpty())
+				return false;
+
+			m_Pixmap.save(fileName, fileFormat);
+		}
+
 	public:
 		void toggleGrid()
 		{

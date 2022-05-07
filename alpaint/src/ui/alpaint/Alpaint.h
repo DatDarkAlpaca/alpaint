@@ -2,7 +2,6 @@
 #include "pch.h"
 #include "ui_Alpaint.h"
 #include "tools/Tools.h"
-//#include "canvas/CanvasWidget.h"
 #include "canvas/Canvas.h"
 
 #include "dialogs/NewFileDialog.h"
@@ -31,10 +30,13 @@ namespace alp
     private:
         void newFileAction();
 
+        void openFileAction();
+
+        void saveFileAction();
+
         void resizeCanvasAction();
 
     private:
-        //CanvasWidget* m_CanvasWidget = nullptr;
         Canvas* m_Canvas = nullptr;
 
         ::Ui::AlpaintClass ui;

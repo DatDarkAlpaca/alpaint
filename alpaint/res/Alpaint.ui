@@ -65,6 +65,9 @@
      <string>File</string>
     </property>
     <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="separator"/>
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
    </widget>
@@ -603,6 +606,22 @@ QToolButton:hover
   <action name="actionResizeCanvas">
    <property name="text">
     <string>Resize canvas...</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>

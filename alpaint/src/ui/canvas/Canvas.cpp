@@ -42,7 +42,7 @@ void alp::Canvas::resizeCanvas(const QSize& size)
 
 	m_Size = size;
 	m_Pixmap = QPixmap(size);
-	m_Pixmap.fill(Qt::transparent);
+	//m_Pixmap.fill(Qt::transparent);
 
 	QPainter painter(&m_Pixmap);
 	painter.setPen(Qt::NoPen);
