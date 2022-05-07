@@ -11,7 +11,7 @@ namespace alp
 		ToolBarDock(QWidget* parent)
 			: QDockWidget(parent)
 		{
-			setTitleBarWidget(new QWidget(this));
+			//setTitleBarWidget(new QWidget(this));
 		}
 	};
 }

@@ -37,6 +37,7 @@ namespace alp
         void resizeCanvasAction();
 
     private:
+        QDockWidget *m_CanvasWidget = nullptr;
         Canvas* m_Canvas = nullptr;
 
         ::Ui::AlpaintClass ui;

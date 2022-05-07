@@ -10,6 +10,12 @@
     <height>400</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="minimumSize">
    <size>
     <width>600</width>
@@ -26,10 +32,23 @@
 }</string>
   </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>0</width>
+     <height>1000000</height>
+    </size>
+   </property>
    <property name="styleSheet">
     <string notr="true">QWidget#centralWidget
 {
 	background-color: rgb(40, 40, 40);
+	background-color: red;
 }</string>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -90,7 +109,7 @@
   </widget>
   <widget class="alp::ToolBarDock" name="toolBar">
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+    <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -514,7 +533,7 @@ QToolButton:hover
     <set>QDockWidget::NoDockWidgetFeatures</set>
    </property>
    <property name="allowedAreas">
-    <set>Qt::TopDockWidgetArea</set>
+    <set>Qt::NoDockWidgetArea</set>
    </property>
    <attribute name="dockWidgetArea">
     <number>4</number>

@@ -84,7 +84,18 @@ void alp::Alpaint::newFileAction()
     QSize size{ data.documentWidth, data.documentHeight };
     m_Canvas = new Canvas(this, size);
 
-    ui.centralWidget->layout()->addWidget(m_Canvas);
+    setDockNestingEnabled(true);
+
+    m_CanvasWidget = new QDockWidget(this);
+    m_CanvasWidget->setWindowTitle("Untitled - 0");
+    m_CanvasWidget->setBaseSize(width(), height());
+    m_CanvasWidget->setWidget(m_Canvas);
+
+    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    m_CanvasWidget->setSizePolicy(sizePolicy);
+    m_CanvasWidget->setAllowedAreas(Qt::AllDockWidgetAreas);
+
+    addDockWidget(Qt::RightDockWidgetArea, m_CanvasWidget);
 }
 
 void alp::Alpaint::openFileAction()
