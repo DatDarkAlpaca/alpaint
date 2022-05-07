@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "tools/Tool.h"
+#include "canvas/Canvas.h"
 
 namespace alp
 {
@@ -16,6 +17,11 @@ namespace alp
 
 	public:
 		static void setTool(std::string&& name) { currentTool = tools[name]; }
+
+	public:
+		static void keyPressEvent(QKeyEvent* event, Canvas* canvas);
+
+		static void keyReleaseEvent(QKeyEvent* event, Canvas* canvas);
 
 	public:
 		static inline QColor primaryColor = Qt::black, secondaryColor = Qt::white;

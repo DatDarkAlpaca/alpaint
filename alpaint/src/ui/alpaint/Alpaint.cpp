@@ -11,45 +11,19 @@ alp::Alpaint::Alpaint(QWidget *parent)
     setFocus();
 
     connectActions();
-
     connectTools();
 }
 
 void alp::Alpaint::keyPressEvent(QKeyEvent* event)
 {
-    if (event->key() == Qt::Key_Q && m_CanvasWidget)
-        m_CanvasWidget->getCanvas()->resetCanvasTransform();
-
-    if (event->key() == Qt::Key_Shift)
-    {
-        if (ToolHandler::ToolHandler::currentTool->type == ToolType::Pencil)
-            ToolHandler::setTool("line");
-    }
-    else if (event->key() == Qt::Key_Alt)
-    {
-        if (ToolHandler::ToolHandler::currentTool->type == ToolType::Pencil)
-            ToolHandler::setTool("picker");
-    }
-
-    if (m_CanvasWidget)
-        m_CanvasWidget->getCanvas()->keyPressEvent(event);
+    if(m_CanvasWidget)
+        ToolHandler::keyPressEvent(event, m_CanvasWidget->getCanvas());
 }
 
 void alp::Alpaint::keyReleaseEvent(QKeyEvent* event)
 {
-    if (event->key() == Qt::Key_Shift)
-    {
-        if (ToolHandler::currentTool->type == ToolType::Line)
-            ToolHandler::setTool("pencil");
-    }
-    else if (event->key() == Qt::Key_Alt)
-    {
-        if (ToolHandler::currentTool->type == ToolType::ColorPicker)
-            ToolHandler::setTool("pencil");
-    }
-
     if (m_CanvasWidget)
-        m_CanvasWidget->getCanvas()->keyReleaseEvent(event);
+        ToolHandler::keyReleaseEvent(event, m_CanvasWidget->getCanvas());
 }
 
 void alp::Alpaint::connectTools()
