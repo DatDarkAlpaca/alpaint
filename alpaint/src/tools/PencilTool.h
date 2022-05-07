@@ -19,7 +19,8 @@ namespace alp
 			QColor usedColor = isSecondaryButton ? ToolHandler::secondaryColor : ToolHandler::primaryColor;
 			painter.setPen(QPen(usedColor, ToolHandler::pencilWidth, ToolHandler::pencilStyle, Qt::PenCapStyle::SquareCap));
 
-			painter.drawPoint(endPoint);
+			painter.drawLine(startPoint, endPoint);
+			startPoint = endPoint;
 		}
 	};
 }
