@@ -96,6 +96,9 @@ namespace alp
 
 		void wheelEvent(QWheelEvent* event) override;
 
+	signals:
+		void projectModified();
+
 	private:
 		void initializeUndoStack();
 

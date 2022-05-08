@@ -26,6 +26,15 @@ namespace alp
 			setWindowTitle(m_ProjectName);
 		}
 
+	public slots:
+		void updateTitle()
+		{
+			if (m_Modified)
+				setWindowTitle(m_ProjectName + " *");
+			else
+				setWindowTitle(m_ProjectName);
+		}
+
 	public:
 		void saveNewProject()
 		{
@@ -41,12 +50,14 @@ namespace alp
 			m_ProjectName = fileInfo.baseName();
 			m_ProjectAbsPath = fileInfo.absolutePath();
 
-			setWindowTitle(m_ProjectName);
-
 			canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
 			
 			m_Modified = false;
 			m_IsDefault = false;
+		
+			updateTitle();
+
+			--unnamedCount;
 		}
 
 		void saveChanges()
@@ -56,12 +67,16 @@ namespace alp
 
 			canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
 			m_Modified = false;
+
+			updateTitle();
 		}
   
 	public:
 		Canvas* getCanvas() { return canvas; }
 
 		bool isDefault() const { return m_IsDefault; }
+
+		void setModified(bool value) { m_Modified = value; }
 
 		bool modified() const { return m_Modified; }
 

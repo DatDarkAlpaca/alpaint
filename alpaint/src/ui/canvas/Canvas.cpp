@@ -9,7 +9,7 @@ alp::Canvas::Canvas(QWidget* parent, QSize size)
 {
 	setAttribute(Qt::WA_StaticContents);
 
-	m_Background = QImage("res/background-sanity.png");
+	m_Background = QImage(":/background/background.png");
 
 	resetCanvasLayers(size);
 	resetCanvasTransform();
@@ -49,6 +49,8 @@ void alp::Canvas::resizeCanvas(const QSize& size)
 	painter.drawRect(copy.rect());
 
 	resetCanvasTransform();
+
+	emit projectModified();
 }
 
 void alp::Canvas::onUndo()
@@ -58,6 +60,8 @@ void alp::Canvas::onUndo()
 
 	m_UndoStack->undo();
 	update();
+
+	emit projectModified();
 }
 
 void alp::Canvas::onRedo()
@@ -67,6 +71,8 @@ void alp::Canvas::onRedo()
 
 	m_UndoStack->redo();
 	update();
+
+	emit projectModified();
 }
 
 void alp::Canvas::mousePressEvent(QMouseEvent* event)
@@ -92,6 +98,7 @@ void alp::Canvas::mousePressEvent(QMouseEvent* event)
 		m_DrawingLine = true;
 
 	update();
+	emit projectModified();
 }
 
 void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
@@ -128,7 +135,9 @@ void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 	}
 
 	ToolHandler::currentTool->draw(m_CurrentLayer, point, event->buttons() & Qt::RightButton);
+
 	update();
+	emit projectModified();
 }
 
 void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
@@ -160,6 +169,7 @@ void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
 		saveDrawCommand();
 
 	update();
+	emit projectModified();
 }
 
 void alp::Canvas::keyPressEvent(QKeyEvent* event)

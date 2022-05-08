@@ -85,6 +85,11 @@ void alp::Alpaint::newProjectAction()
     auto project = m_ProjectList.back();
     m_CurrentProject = project;
 
+    connect(project->getCanvas(), &Canvas::projectModified, project, [project]() {
+        project->setModified(true);
+        project->updateTitle();
+    });
+
     if (m_ProjectList.size() == 1)
         addDockWidget(Qt::RightDockWidgetArea, project);
     else
