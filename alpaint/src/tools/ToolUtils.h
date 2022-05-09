@@ -3,9 +3,9 @@
 
 namespace alp
 {
-	inline QPoint getLayerPoint(const QPoint& point, const QRect& canvasRect, const QPointF& delta, qreal scale)
+	inline QPoint getLayerPoint(const QPoint& point, const QImage& image, const QRect& canvasRect, const QPointF& delta, qreal scale)
 	{
-		auto result = (point - canvasRect.center() - delta) / scale;
+		auto result = (point - canvasRect.center() + image.scaled(image.size() * scale).rect().center() - delta) / scale;
 		result.setX(std::ceil(result.x()) - 1);
 		result.setY(std::ceil(result.y()) - 1);
 

@@ -89,7 +89,7 @@ void alp::Canvas::mousePressEvent(QMouseEvent* event)
 	if (!ToolHandler::currentTool)
 		return;
 
-	ToolHandler::currentTool->setStartPoint(getLayerPoint(event->pos(), rect(), m_Delta, m_Scale));
+	ToolHandler::currentTool->setStartPoint(getLayerPoint(event->pos(), m_CurrentLayer, rect(), m_Delta, m_Scale));
 
 	m_OldLayer = m_CurrentLayer.copy();
 	m_Drawing = true;
@@ -116,7 +116,7 @@ void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 	if (!ToolHandler::currentTool || !m_Drawing)
 		return;
 
-	auto point = getLayerPoint(event->pos(), rect(), m_Delta, m_Scale);
+	auto point = getLayerPoint(event->pos(), m_CurrentLayer, rect(), m_Delta, m_Scale);
 
 	if (ToolHandler::currentTool->type == ToolType::Line)
 	{
@@ -156,7 +156,7 @@ void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
 	if (!ToolHandler::currentTool)
 		return;
 
-	auto point = getLayerPoint(event->pos(), rect(), m_Delta, m_Scale);
+	auto point = getLayerPoint(event->pos(), m_CurrentLayer, rect(), m_Delta, m_Scale);
 
 	if (ToolHandler::currentTool->type == ToolType::Line)
 		ToolHandler::currentTool->setEndPoint(point);
@@ -198,6 +198,7 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 
 	QPainter painter(this);
 	painter.translate(rect().center());
+	painter.translate(-m_CurrentLayer.scaled(m_Size * m_Scale).rect().center());
 	painter.translate(m_Delta);
 	painter.scale(m_Scale, m_Scale);
 
