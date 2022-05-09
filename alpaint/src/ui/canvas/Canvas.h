@@ -30,23 +30,9 @@ namespace alp
 		}
 
 	public:
-		void toggleGrid()
-		{
-			QSettings settings;
-			m_EnableGrid = !m_EnableGrid;
-			settings.beginGroup("canvas");
-			settings.setValue("enableGrid", m_EnableGrid);
-			settings.endGroup();
-		}
+		void toggleGrid();
 
-		void toggleBackground()
-		{
-			QSettings settings;
-			m_EnableSanityBackground = !m_EnableSanityBackground;
-			settings.beginGroup("canvas");
-			settings.setValue("enableBackground", m_EnableSanityBackground);
-			settings.endGroup();
-		}
+		void toggleBackground();
 
 	public slots:
 		void onUndo();

@@ -53,6 +53,24 @@ void alp::Canvas::resizeCanvas(const QSize& size)
 	emit projectModified();
 }
 
+void alp::Canvas::toggleGrid()
+{
+	QSettings settings;
+	m_EnableGrid = !m_EnableGrid;
+	settings.beginGroup("canvas");
+	settings.setValue("enableGrid", m_EnableGrid);
+	settings.endGroup();
+}
+
+void alp::Canvas::toggleBackground()
+{
+	QSettings settings;
+	m_EnableSanityBackground = !m_EnableSanityBackground;
+	settings.beginGroup("canvas");
+	settings.setValue("enableBackground", m_EnableSanityBackground);
+	settings.endGroup();
+}
+
 void alp::Canvas::onUndo()
 {
 	if (!m_UndoStack->canUndo())
