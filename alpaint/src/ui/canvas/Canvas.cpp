@@ -9,7 +9,7 @@ alp::Canvas::Canvas(QWidget* parent, QSize size)
 {
 	setAttribute(Qt::WA_StaticContents);
 
-	m_Background = QImage(":/background/background.png");
+	m_Background = QImage(":/background/background");
 
 	resetCanvasLayers(size);
 	resetCanvasTransform();

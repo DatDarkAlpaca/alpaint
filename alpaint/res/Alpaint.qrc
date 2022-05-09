@@ -11,6 +11,6 @@
         <file>icons/rect.png</file>
     </qresource>
     <qresource prefix="/background">
-        <file>background/background.png</file>
+        <file alias="background">background/background.png</file>
     </qresource>
 </RCC>
