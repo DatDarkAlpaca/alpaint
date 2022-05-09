@@ -4,6 +4,7 @@
 #include "tools/Tools.h"
 
 #include "docks/ProjectDock.h"
+
 #include "dialogs/NewFileDialog.h"
 #include "dialogs/ResizeCanvasDialog.h"
 
@@ -48,6 +49,7 @@ namespace alp
         QList<ProjectDock*> m_ProjectList;
         ProjectDock* m_CurrentProject = nullptr;
 
+    private:
         ::Ui::AlpaintClass ui;
     };
 }

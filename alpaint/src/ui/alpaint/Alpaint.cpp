@@ -8,7 +8,6 @@ alp::Alpaint::Alpaint(QWidget *parent)
     ui.setupUi(this);
 
     setFocusPolicy(Qt::StrongFocus);
-    setDockNestingEnabled(true);
     setFocus();
 
     connectActions();
@@ -81,6 +80,8 @@ void alp::Alpaint::newProjectAction()
 
     auto data = dialog.data;
 
+    ui.centralWidget->setMaximumSize({ 0, 1000000 });
+
     m_ProjectList.push_back(new ProjectDock(this, new Canvas(this, data.documentSize)));
     auto project = m_ProjectList.back();
     m_CurrentProject = project;
@@ -91,7 +92,10 @@ void alp::Alpaint::newProjectAction()
     });
 
     if (m_ProjectList.size() == 1)
+    {
         addDockWidget(Qt::RightDockWidgetArea, project);
+        splitDockWidget(ui.toolBar, project, Qt::Horizontal);
+    }
     else
     {
         tabifyDockWidget(m_ProjectList[0], project);

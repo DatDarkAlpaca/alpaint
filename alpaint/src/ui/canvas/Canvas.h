@@ -29,22 +29,6 @@ namespace alp
 			update();
 		}
 
-		void saveNewImage(const QString& projectName, const QByteArray& fileFormat)
-		{
-			/*QString initialPath = QDir::currentPath() + "/untitled." + fileFormat;
-
-			QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
-				initialPath,
-				tr("%1 Files (*.%2);;All Files (*)")
-				.arg(QString::fromLatin1(fileFormat.toUpper()))
-				.arg(QString::fromLatin1(fileFormat)));
-
-			if (fileName.isEmpty())
-				return;
-
-			m_CurrentLayer.save(fileName, fileFormat);*/
-		}
-
 	public:
 		void toggleGrid()
 		{
