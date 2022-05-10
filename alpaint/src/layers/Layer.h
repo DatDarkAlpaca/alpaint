@@ -28,6 +28,35 @@ namespace alp
 		return layers.back();
 	}
 
+	inline void swapLayerOrder(int first, int second)
+	{
+		std::iter_swap(layers.begin() + first, layers.begin() + second);
+	}
+
+	inline int findLayerIndex(const std::shared_ptr<Layer>& layer)
+	{
+		if (!layer)
+			return -1;
+
+		for (int i = 0; i < layers.size(); i++)
+		{
+			if (layer == layers[i])
+				return i;
+		}
+
+		return -1;
+	}
+
+	inline void swapLayerOrder(const std::shared_ptr<Layer>& layer, int second)
+	{
+		int index = findLayerIndex(layer);
+
+		if (!layers[second] || !layers[index])
+			return;
+
+		std::iter_swap(layers.begin() + index, layers.begin() + second);
+	}
+
 	inline void deleteLayer(const std::shared_ptr<Layer>& layer)
 	{
 		for (auto it = layers.begin(); it < layers.end();)

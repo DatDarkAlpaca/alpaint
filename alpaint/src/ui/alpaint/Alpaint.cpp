@@ -111,8 +111,7 @@ void alp::Alpaint::newProjectAction()
     auto layer = createNewLayer(data.documentSize);
     canvas->selectLayer(layer);
 
-    auto layerWidget = createLayerWidget();
-    layerWidget->selectLayer(layer);
+    auto layerWidget = createLayerWidget(layer);
    
     connect(canvas, &Canvas::projectModified, m_CurrentProject, [&]() {
         m_CurrentProject->setModified(true);
@@ -167,7 +166,7 @@ void alp::Alpaint::closeProjectAction()
     }
 }
 
-alp::LayerWidget* alp::Alpaint::createLayerWidget()
+alp::LayerWidget* alp::Alpaint::createLayerWidget(const std::shared_ptr<Layer>& layer)
 {
     if (!m_CurrentProject)
         return nullptr;
@@ -179,8 +178,13 @@ alp::LayerWidget* alp::Alpaint::createLayerWidget()
     ui.layerList->addItem(item);
     ui.layerList->setItemWidget(item, widget);
 
-    auto layer = createNewLayer(layers.back()->image.size());
-    widget->selectLayer(layer);
+    auto usedLayer = layer;
+    if (!layer)
+        usedLayer = createNewLayer(layers.back()->image.size());
+    else
+        m_CurrentProject->getCanvas()->selectLayer(layer);
+
+    widget->selectLayer(usedLayer);
     
     ui.layerList->setCurrentRow(ui.layerList->row(item));
 

@@ -5,6 +5,7 @@
 #include <QtWidgets>
 #include <qpen.h>
 
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <vector>
