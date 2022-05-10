@@ -4,6 +4,7 @@
 #include "tools/Tools.h"
 
 #include "docks/ProjectDock.h"
+#include "layers/LayerWidget.h"
 
 #include "dialogs/NewFileDialog.h"
 #include "dialogs/ResizeCanvasDialog.h"
@@ -38,6 +39,11 @@ namespace alp
         void saveAsProjectAction();
 
         void closeProjectAction();
+
+    public slots:
+        LayerWidget* createLayerWidget();
+
+        void deleteSelectedLayerWidget();
 
     private:
         void resizeCanvasAction();

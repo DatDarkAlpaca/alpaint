@@ -126,12 +126,15 @@
     </ClCompile>
     <ClCompile Include="src\ui\alpaint\Alpaint.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <QtUic Include="res\LayerWidget.ui" />
     <QtUic Include="res\NewFileDialog.ui" />
     <QtUic Include="res\ResizeCanvasDialog.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="src\ui\docks\ProjectDock.h" />
     <QtMoc Include="src\ui\dialogs\ResizeCanvasDialog.h" />
+    <ClInclude Include="src\layers\Layer.h" />
+    <QtMoc Include="src\layers\LayerWidget.h" />
     <ClInclude Include="src\ToolHandler.h" />
     <ClInclude Include="src\tools\ColorPickerTool.h" />
     <ClInclude Include="src\tools\DrawCommand.h" />

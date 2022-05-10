@@ -2,6 +2,8 @@
 #include "Alpaint.h"
 #include "ToolHandler.h"
 
+#include "layers/LayerWidget.h"
+
 alp::Alpaint::Alpaint(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -38,6 +40,14 @@ void alp::Alpaint::connectTools()
     connect(ToolHandler::tools["picker"].get(), &Tool::colorUpdated, this, [&]() {
         ui.primaryColor->updatePanelColors();
         ui.secondaryColor->updatePanelColors();
+    });
+
+    connect(ui.addLayerButton, &QToolButton::clicked, this, [&]() {
+        createLayerWidget();
+    });
+
+    connect(ui.removeLayerButton, &QToolButton::clicked, this, [&]() {
+        deleteSelectedLayerWidget();
     });
 }
 
@@ -82,19 +92,31 @@ void alp::Alpaint::newProjectAction()
 
     ui.centralWidget->setMaximumSize({ 0, 1000000 });
 
-    m_ProjectList.push_back(new ProjectDock(this, new Canvas(this, data.documentSize)));
+    auto canvas = new Canvas(this, data.documentSize);
+    m_ProjectList.push_back(new ProjectDock(this, canvas));
     auto project = m_ProjectList.back();
     m_CurrentProject = project;
 
-    connect(project->getCanvas(), &Canvas::projectModified, project, [project]() {
+    connect(canvas, &Canvas::projectModified, project, [project]() {
         project->setModified(true);
         project->updateTitle();
+    });
+
+    connect(ui.layerList, &QListWidget::currentItemChanged, canvas, [=]() {
+        auto layer = (LayerWidget*)ui.layerList->itemWidget(ui.layerList->currentItem());
+        canvas->changedLayer(layer);
     });
 
     if (m_ProjectList.size() == 1)
     {
         addDockWidget(Qt::RightDockWidgetArea, project);
         splitDockWidget(ui.toolBar, project, Qt::Horizontal);
+
+        auto layer = createNewLayer(data.documentSize); // Layer
+        canvas->selectLayer(layer);
+
+        auto layerWidget = createLayerWidget(); // LayerWidget
+        layerWidget->selectLayer(layer);
     }
     else
     {
@@ -102,6 +124,11 @@ void alp::Alpaint::newProjectAction()
         project->show();
         project->raise();
     }
+   
+    connect(canvas, &Canvas::projectModified, this, [=]() {
+        if(ui.layerList->currentItem())
+            ui.layerList->itemWidget(ui.layerList->currentItem())->update();
+    });
 }
 
 void alp::Alpaint::openProjectAction()
@@ -151,20 +178,48 @@ void alp::Alpaint::closeProjectAction()
     }
 }
 
+alp::LayerWidget* alp::Alpaint::createLayerWidget()
+{
+    if (!m_CurrentProject)
+        return nullptr;
+
+    LayerWidget* widget = new LayerWidget(ui.layerList);
+    QListWidgetItem* item = new QListWidgetItem();
+    item->setSizeHint(widget->sizeHint());
+
+    connect(widget, &LayerWidget::destroyed, this, []() {
+        LayerWidget::decreaseDefaultCount();
+    });
+
+    ui.layerList->addItem(item);
+    ui.layerList->setItemWidget(item, widget);
+
+    auto layer = createNewLayer(layers.back()->image.size());
+    widget->selectLayer(layer);
+
+    return widget;
+}
+
+void alp::Alpaint::deleteSelectedLayerWidget()
+{
+    if (ui.layerList->count() > 1)
+        ui.layerList->takeItem(ui.layerList->row(ui.layerList->currentItem()));
+}
+
 void alp::Alpaint::resizeCanvasAction()
 {
     if (!m_CurrentProject)
         return;
 
-    auto image = getFocusedCanvas()->getSelectedLayer();
+    //auto image = getFocusedCanvas()->getSelectedLayer();
 
-    ResizeCanvasDialog dialog(this, image->width(), image->height());
+    //ResizeCanvasDialog dialog(this, image->width(), image->height());
 
-    if (!dialog.exec())
-        return;
+    //if (!dialog.exec())
+    //    return;
 
-    QSize size{ dialog.width, dialog.height };
-    getFocusedCanvas()->resizeCanvas(size);
+    //QSize size{ dialog.width, dialog.height };
+    //getFocusedCanvas()->resizeCanvas(size);
 }
 
 alp::Canvas* alp::Alpaint::getFocusedCanvas()

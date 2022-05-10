@@ -50,7 +50,7 @@ namespace alp
 			m_ProjectName = fileInfo.baseName();
 			m_ProjectAbsPath = fileInfo.absolutePath();
 
-			canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
+			// canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
 			
 			m_Modified = false;
 			m_IsDefault = false;
@@ -65,7 +65,7 @@ namespace alp
 			if (m_IsDefault)
 				return;
 
-			canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
+			// canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
 			m_Modified = false;
 
 			updateTitle();

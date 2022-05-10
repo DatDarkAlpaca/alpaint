@@ -11,41 +11,28 @@ alp::Canvas::Canvas(QWidget* parent, QSize size)
 
 	m_Background = QImage(":/background/background");
 
-	resetCanvasLayers(size);
-	resetCanvasTransform();
-
 	loadSettings();
 
 	initializeUndoStack();
 }
 
-void alp::Canvas::resetCanvasLayers(const QSize& size)
-{
-	m_Scale = int(std::min(size.width(), size.height()) / 4);
-
-	m_Size = size;
-	m_CurrentLayer = QImage(size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
-	m_CurrentLayer.fill(Qt::transparent);
-}
-
 void alp::Canvas::resetCanvasTransform()
 {
 	m_Delta = QPointF(0, 0);
-	m_Scale = int(std::min(m_CurrentLayer.size().width(), m_CurrentLayer.size().height()) / 4);;
+	m_Scale = int(std::min(m_CurrentLayer->image.size().width(), m_CurrentLayer->image.size().height()) / 4);
 	update();
 }
 
 void alp::Canvas::resizeCanvas(const QSize& size)
 {
-	QImage copy = m_CurrentLayer.copy();
+	QImage copy = m_CurrentLayer->image.copy();
 
-	m_Size = size;
-	m_CurrentLayer = QImage(size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
+	m_CurrentLayer->image = QImage(size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
 
-	QPainter painter(&m_CurrentLayer);
+	QPainter painter(&m_CurrentLayer->image);
 	painter.setPen(Qt::NoPen);
 	painter.setBrush(copy);
-	painter.setBrushOrigin(m_CurrentLayer.rect().topLeft());
+	painter.setBrushOrigin(m_CurrentLayer->image.rect().topLeft());
 	painter.drawRect(copy.rect());
 
 	resetCanvasTransform();
@@ -107,9 +94,9 @@ void alp::Canvas::mousePressEvent(QMouseEvent* event)
 	if (!ToolHandler::currentTool)
 		return;
 
-	ToolHandler::currentTool->setStartPoint(getLayerPoint(event->pos(), m_CurrentLayer, rect(), m_Delta, m_Scale));
+	ToolHandler::currentTool->setStartPoint(getLayerPoint(event->pos(), m_CurrentLayer->image, rect(), m_Delta, m_Scale));
 
-	m_OldLayer = m_CurrentLayer.copy();
+	m_OldLayer = m_CurrentLayer->image.copy();
 	m_Drawing = true;
 
 	if (ToolHandler::currentTool->type == ToolType::Pencil)
@@ -134,14 +121,14 @@ void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 	if (!ToolHandler::currentTool || !m_Drawing)
 		return;
 
-	auto point = getLayerPoint(event->pos(), m_CurrentLayer, rect(), m_Delta, m_Scale);
+	auto point = getLayerPoint(event->pos(), m_CurrentLayer->image, rect(), m_Delta, m_Scale);
 
 	if (ToolHandler::currentTool->type == ToolType::Line)
 	{
 		if (m_DrawingLine)
 		{
-			ToolHandler::tools["pencil"]->draw(m_CurrentLayer, point, event->buttons() & Qt::RightButton);
-			m_OldLayer = m_CurrentLayer.copy();
+			ToolHandler::tools["pencil"]->draw(m_CurrentLayer->image, point, event->buttons() & Qt::RightButton);
+			m_OldLayer = m_CurrentLayer->image.copy();
 			ToolHandler::currentTool->setStartPoint(point);
 			m_DrawingLine = false;
 		}
@@ -149,10 +136,10 @@ void alp::Canvas::mouseMoveEvent(QMouseEvent* event)
 	if (ToolHandler::currentTool->type == ToolType::Line || ToolHandler::currentTool->type == ToolType::Ellipse || ToolHandler::currentTool->type == ToolType::Rect)
 	{
 		ToolHandler::currentTool->setEndPoint(point);
-		m_CurrentLayer = m_OldLayer;
+		m_CurrentLayer->image = m_OldLayer;
 	}
 
-	ToolHandler::currentTool->draw(m_CurrentLayer, point, event->buttons() & Qt::RightButton);
+	ToolHandler::currentTool->draw(m_CurrentLayer->image, point, event->buttons() & Qt::RightButton);
 
 	update();
 	emit projectModified();
@@ -174,16 +161,16 @@ void alp::Canvas::mouseReleaseEvent(QMouseEvent* event)
 	if (!ToolHandler::currentTool)
 		return;
 
-	auto point = getLayerPoint(event->pos(), m_CurrentLayer, rect(), m_Delta, m_Scale);
+	auto point = getLayerPoint(event->pos(), m_CurrentLayer->image, rect(), m_Delta, m_Scale);
 
 	if (ToolHandler::currentTool->type == ToolType::Line)
 		ToolHandler::currentTool->setEndPoint(point);
 
-	ToolHandler::currentTool->draw(m_CurrentLayer, point, event->button() == Qt::RightButton);
+	ToolHandler::currentTool->draw(m_CurrentLayer->image, point, event->button() == Qt::RightButton);
 
 	m_Drawing = false;
 
-	if (m_OldLayer != m_CurrentLayer)
+	if (m_OldLayer != m_CurrentLayer->image)
 		saveDrawCommand();
 
 	update();
@@ -216,7 +203,7 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 
 	QPainter painter(this);
 	painter.translate(rect().center());
-	painter.translate(-m_CurrentLayer.scaled(m_Size * m_Scale).rect().center());
+	painter.translate(-m_CurrentLayer->image.scaled(m_CurrentLayer->image.size() * m_Scale).rect().center());
 	painter.translate(m_Delta);
 	painter.scale(m_Scale, m_Scale);
 
@@ -225,7 +212,7 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 		painter.setPen(Qt::NoPen);
 		painter.setBrush(m_Background);
 		painter.setBrushOrigin(rect().topLeft());
-		painter.drawRect(m_CurrentLayer.rect());
+		painter.drawRect(m_CurrentLayer->image.rect());
 	}
 	
 	if (m_EnableGrid && m_Scale > 2)
@@ -234,14 +221,18 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 		pen.setCosmetic(true);
 		painter.setPen(pen);
 
-		for (int x = 0; x < m_CurrentLayer.width(); ++x)
-			painter.drawRect(x, 0, 0, m_CurrentLayer.height());
+		for (int x = 0; x < m_CurrentLayer->image.width(); ++x)
+			painter.drawRect(x, 0, 0, m_CurrentLayer->image.height());
 
-		for (int y = 0; y < m_CurrentLayer.height(); ++y)
-			painter.drawRect(0, y, m_CurrentLayer.width(), 0);
+		for (int y = 0; y < m_CurrentLayer->image.height(); ++y)
+			painter.drawRect(0, y, m_CurrentLayer->image.width(), 0);
 	}
 	
-	painter.drawImage(rect().topLeft(), m_CurrentLayer, m_CurrentLayer.rect());
+	for (const auto& layer : layers)
+	{
+		painter.setCompositionMode(layer->blendingMode);
+		painter.drawImage(rect().topLeft(), layer->image, layer->image.rect());
+	}
 }
 
 void alp::Canvas::wheelEvent(QWheelEvent* event)
@@ -266,8 +257,8 @@ void alp::Canvas::initializeUndoStack()
 
 void alp::Canvas::saveDrawCommand()
 {
-	DrawCommand* command = new DrawCommand(m_OldLayer, &m_CurrentLayer);
-	m_UndoStack->push(command);
+	//DrawCommand* command = new DrawCommand(m_OldLayer, &m_CurrentLayer);
+	//m_UndoStack->push(command);
 }
 
 void alp::Canvas::loadSettings()

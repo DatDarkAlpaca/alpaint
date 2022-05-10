@@ -1,6 +1,8 @@
 #pragma once
 #include "pch.h"
 #include "tools/Tool.h"
+#include "layers/Layer.h"
+#include "layers/LayerWidget.h"
 
 namespace alp
 {
@@ -12,21 +14,31 @@ namespace alp
 		Canvas(QWidget* parent = nullptr, QSize size = QSize());
 
 	public:
-		void resetCanvasLayers(const QSize& size);
+		void changedLayer(LayerWidget* layerWidget)
+		{
+			m_CurrentLayer = layerWidget->layer;
+			std::cout << "wow\n";
+		}
 
+		void selectLayer(const std::shared_ptr<Layer>& layer)
+		{
+			m_CurrentLayer = layer;
+		}
+
+	public:
 		void resetCanvasTransform();
 
 		void resizeCanvas(const QSize& size);
 
 		void openImage(const QString& filepath)
 		{
-			QImageReader reader(filepath);
+			/*QImageReader reader(filepath);
 
 			m_CurrentLayer = reader.read();
 			m_Size = m_CurrentLayer.size();
 			m_Scale = int(std::min(m_CurrentLayer.size().width(), m_CurrentLayer.size().height()) / 4);;
 			m_Delta = QPointF(0, 0);
-			update();
+			update();*/
 		}
 
 	public:
@@ -40,16 +52,12 @@ namespace alp
 		void onRedo();
 
 	public:
-		void setCurrentLayer(const QImage& pixmap) { m_CurrentLayer = pixmap; }
-
-		QImage* getSelectedLayer() { return &m_CurrentLayer; }
-
 		qreal getScale() const { return m_Scale; }
 
 		QPointF getDelta() const { return m_Delta; }
 
 		// Preparations the layer blending modes in the future:
-		QImage getPreparedImage() const { return m_CurrentLayer; }
+		// QImage getPreparedImage() const { return m_CurrentLayer; }
 
 	public:
 		void mousePressEvent(QMouseEvent* event) override;
@@ -77,10 +85,12 @@ namespace alp
 		void loadSettings();
 
 	private:
-		QImage m_Background, m_CurrentLayer, m_OldLayer;
+		QImage m_Background, m_OldLayer;
 		bool m_Drawing = false, m_DrawingLine = false;
 		QUndoStack* m_UndoStack;
-		QSize m_Size;
+
+	private:
+		std::shared_ptr<Layer> m_CurrentLayer = nullptr;
 
 	private:
 		QPointF m_Reference, m_Delta;
