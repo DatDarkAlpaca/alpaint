@@ -26,6 +26,11 @@ namespace alp
 			ui.previewImage->setPixmap(QPixmap::fromImage(this->layer->image));
 		}
 
+		void updateLayer()
+		{
+			ui.previewImage->setPixmap(QPixmap::fromImage(this->layer->image));
+		}
+
 	public:
 		static void decreaseDefaultCount() { --defaultCount; }
 

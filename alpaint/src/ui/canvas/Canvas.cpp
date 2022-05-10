@@ -203,7 +203,7 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 
 	QPainter painter(this);
 	painter.translate(rect().center());
-	painter.translate(-m_CurrentLayer->image.scaled(m_CurrentLayer->image.size() * m_Scale).rect().center());
+	painter.translate(-layers.back()->image.scaled(layers.back()->image.size() * m_Scale).rect().center());
 	painter.translate(m_Delta);
 	painter.scale(m_Scale, m_Scale);
 
@@ -212,7 +212,7 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 		painter.setPen(Qt::NoPen);
 		painter.setBrush(m_Background);
 		painter.setBrushOrigin(rect().topLeft());
-		painter.drawRect(m_CurrentLayer->image.rect());
+		painter.drawRect(layers.back()->image.rect());
 	}
 	
 	if (m_EnableGrid && m_Scale > 2)
@@ -221,15 +221,18 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 		pen.setCosmetic(true);
 		painter.setPen(pen);
 
-		for (int x = 0; x < m_CurrentLayer->image.width(); ++x)
-			painter.drawRect(x, 0, 0, m_CurrentLayer->image.height());
+		for (int x = 0; x < layers.back()->image.width(); ++x)
+			painter.drawRect(x, 0, 0, layers.back()->image.height());
 
-		for (int y = 0; y < m_CurrentLayer->image.height(); ++y)
-			painter.drawRect(0, y, m_CurrentLayer->image.width(), 0);
+		for (int y = 0; y < layers.back()->image.height(); ++y)
+			painter.drawRect(0, y, layers.back()->image.width(), 0);
 	}
 	
 	for (const auto& layer : layers)
 	{
+		if (!layer)
+			continue;
+
 		painter.setCompositionMode(layer->blendingMode);
 		painter.drawImage(rect().topLeft(), layer->image, layer->image.rect());
 	}

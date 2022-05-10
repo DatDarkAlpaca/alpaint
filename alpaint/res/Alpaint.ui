@@ -595,7 +595,7 @@ QToolButton:hover
    </property>
    <property name="minimumSize">
     <size>
-     <width>150</width>
+     <width>310</width>
      <height>145</height>
     </size>
    </property>
@@ -696,6 +696,12 @@ QToolButton:hover
      </item>
      <item>
       <widget class="QListWidget" name="layerList">
+       <property name="minimumSize">
+        <size>
+         <width>300</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color:rgb(40,40,40);
 border: 0px;

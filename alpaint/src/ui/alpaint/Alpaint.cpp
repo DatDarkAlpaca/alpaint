@@ -97,26 +97,10 @@ void alp::Alpaint::newProjectAction()
     auto project = m_ProjectList.back();
     m_CurrentProject = project;
 
-    connect(canvas, &Canvas::projectModified, project, [project]() {
-        project->setModified(true);
-        project->updateTitle();
-    });
-
-    connect(ui.layerList, &QListWidget::currentItemChanged, canvas, [=]() {
-        auto layer = (LayerWidget*)ui.layerList->itemWidget(ui.layerList->currentItem());
-        canvas->changedLayer(layer);
-    });
-
     if (m_ProjectList.size() == 1)
     {
         addDockWidget(Qt::RightDockWidgetArea, project);
         splitDockWidget(ui.toolBar, project, Qt::Horizontal);
-
-        auto layer = createNewLayer(data.documentSize); // Layer
-        canvas->selectLayer(layer);
-
-        auto layerWidget = createLayerWidget(); // LayerWidget
-        layerWidget->selectLayer(layer);
     }
     else
     {
@@ -124,10 +108,29 @@ void alp::Alpaint::newProjectAction()
         project->show();
         project->raise();
     }
+
+    auto layer = createNewLayer(data.documentSize); // Layer
+    canvas->selectLayer(layer);
+
+    auto layerWidget = createLayerWidget(); // LayerWidget
+    layerWidget->selectLayer(layer);
    
+    connect(canvas, &Canvas::projectModified, project, [project]() {
+        project->setModified(true);
+        project->updateTitle();
+    });
+
+    connect(ui.layerList, &QListWidget::currentItemChanged, canvas, [=]() {
+        auto layerWidget = (LayerWidget*)ui.layerList->itemWidget(ui.layerList->currentItem());
+        canvas->selectLayer(layerWidget->layer);
+    });
+
     connect(canvas, &Canvas::projectModified, this, [=]() {
-        if(ui.layerList->currentItem())
-            ui.layerList->itemWidget(ui.layerList->currentItem())->update();
+        if (!ui.layerList->currentItem())
+            return;
+
+        auto layer = (LayerWidget*)ui.layerList->itemWidget(ui.layerList->currentItem());
+        layer->updateLayer();
     });
 }
 
@@ -187,15 +190,20 @@ alp::LayerWidget* alp::Alpaint::createLayerWidget()
     QListWidgetItem* item = new QListWidgetItem();
     item->setSizeHint(widget->sizeHint());
 
-    connect(widget, &LayerWidget::destroyed, this, []() {
-        LayerWidget::decreaseDefaultCount();
-    });
-
     ui.layerList->addItem(item);
     ui.layerList->setItemWidget(item, widget);
 
+    connect(widget, &LayerWidget::destroyed, this, [=]() {
+        auto canvas = m_CurrentProject->getCanvas();
+        widget->decreaseDefaultCount();
+        canvas->selectLayer(nullptr);
+        canvas->deleteCurrentLayer();
+    });
+
     auto layer = createNewLayer(layers.back()->image.size());
     widget->selectLayer(layer);
+
+    ui.layerList->setCurrentRow(ui.layerList->row(item));
 
     return widget;
 }

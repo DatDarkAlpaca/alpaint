@@ -14,15 +14,15 @@ namespace alp
 		Canvas(QWidget* parent = nullptr, QSize size = QSize());
 
 	public:
-		void changedLayer(LayerWidget* layerWidget)
-		{
-			m_CurrentLayer = layerWidget->layer;
-			std::cout << "wow\n";
-		}
-
 		void selectLayer(const std::shared_ptr<Layer>& layer)
 		{
 			m_CurrentLayer = layer;
+		}
+
+		void deleteCurrentLayer()
+		{
+			delete m_CurrentLayer.get();
+			m_CurrentLayer = nullptr;
 		}
 
 	public:
