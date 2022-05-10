@@ -94,43 +94,29 @@ void alp::Alpaint::newProjectAction()
 
     auto canvas = new Canvas(this, data.documentSize);
     m_ProjectList.push_back(new ProjectDock(this, canvas));
-    auto project = m_ProjectList.back();
-    m_CurrentProject = project;
+    m_CurrentProject = m_ProjectList.back();
 
     if (m_ProjectList.size() == 1)
     {
-        addDockWidget(Qt::RightDockWidgetArea, project);
-        splitDockWidget(ui.toolBar, project, Qt::Horizontal);
+        addDockWidget(Qt::RightDockWidgetArea, m_CurrentProject);
+        splitDockWidget(ui.toolBar, m_CurrentProject, Qt::Horizontal);
     }
     else
     {
-        tabifyDockWidget(m_ProjectList[0], project);
-        project->show();
-        project->raise();
+        tabifyDockWidget(m_ProjectList[0], m_CurrentProject);
+        m_CurrentProject->show();
+        m_CurrentProject->raise();
     }
 
-    auto layer = createNewLayer(data.documentSize); // Layer
+    auto layer = createNewLayer(data.documentSize);
     canvas->selectLayer(layer);
 
-    auto layerWidget = createLayerWidget(); // LayerWidget
+    auto layerWidget = createLayerWidget();
     layerWidget->selectLayer(layer);
    
-    connect(canvas, &Canvas::projectModified, project, [project]() {
-        project->setModified(true);
-        project->updateTitle();
-    });
-
-    connect(ui.layerList, &QListWidget::currentItemChanged, canvas, [=]() {
-        auto layerWidget = (LayerWidget*)ui.layerList->itemWidget(ui.layerList->currentItem());
-        canvas->selectLayer(layerWidget->layer);
-    });
-
-    connect(canvas, &Canvas::projectModified, this, [=]() {
-        if (!ui.layerList->currentItem())
-            return;
-
-        auto layer = (LayerWidget*)ui.layerList->itemWidget(ui.layerList->currentItem());
-        layer->updateLayer();
+    connect(canvas, &Canvas::projectModified, m_CurrentProject, [&]() {
+        m_CurrentProject->setModified(true);
+        m_CurrentProject->updateTitle();
     });
 }
 
@@ -193,24 +179,37 @@ alp::LayerWidget* alp::Alpaint::createLayerWidget()
     ui.layerList->addItem(item);
     ui.layerList->setItemWidget(item, widget);
 
-    connect(widget, &LayerWidget::destroyed, this, [=]() {
-        auto canvas = m_CurrentProject->getCanvas();
-        widget->decreaseDefaultCount();
-        canvas->deleteCurrentLayer();
-    });
-
     auto layer = createNewLayer(layers.back()->image.size());
     widget->selectLayer(layer);
-
+    
     ui.layerList->setCurrentRow(ui.layerList->row(item));
+
+    connect(ui.layerList, &QListWidget::currentItemChanged, this, [=]() {
+        auto layerWidget = (LayerWidget*)ui.layerList->itemWidget(ui.layerList->currentItem());
+        m_CurrentProject->getCanvas()->selectLayer(layerWidget->layer);
+    });
+
+    connect(m_CurrentProject->getCanvas(), &Canvas::projectModified, this, [=]() {
+        if (!ui.layerList->currentItem())
+            return;
+
+        auto layer = (LayerWidget*)ui.layerList->itemWidget(ui.layerList->currentItem());
+        layer->updateLayer();
+    });
 
     return widget;
 }
 
 void alp::Alpaint::deleteSelectedLayerWidget()
 {
-    if (ui.layerList->count() > 1)
-        ui.layerList->takeItem(ui.layerList->row(ui.layerList->currentItem()));
+    if (ui.layerList->count() <= 1)
+        return;
+    
+    ui.layerList->takeItem(ui.layerList->row(ui.layerList->currentItem()));
+
+    auto canvas = m_CurrentProject->getCanvas();
+    LayerWidget::decreaseDefaultCount();
+    canvas->deleteCurrentLayer();
 }
 
 void alp::Alpaint::resizeCanvasAction()
