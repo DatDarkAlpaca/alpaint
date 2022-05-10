@@ -27,4 +27,19 @@ namespace alp
 
 		return layers.back();
 	}
+
+	inline void deleteLayer(const std::shared_ptr<Layer>& layer)
+	{
+		for (auto it = layers.begin(); it < layers.end();)
+		{
+			if (*it == layer)
+			{
+				it->reset();
+				it = layers.erase(it);
+				break;
+			}
+			else
+				++it;
+		}
+	}
 }

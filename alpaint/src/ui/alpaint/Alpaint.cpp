@@ -205,11 +205,15 @@ void alp::Alpaint::deleteSelectedLayerWidget()
     if (ui.layerList->count() <= 1)
         return;
     
-    ui.layerList->takeItem(ui.layerList->row(ui.layerList->currentItem()));
-
     auto canvas = m_CurrentProject->getCanvas();
     LayerWidget::decreaseDefaultCount();
     canvas->deleteCurrentLayer();
+
+    ui.layerList->takeItem(ui.layerList->row(ui.layerList->currentItem()));
+
+    ui.layerList->setCurrentRow(ui.layerList->count() - 1);
+    auto layer = (LayerWidget*)ui.layerList->itemWidget(ui.layerList->currentItem());
+    layer->updateLayer();
 }
 
 void alp::Alpaint::resizeCanvasAction()

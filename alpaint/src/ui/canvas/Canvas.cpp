@@ -18,24 +18,14 @@ alp::Canvas::Canvas(QWidget* parent, QSize size)
 
 void alp::Canvas::deleteCurrentLayer()
 {
-	auto it = layers.begin();
-	for (; it != layers.end(); )
-	{
-		if (*it == m_CurrentLayer)
-		{
-			it = layers.erase(it);
+	deleteLayer(m_CurrentLayer);
 
-			if (layers.back())
-				m_CurrentLayer = layers.back();
-			else
-				m_CurrentLayer = nullptr;
+	if (layers.back())
+		m_CurrentLayer = layers.back();
+	else
+		m_CurrentLayer = nullptr;
 
-			update();
-			break;
-		}
-		else
-			it++;
-	}
+	update();
 }
 
 void alp::Canvas::resetCanvasTransform()
