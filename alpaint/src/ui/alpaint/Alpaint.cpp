@@ -196,7 +196,6 @@ alp::LayerWidget* alp::Alpaint::createLayerWidget()
     connect(widget, &LayerWidget::destroyed, this, [=]() {
         auto canvas = m_CurrentProject->getCanvas();
         widget->decreaseDefaultCount();
-        canvas->selectLayer(nullptr);
         canvas->deleteCurrentLayer();
     });
 

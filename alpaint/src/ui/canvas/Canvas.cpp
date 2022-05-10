@@ -16,6 +16,28 @@ alp::Canvas::Canvas(QWidget* parent, QSize size)
 	initializeUndoStack();
 }
 
+void alp::Canvas::deleteCurrentLayer()
+{
+	auto it = layers.begin();
+	for (; it != layers.end(); )
+	{
+		if (*it == m_CurrentLayer)
+		{
+			it = layers.erase(it);
+
+			if (layers.back())
+				m_CurrentLayer = layers.back();
+			else
+				m_CurrentLayer = nullptr;
+
+			update();
+			break;
+		}
+		else
+			it++;
+	}
+}
+
 void alp::Canvas::resetCanvasTransform()
 {
 	m_Delta = QPointF(0, 0);

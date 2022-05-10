@@ -19,11 +19,7 @@ namespace alp
 			m_CurrentLayer = layer;
 		}
 
-		void deleteCurrentLayer()
-		{
-			delete m_CurrentLayer.get();
-			m_CurrentLayer = nullptr;
-		}
+		void deleteCurrentLayer();
 
 	public:
 		void resetCanvasTransform();
