@@ -2,9 +2,10 @@
 #include "Alpaint.h"
 #include "ToolHandler.h"
 
+#include "layers/LayerList.h"
 #include "layers/LayerWidget.h"
 
-alp::Alpaint::Alpaint(QWidget *parent)
+alp::Alpaint::Alpaint(QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
@@ -116,6 +117,12 @@ void alp::Alpaint::newProjectAction()
     connect(canvas, &Canvas::projectModified, m_CurrentProject, [&]() {
         m_CurrentProject->setModified(true);
         m_CurrentProject->updateTitle();
+    });
+
+    connect((LayerList*)ui.layerList, &LayerList::onDrop, (LayerList*)ui.layerList, [&](QDropEvent* event) {
+        auto layer = (LayerList*)ui.layerList;
+        layer->afterDrop(event);
+        m_CurrentProject->getCanvas()->update();
     });
 }
 

@@ -135,6 +135,7 @@
     <QtMoc Include="src\ui\dialogs\ResizeCanvasDialog.h" />
     <ClInclude Include="src\layers\Layer.h" />
     <QtMoc Include="src\layers\LayerWidget.h" />
+    <QtMoc Include="src\layers\LayerList.h" />
     <ClInclude Include="src\ToolHandler.h" />
     <ClInclude Include="src\tools\ColorPickerTool.h" />
     <ClInclude Include="src\tools\DrawCommand.h" />

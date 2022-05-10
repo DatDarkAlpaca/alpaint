@@ -595,7 +595,7 @@ QToolButton:hover
    </property>
    <property name="minimumSize">
     <size>
-     <width>310</width>
+     <width>352</width>
      <height>145</height>
     </size>
    </property>
@@ -695,7 +695,7 @@ QToolButton:hover
       </layout>
      </item>
      <item>
-      <widget class="QListWidget" name="layerList">
+      <widget class="alp::LayerList" name="layerList">
        <property name="minimumSize">
         <size>
          <width>300</width>
@@ -715,6 +715,9 @@ border: 0px;
        </property>
        <property name="alternatingRowColors">
         <bool>false</bool>
+       </property>
+       <property name="flow">
+        <enum>QListView::TopToBottom</enum>
        </property>
        <property name="sortingEnabled">
         <bool>true</bool>
@@ -821,6 +824,11 @@ border: 0px;
    <extends>QDockWidget</extends>
    <header>docks/InformationBarDock.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>alp::LayerList</class>
+   <extends>QListWidget</extends>
+   <header>layers/LayerList.h</header>
   </customwidget>
  </customwidgets>
  <resources>

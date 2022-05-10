@@ -7,7 +7,8 @@ namespace alp
 	{
 	public:
 		Layer(const QImage& image = QImage(), QPainter::CompositionMode mode = QPainter::CompositionMode_SourceOver)
-			: image(image), blendingMode(mode) { }
+			: image(image), blendingMode(mode) 
+		{ }
 
 	public:
 		QImage image;
@@ -28,9 +29,11 @@ namespace alp
 		return layers.back();
 	}
 
-	inline void swapLayerOrder(int first, int second)
+	inline void swapLayerOrder(int before, int after)
 	{
-		std::iter_swap(layers.begin() + first, layers.begin() + second);
+		auto element = layers[before];
+		layers.erase(layers.begin() + before);
+		layers.insert(layers.begin() + after, element);
 	}
 
 	inline int findLayerIndex(const std::shared_ptr<Layer>& layer)

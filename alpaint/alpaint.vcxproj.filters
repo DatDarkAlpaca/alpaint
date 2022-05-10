@@ -125,6 +125,9 @@
     <QtMoc Include="src\layers\LayerWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="src\layers\LayerList.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="res\NewFileDialog.ui">
