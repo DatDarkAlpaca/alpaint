@@ -4,8 +4,8 @@
 #include "tools/ToolUtils.h"
 #include "tools/DrawCommand.h"
 
-alp::Canvas::Canvas(QWidget* parent, QSize size)
-	: QWidget(parent)
+alp::Canvas::Canvas(QWidget* parent, QSize size, std::vector<std::shared_ptr<Layer>>& layers)
+	: QWidget(parent), m_LayersRef(layers), m_Size(size)
 {
 	setAttribute(Qt::WA_StaticContents);
 
@@ -16,17 +16,17 @@ alp::Canvas::Canvas(QWidget* parent, QSize size)
 	initializeUndoStack();
 }
 
-void alp::Canvas::deleteCurrentLayer()
-{
-	deleteLayer(m_CurrentLayer);
-
-	if (layers.back())
-		m_CurrentLayer = layers.back();
-	else
-		m_CurrentLayer = nullptr;
-
-	update();
-}
+//void alp::Canvas::deleteCurrentLayer()
+//{
+//	deleteLayer(m_CurrentLayer);
+//
+//	if (layers.back())
+//		m_CurrentLayer = layers.back();
+//	else
+//		m_CurrentLayer = nullptr;*/
+//
+//	 update();
+//}
 
 void alp::Canvas::resetCanvasTransform()
 {
@@ -215,7 +215,7 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 
 	QPainter painter(this);
 	painter.translate(rect().center());
-	painter.translate(-layers.back()->image.scaled(layers.back()->image.size() * m_Scale).rect().center());
+	painter.translate(-m_LayersRef.back()->image.scaled(m_LayersRef.back()->image.size() * m_Scale).rect().center());
 	painter.translate(m_Delta);
 	painter.scale(m_Scale, m_Scale);
 
@@ -224,7 +224,7 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 		painter.setPen(Qt::NoPen);
 		painter.setBrush(m_Background);
 		painter.setBrushOrigin(rect().topLeft());
-		painter.drawRect(layers.back()->image.rect());
+		painter.drawRect(m_LayersRef.back()->image.rect());
 	}
 	
 	if (m_EnableGrid && m_Scale > 2)
@@ -233,14 +233,14 @@ void alp::Canvas::paintEvent(QPaintEvent* event)
 		pen.setCosmetic(true);
 		painter.setPen(pen);
 
-		for (int x = 0; x < layers.back()->image.width(); ++x)
-			painter.drawRect(x, 0, 0, layers.back()->image.height());
+		for (int x = 0; x < m_LayersRef.back()->image.width(); ++x)
+			painter.drawRect(x, 0, 0, m_LayersRef.back()->image.height());
 
-		for (int y = 0; y < layers.back()->image.height(); ++y)
-			painter.drawRect(0, y, layers.back()->image.width(), 0);
+		for (int y = 0; y < m_LayersRef.back()->image.height(); ++y)
+			painter.drawRect(0, y, m_LayersRef.back()->image.width(), 0);
 	}
 	
-	for (const auto& layer : layers)
+	for (const auto& layer : m_LayersRef)
 	{
 		if (!layer)
 			continue;

@@ -13,8 +13,8 @@ alp::Alpaint::Alpaint(QWidget* parent)
     setFocusPolicy(Qt::StrongFocus);
     setFocus();
 
-    connectActions();
     connectTools();
+    connectActions();
 }
 
 void alp::Alpaint::keyPressEvent(QKeyEvent* event)
@@ -44,11 +44,11 @@ void alp::Alpaint::connectTools()
     });
 
     connect(ui.addLayerButton, &QToolButton::clicked, this, [&]() {
-        createLayerWidget();
+        m_CurrentProject->addLayer(m_CurrentProject->getCanvas()->getCanvasSize());
     });
 
     connect(ui.removeLayerButton, &QToolButton::clicked, this, [&]() {
-        deleteSelectedLayerWidget();
+        m_CurrentProject->deleteSelectedLayer();
     });
 }
 
@@ -93,10 +93,9 @@ void alp::Alpaint::newProjectAction()
 
     ui.centralWidget->setMaximumSize({ 0, 1000000 });
 
-    auto canvas = new Canvas(this, data.documentSize);
-    m_ProjectList.push_back(new ProjectDock(this, canvas));
+    m_ProjectList.push_back(new ProjectDock(this, ui.layerList, data.documentSize));
     m_CurrentProject = m_ProjectList.back();
-
+    
     if (m_ProjectList.size() == 1)
     {
         addDockWidget(Qt::RightDockWidgetArea, m_CurrentProject);
@@ -108,22 +107,6 @@ void alp::Alpaint::newProjectAction()
         m_CurrentProject->show();
         m_CurrentProject->raise();
     }
-
-    auto layer = createNewLayer(data.documentSize);
-    canvas->selectLayer(layer);
-
-    auto layerWidget = createLayerWidget(layer);
-   
-    connect(canvas, &Canvas::projectModified, m_CurrentProject, [&]() {
-        m_CurrentProject->setModified(true);
-        m_CurrentProject->updateTitle();
-    });
-
-    connect((LayerList*)ui.layerList, &LayerList::onDrop, (LayerList*)ui.layerList, [&](QDropEvent* event) {
-        auto layer = (LayerList*)ui.layerList;
-        layer->afterDrop(event);
-        m_CurrentProject->getCanvas()->update();
-    });
 }
 
 void alp::Alpaint::openProjectAction()
@@ -144,87 +127,33 @@ void alp::Alpaint::openProjectAction()
 
 void alp::Alpaint::saveProjectAction()
 {
-    if (!m_CurrentProject)
+    /*if (!m_CurrentProject)
         return;
 
     if (m_CurrentProject->isDefault())
         m_CurrentProject->saveNewProject();
     else
-        m_CurrentProject->saveChanges();
+        m_CurrentProject->saveChanges();*/
 }
 
 void alp::Alpaint::saveAsProjectAction()
 {
-    if (!m_CurrentProject)
+   /* if (!m_CurrentProject)
         return;
 
-    m_CurrentProject->saveNewProject();
+    m_CurrentProject->saveNewProject();*/
 }
 
 void alp::Alpaint::closeProjectAction()
 {
-    if(!m_CurrentProject->modified())
-        m_CurrentProject->close();
-    else
-    {
-        // Todo: dialog for 'Do you want to save changes to ProjectName?'
-        // Save || Discard || Cancel
-        m_CurrentProject->close();
-    }
-}
-
-alp::LayerWidget* alp::Alpaint::createLayerWidget(const std::shared_ptr<Layer>& layer)
-{
-    if (!m_CurrentProject)
-        return nullptr;
-
-    LayerWidget* widget = new LayerWidget(ui.layerList);
-    QListWidgetItem* item = new QListWidgetItem();
-    item->setSizeHint(widget->sizeHint());
-
-    ui.layerList->addItem(item);
-    ui.layerList->setItemWidget(item, widget);
-
-    auto usedLayer = layer;
-    if (!layer)
-        usedLayer = createNewLayer(layers.back()->image.size());
-    else
-        m_CurrentProject->getCanvas()->selectLayer(layer);
-
-    widget->selectLayer(usedLayer);
-    
-    ui.layerList->setCurrentRow(ui.layerList->row(item));
-
-    connect(ui.layerList, &QListWidget::currentItemChanged, this, [=]() {
-        auto layerWidget = (LayerWidget*)ui.layerList->itemWidget(ui.layerList->currentItem());
-        m_CurrentProject->getCanvas()->selectLayer(layerWidget->layer);
-    });
-
-    connect(m_CurrentProject->getCanvas(), &Canvas::projectModified, this, [=]() {
-        if (!ui.layerList->currentItem())
-            return;
-
-        auto layer = (LayerWidget*)ui.layerList->itemWidget(ui.layerList->currentItem());
-        layer->updateLayer();
-    });
-
-    return widget;
-}
-
-void alp::Alpaint::deleteSelectedLayerWidget()
-{
-    if (ui.layerList->count() <= 1)
-        return;
-    
-    auto canvas = m_CurrentProject->getCanvas();
-    LayerWidget::decreaseDefaultCount();
-    canvas->deleteCurrentLayer();
-
-    ui.layerList->takeItem(ui.layerList->row(ui.layerList->currentItem()));
-
-    ui.layerList->setCurrentRow(ui.layerList->count() - 1);
-    auto layer = (LayerWidget*)ui.layerList->itemWidget(ui.layerList->currentItem());
-    layer->updateLayer();
+    //if(!m_CurrentProject->modified())
+    //    m_CurrentProject->close();
+    //else
+    //{
+    //    // Todo: dialog for 'Do you want to save changes to ProjectName?'
+    //    // Save || Discard || Cancel
+    //    m_CurrentProject->close();
+    //}
 }
 
 void alp::Alpaint::resizeCanvasAction()

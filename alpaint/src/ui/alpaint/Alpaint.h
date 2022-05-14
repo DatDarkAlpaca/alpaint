@@ -40,11 +40,6 @@ namespace alp
 
         void closeProjectAction();
 
-    public slots:
-        LayerWidget* createLayerWidget(const std::shared_ptr<Layer>& layer = nullptr);
-
-        void deleteSelectedLayerWidget();
-
     private:
         void resizeCanvasAction();
 

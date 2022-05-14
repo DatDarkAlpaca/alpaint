@@ -11,15 +11,12 @@ namespace alp
 		Q_OBJECT
 
 	public:
-		Canvas(QWidget* parent = nullptr, QSize size = QSize());
+		Canvas(QWidget* parent, QSize size, std::vector<std::shared_ptr<Layer>>& layers);
 
 	public:
-		void selectLayer(const std::shared_ptr<Layer>& layer)
-		{
-			m_CurrentLayer = layer;
-		}
+		void selectLayer(std::shared_ptr<Layer>& layer) { m_CurrentLayer = layer; }
 
-		void deleteCurrentLayer();
+		std::shared_ptr<Layer>& getLayer() { return m_CurrentLayer; }
 
 	public:
 		void resetCanvasTransform();
@@ -51,6 +48,8 @@ namespace alp
 		qreal getScale() const { return m_Scale; }
 
 		QPointF getDelta() const { return m_Delta; }
+
+		QSize getCanvasSize() const { return m_Size; }
 
 		// Preparations the layer blending modes in the future:
 		// QImage getPreparedImage() const { return m_CurrentLayer; }
@@ -84,8 +83,10 @@ namespace alp
 		QImage m_Background, m_OldLayer;
 		bool m_Drawing = false, m_DrawingLine = false;
 		QUndoStack* m_UndoStack;
+		QSize m_Size;
 
 	private:
+		std::vector<std::shared_ptr<Layer>>& m_LayersRef;
 		std::shared_ptr<Layer> m_CurrentLayer = nullptr;
 
 	private:

@@ -28,7 +28,7 @@ namespace alp
 
 		void updateLayer()
 		{
-			ui.previewImage->setPixmap(QPixmap::fromImage(this->layer->image));
+			ui.previewImage->setPixmap(QPixmap::fromImage(layer->image));
 		}
 
 	public:

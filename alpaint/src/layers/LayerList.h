@@ -14,22 +14,24 @@ namespace alp
 	protected:
 		void dropEvent(QDropEvent* event) override
 		{
-			indexBefore = layers.size() - row(currentItem()) - 1;
-
 			QListWidget::dropEvent(event);
-			event->accept();
-			emit onDrop(event);
+			emit onDrop();
 		}
 
 	public slots:
-		void afterDrop(QDropEvent* event)
+		void setIndexBefore(std::vector<std::shared_ptr<Layer>>& layers)
 		{
-			int indexAfter = layers.size() - selectedIndexes()[0].row() - 1;			
-			swapLayerOrder(indexBefore, indexAfter);
+			indexBefore = layers.size() - row(currentItem()) - 1;
+		}
+
+		void afterDrop(std::vector<std::shared_ptr<Layer>>& layers)
+		{
+			int indexAfter = layers.size() - selectedIndexes()[0].row() - 1;
+			swapLayerOrder(layers, indexBefore, indexAfter);
 		}
 
 	signals:
-		void onDrop(QDropEvent* event);
+		void onDrop();
 
 	private:
 		int indexBefore = -1;
