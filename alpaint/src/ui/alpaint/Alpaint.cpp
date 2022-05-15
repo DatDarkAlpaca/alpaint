@@ -247,8 +247,23 @@ void alp::Alpaint::closeProjectAction()
         if (message == QMessageBox::Save)
             saveProjectAction();
 
-        m_CurrentProject->close();
+        ui.layerList->clear();
+        
+        for (auto it = m_ProjectList.begin(); it < m_ProjectList.end(); )
+        {
+            auto project = *it;
+            if (!project->visibleRegion().isEmpty())
+            {
+                project->close();
+                it = m_ProjectList.erase(it);
+            }
+            else
+                ++it;
+        }
     }
+
+    if (m_ProjectList.isEmpty())
+        ui.centralWidget->setMaximumSize({ 1000000, 1000000 });
 }
 
 void alp::Alpaint::resizeCanvasAction()
