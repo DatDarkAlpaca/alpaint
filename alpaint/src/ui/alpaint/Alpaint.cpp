@@ -38,6 +38,15 @@ void alp::Alpaint::connectTools()
     connect(ui.colorPickerButton, &QToolButton::clicked, this, [&]() { ToolHandler::setTool("picker");  });
     connect(ui.fillButton,        &QToolButton::clicked, this, [&]() { ToolHandler::setTool("fill");    });
 
+    connect(ui.defaultColorButton, &QToolButton::clicked, this, [&]() {
+        ui.primaryColor->setDefaultColors();
+        ui.secondaryColor->setDefaultColors();
+    });
+    connect(ui.invertColorsButton, &QToolButton::clicked, this, [&]() {
+        ui.primaryColor->invertColors();
+        ui.secondaryColor->invertColors();
+    });
+
     connect(ui.undoButton, &QToolButton::clicked, this, [&]() {
         if (m_CurrentProject)
             getFocusedCanvas()->onUndo();

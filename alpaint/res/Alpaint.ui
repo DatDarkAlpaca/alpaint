@@ -256,7 +256,7 @@
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="pencilLayout">
        <property name="topMargin">
         <number>9</number>
        </property>
@@ -343,7 +343,7 @@ QToolButton:hover
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QHBoxLayout" name="shapeLayout">
        <property name="topMargin">
         <number>0</number>
        </property>
@@ -422,7 +422,7 @@ QToolButton:hover
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <layout class="QHBoxLayout" name="fillLayout">
        <property name="topMargin">
         <number>0</number>
        </property>
@@ -504,14 +504,20 @@ QToolButton:hover
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <layout class="QHBoxLayout" name="undoLayout">
        <property name="spacing">
         <number>6</number>
        </property>
        <property name="sizeConstraint">
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
        <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
         <number>0</number>
        </property>
        <item>
@@ -578,6 +584,71 @@ QToolButton:hover
          </property>
          <property name="shortcut">
           <string>Ctrl+Y</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="colorsLayout">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QToolButton" name="invertColorsButton">
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QToolButton
+{
+	background-color: rgb(50, 50, 50);
+	border: 1px solid rgb(45, 45, 45);
+	border-radius: 3px;
+	color: white;
+}
+QToolButton:hover
+{
+	background-color: rgb(70, 70, 70);
+};</string>
+         </property>
+         <property name="text">
+          <string>I</string>
+         </property>
+         <property name="shortcut">
+          <string>X</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="defaultColorButton">
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QToolButton
+{
+	background-color: rgb(50, 50, 50);
+	border: 1px solid rgb(45, 45, 45);
+	border-radius: 3px;
+	color: white;
+}
+QToolButton:hover
+{
+	background-color: rgb(70, 70, 70);
+};</string>
+         </property>
+         <property name="text">
+          <string>D</string>
+         </property>
+         <property name="shortcut">
+          <string>Ctrl+Shift+X</string>
          </property>
         </widget>
        </item>
