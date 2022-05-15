@@ -58,6 +58,9 @@ namespace alp
 		void setupCanvas(QWidget* parent, const QSize& size);
 
 	private:
+		void writeProjectData(QFile& file);
+
+	private:
 		bool m_IsDefault = true, m_Modified = true;
 		QString m_ProjectAbsPath, m_ProjectName;
 		inline static size_t s_UnnamedCount = 0;

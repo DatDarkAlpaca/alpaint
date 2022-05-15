@@ -1,22 +1,6 @@
 #include "pch.h"
 #include "ProjectDock.h"
 
-static void writeProjectData(QFile& file, const QString& projectName, std::vector<std::shared_ptr<alp::Layer>>& layers)
-{
-	QDataStream out(&file);
-	out.setVersion(QDataStream::Qt_6_2);
-
-	out << projectName;
-	out << layers.size();
-	
-	for (const auto& layer : layers)
-	{
-		out << layer->name;
-		out << layer->image;
-		out << layer->blendingMode;
-	}
-}
-
 alp::ProjectDock::ProjectDock(QWidget* parent, LayerList* layerList, const QSize& size)
 	: QDockWidget(parent), m_LayerListRef(layerList)
 {
@@ -89,8 +73,6 @@ void alp::ProjectDock::saveNewProject()
 	auto path = QFileDialog::getSaveFileName(this, tr("Save As"), initialPath,
 											 tr("ALP Files (*.alp);;All Files (*)"));
 
-	// Todo: get new project name.
-
 	if (path.isEmpty())
 		return;
 
@@ -101,7 +83,7 @@ void alp::ProjectDock::saveNewProject()
 		return;
 	}
 
-	writeProjectData(file, m_ProjectName, m_Layers);
+	writeProjectData(file);
 
 	--s_UnnamedCount;
 	m_Modified = false;
@@ -116,7 +98,7 @@ void alp::ProjectDock::saveChanges()
 		return;
 
 	QFile file(m_ProjectAbsPath + "/" + m_ProjectName + ".alp");
-	writeProjectData(file, m_ProjectName, m_Layers);
+	writeProjectData(file);
 	
 	m_Modified = false;
 	updateTitle();
@@ -251,4 +233,20 @@ void alp::ProjectDock::setupCanvas(QWidget* parent, const QSize& size)
 		});
 
 	m_Canvas->selectLayer(m_Layers.back());
+}
+
+void alp::ProjectDock::writeProjectData(QFile& file)
+{
+	QDataStream out(&file);
+	out.setVersion(QDataStream::Qt_6_2);
+
+	out << m_ProjectName;
+	out << m_Layers.size();
+
+	for (const auto& layer : m_Layers)
+	{
+		out << layer->name;
+		out << layer->image;
+		out << layer->blendingMode;
+	}
 }
