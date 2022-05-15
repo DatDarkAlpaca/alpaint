@@ -38,6 +38,15 @@ void alp::Alpaint::connectTools()
     connect(ui.colorPickerButton, &QToolButton::clicked, this, [&]() { ToolHandler::setTool("picker");  });
     connect(ui.fillButton,        &QToolButton::clicked, this, [&]() { ToolHandler::setTool("fill");    });
 
+    connect(ui.undoButton, &QToolButton::clicked, this, [&]() {
+        if (m_CurrentProject)
+            getFocusedCanvas()->onUndo();
+    });
+    connect(ui.redoButton, &QToolButton::clicked, this, [&]() {
+        if (m_CurrentProject)
+            getFocusedCanvas()->onRedo();
+    });
+
     connect(ToolHandler::tools["picker"].get(), &Tool::colorUpdated, this, [&]() {
         ui.primaryColor->updatePanelColors();
         ui.secondaryColor->updatePanelColors();
@@ -46,7 +55,6 @@ void alp::Alpaint::connectTools()
     connect(ui.addLayerButton, &QToolButton::clicked, this, [&]() {
         m_CurrentProject->addNewLayer(m_CurrentProject->getCanvas()->getCanvasSize());
     });
-
     connect(ui.removeLayerButton, &QToolButton::clicked, this, [&]() {
         m_CurrentProject->deleteSelectedLayer();
     });
@@ -70,16 +78,6 @@ void alp::Alpaint::connectActions()
         if (m_CurrentProject)
             getFocusedCanvas()->toggleBackground();
         });
-
-    connect(ui.actionUndo, &QAction::triggered, this, [&]() {
-        if (m_CurrentProject)
-            getFocusedCanvas()->onUndo();
-        });
-
-    connect(ui.actionRedo, &QAction::triggered, this, [&]() {
-        if (m_CurrentProject)
-            getFocusedCanvas()->onRedo();
-    });
 }
 
 void alp::Alpaint::newProjectAction()

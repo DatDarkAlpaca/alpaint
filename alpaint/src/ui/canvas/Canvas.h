@@ -23,17 +23,6 @@ namespace alp
 
 		void resizeCanvas(const QSize& size);
 
-		void openImage(const QString& filepath)
-		{
-			/*QImageReader reader(filepath);
-
-			m_CurrentLayer = reader.read();
-			m_Size = m_CurrentLayer.size();
-			m_Scale = int(std::min(m_CurrentLayer.size().width(), m_CurrentLayer.size().height()) / 4);;
-			m_Delta = QPointF(0, 0);
-			update();*/
-		}
-
 	public:
 		void toggleGrid();
 
@@ -50,9 +39,6 @@ namespace alp
 		QPointF getDelta() const { return m_Delta; }
 
 		QSize getCanvasSize() const { return m_Size; }
-
-		// Preparations the layer blending modes in the future:
-		// QImage getPreparedImage() const { return m_CurrentLayer; }
 
 	public:
 		void mousePressEvent(QMouseEvent* event) override;

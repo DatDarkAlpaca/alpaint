@@ -16,18 +16,6 @@ alp::Canvas::Canvas(QWidget* parent, QSize size, std::vector<std::shared_ptr<Lay
 	initializeUndoStack();
 }
 
-//void alp::Canvas::deleteCurrentLayer()
-//{
-//	deleteLayer(m_CurrentLayer);
-//
-//	if (layers.back())
-//		m_CurrentLayer = layers.back();
-//	else
-//		m_CurrentLayer = nullptr;*/
-//
-//	 update();
-//}
-
 void alp::Canvas::resetCanvasTransform()
 {
 	m_Delta = QPointF(0, 0);
@@ -272,8 +260,8 @@ void alp::Canvas::initializeUndoStack()
 
 void alp::Canvas::saveDrawCommand()
 {
-	//DrawCommand* command = new DrawCommand(m_OldLayer, &m_CurrentLayer);
-	//m_UndoStack->push(command);
+	DrawCommand* command = new DrawCommand(m_OldLayer, &m_CurrentLayer->image);
+	m_UndoStack->push(command);
 }
 
 void alp::Canvas::loadSettings()
