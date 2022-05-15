@@ -203,17 +203,16 @@ void alp::Alpaint::openProjectAction()
     if (tab.isEmpty())
         return;
 
-    connect(tab.back(), &QTabBar::currentChanged, this, [&](int index)
+    connect(tab.back(), &QTabBar::currentChanged, this, [&](int index) {
+        for (int i = 0; i < m_ProjectList.count(); ++i)
         {
-            for (int i = 0; i < m_ProjectList.count(); ++i)
-            {
-                if (index != i)
-                    m_ProjectList[i]->hideItems();
-            }
+            if (index != i)
+                m_ProjectList[i]->hideItems();
+        }
 
-            m_ProjectList[index]->showItems();
-            m_ProjectList[index]->focusLastLayer();
-        });
+        m_ProjectList[index]->showItems();
+        m_ProjectList[index]->focusLastLayer();
+    });
 }
 
 void alp::Alpaint::saveProjectAction()
@@ -246,8 +245,6 @@ void alp::Alpaint::closeProjectAction()
 
         if (message == QMessageBox::Save)
             saveProjectAction();
-
-        ui.layerList->clear();
         
         for (auto it = m_ProjectList.begin(); it < m_ProjectList.end(); )
         {
@@ -261,6 +258,8 @@ void alp::Alpaint::closeProjectAction()
                 ++it;
         }
     }
+
+    ui.layerList->clear();
 
     if (m_ProjectList.isEmpty())
         ui.centralWidget->setMaximumSize({ 1000000, 1000000 });

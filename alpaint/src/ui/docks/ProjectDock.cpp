@@ -73,6 +73,10 @@ void alp::ProjectDock::saveNewProject()
 	auto path = QFileDialog::getSaveFileName(this, tr("Save As"), initialPath,
 											 tr("ALP Files (*.alp);;All Files (*)"));
 
+	QFileInfo info(path);
+	m_ProjectName = info.baseName();
+	m_ProjectAbsPath = info.absoluteFilePath();
+
 	if (path.isEmpty())
 		return;
 
@@ -94,10 +98,16 @@ void alp::ProjectDock::saveNewProject()
 
 void alp::ProjectDock::saveChanges()
 {
-	if (m_IsDefault)
+	if (m_IsDefault || m_ProjectAbsPath.isEmpty())
 		return;
 
-	QFile file(m_ProjectAbsPath + "/" + m_ProjectName + ".alp");
+	QFile file(m_ProjectAbsPath);
+	if (!file.open(QIODevice::WriteOnly))
+	{
+		QMessageBox::warning(this, tr("Unable to open the file."), file.errorString());
+		return;
+	}
+
 	writeProjectData(file);
 	
 	m_Modified = false;
