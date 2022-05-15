@@ -6,17 +6,18 @@ namespace alp
 	struct Layer
 	{
 	public:
-		Layer(const QImage& image = QImage(), QPainter::CompositionMode mode = QPainter::CompositionMode_SourceOver)
-			: image(image), blendingMode(mode) { }
+		Layer(const QString& name = QString(), const QImage& image = QImage(), QPainter::CompositionMode mode = QPainter::CompositionMode_SourceOver)
+			: name(name), image(image), blendingMode(mode) { }
 
 	public:
+		QString name;
 		QImage image;
 		QPainter::CompositionMode blendingMode;
 	};
 
-	inline std::shared_ptr<Layer> createNewLayer(const QSize& size)
+	inline std::shared_ptr<Layer> createNewLayer(const QSize& size, const QString& name)
 	{
-		auto layer = std::make_shared<Layer>();
+		auto layer = std::make_shared<Layer>(name);
 		
 		layer->image = QImage(size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
 		layer->image.fill(Qt::transparent);

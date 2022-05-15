@@ -127,6 +127,7 @@ void alp::Alpaint::newProjectAction()
         }
 
         m_ProjectList[index]->showItems();
+        m_ProjectList[index]->focusLastLayer();
     });
 }
 

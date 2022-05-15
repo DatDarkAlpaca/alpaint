@@ -14,9 +14,6 @@ namespace alp
 			: QWidget(parent)
 		{
 			ui.setupUi(this);
-
-			ui.layerName->setText("Layer - " + QString::number(defaultCount));
-			++defaultCount;
 		}
 
 	public:
@@ -24,18 +21,13 @@ namespace alp
 		{
 			this->layer = layer;
 			ui.previewImage->setPixmap(QPixmap::fromImage(this->layer->image));
+			ui.layerName->setText(layer->name);
 		}
 
 		void updateLayer()
 		{
 			ui.previewImage->setPixmap(QPixmap::fromImage(layer->image));
 		}
-
-	public:
-		static void decreaseDefaultCount() { --defaultCount; }
-
-	private:
-		inline static unsigned int defaultCount = 0;
 
 	public:
 		std::shared_ptr<Layer> layer = nullptr;

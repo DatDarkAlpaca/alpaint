@@ -78,8 +78,8 @@ namespace alp
 			if (layerListRef->count() <= 1)
 				return;
 
-			LayerWidget::decreaseDefaultCount();
-			
+			m_DefaultLayerAmount--;
+
 			deleteLayer(m_Layers, m_Canvas->getLayer());
 
 			m_Canvas->update();
@@ -98,13 +98,19 @@ namespace alp
 			QListWidgetItem* item = new QListWidgetItem();
 			item->setSizeHint(widget->sizeHint());
 
-			m_Layers.push_back(createNewLayer(size));
+			m_Layers.push_back(createNewLayer(size, "Layer - " + QString::number(m_DefaultLayerAmount)));
 			widget->selectLayer(m_Layers.back());
+			m_DefaultLayerAmount++;
 
 			layerListRef->insertItem(layerListRef->count(), item);			
 			layerListRef->setItemWidget(item, widget);
 
 			layerListRef->setCurrentRow(layerListRef->row(item));
+		}
+
+		void focusLastLayer()
+		{
+			layerListRef->setCurrentRow(m_LastSelected);
 		}
 
 	public:
@@ -196,10 +202,10 @@ namespace alp
 				item->setSizeHint(widget->sizeHint());
 
 				widget->selectLayer(layer);
+				widget->ui.layerName->setText(layer->name);
 
 				layerListRef->addItem(item);
 				layerListRef->setItemWidget(item, widget);
-
 			}
 
 			layerListRef->setCurrentRow(layerListRef->count());
@@ -212,8 +218,8 @@ namespace alp
 			if (m_Hidden)
 				return;
 
+			m_LastSelected = layerListRef->row(layerListRef->currentItem());
 			layerListRef->clear();
-			m_Layers;
 			m_Hidden = true;
 		}
 
@@ -221,10 +227,12 @@ namespace alp
 		bool m_IsDefault = true, m_Modified = true;
 		QString m_ProjectAbsPath, m_ProjectName;
 		inline static size_t unnamedCount = 0;
-		
+		int m_DefaultLayerAmount = 0;
+		int m_LastSelected;
+
 	private:
 		int m_TabIndex = 0;
-		static inline int s_Tab = 0;
+		static inline int s_Tab = 0;	
 
 	private:
 		bool m_Hidden = false;
