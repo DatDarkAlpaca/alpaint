@@ -143,6 +143,15 @@ void alp::Alpaint::openProjectAction()
         return;
     }
 
+    QFileInfo info(path);
+    auto absPath = info.absolutePath();
+
+    for (const auto& project : m_ProjectList)
+    {
+        if (project->getProjectAbsPath() == absPath)
+            return;
+    }
+
     QDataStream in(&file);
     in.setVersion(QDataStream::Qt_6_2);
 
@@ -180,8 +189,7 @@ void alp::Alpaint::openProjectAction()
     for (int i = 0; i <= m_ProjectList.count() - 1; ++i)
         m_ProjectList[i]->hideItems();
 
-    QFileInfo info(path);
-    auto absPath = info.absolutePath();
+    
 
     m_ProjectList.push_back(new ProjectDock(this, ui.layerList, name, absPath, result));
     m_ProjectList.back()->setModified(true);

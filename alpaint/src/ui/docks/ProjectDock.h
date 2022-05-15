@@ -50,6 +50,8 @@ namespace alp
 		
 		QString getProjectName() const { return m_ProjectName; }
 
+		QString getProjectAbsPath() const { return m_ProjectAbsPath; }
+
 	private:
 		void setupTitle();
 
