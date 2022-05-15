@@ -460,9 +460,6 @@ QToolButton:hover
           <iconset resource="Alpaint.qrc">
            <normaloff>:/icons/icons/pipette.png</normaloff>:/icons/icons/pipette.png</iconset>
          </property>
-         <property name="shortcut">
-          <string>Ctrl+S</string>
-         </property>
         </widget>
        </item>
        <item>
