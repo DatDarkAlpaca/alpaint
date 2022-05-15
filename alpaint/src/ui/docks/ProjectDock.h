@@ -14,6 +14,8 @@ namespace alp
 	public:
 		ProjectDock(QWidget* parent, LayerList* layerList, const QSize& size);
 
+		ProjectDock(QWidget* parent, LayerList* layerList, const QString& projectName, const std::vector<std::shared_ptr<alp::Layer>>& layer);
+
 	protected:
 		bool eventFilter(QObject* object, QEvent* event) override;
 
@@ -21,7 +23,7 @@ namespace alp
 		void saveNewProject();
 
 		void saveChanges();
-  
+
 	public:
 		void updateTitle();
 
@@ -45,6 +47,8 @@ namespace alp
 		int getIndex() const { return m_TabIndex; }
 
 		Canvas* getCanvas() { return m_Canvas; }
+		
+		QString getProjectName() const { return m_ProjectName; }
 
 	private:
 		void setupTitle();

@@ -133,49 +133,124 @@ void alp::Alpaint::newProjectAction()
 
 void alp::Alpaint::openProjectAction()
 {
-    /*auto filepath = QFileDialog::getOpenFileName(this, tr("Open file"), QDir::currentPath());
-    
-    if (filepath.length() <= 0)
+    QString initialPath = QDir::currentPath() + "/";
+
+    auto path = QFileDialog::getOpenFileName(this, tr("Open Project"), initialPath,
+        tr("ALP Files (*.alp);;All Files (*)"));
+
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        QMessageBox::warning(this, tr("Unable to open the file."), file.errorString());
+        return;
+    }
+
+    QDataStream in(&file);
+    in.setVersion(QDataStream::Qt_6_2);
+
+    QString name;
+    in >> name;
+
+    size_t size;
+    in >> size;
+
+    std::vector<std::shared_ptr<alp::Layer>> result;
+
+    for (size_t i = 0; i < size; ++i)
+    {
+        QString name;
+        in >> name;
+
+        QImage image;
+        in >> image;
+
+        QPainter::CompositionMode blendingMode;
+        in >> blendingMode;
+
+        auto layer = alp::Layer();
+        result.push_back(std::make_shared<alp::Layer>(name, image, blendingMode));
+    }
+
+    if (result.empty())
+    {
+        QMessageBox::warning(this, tr("Invalid project data."), "The file opened is corrupted or is not an Alpaint Project file");
+        return;
+    }
+
+    ui.centralWidget->setMaximumSize({ 0, 1000000 });
+
+    for (int i = 0; i <= m_ProjectList.count() - 1; ++i)
+        m_ProjectList[i]->hideItems();
+
+    m_ProjectList.push_back(new ProjectDock(this, ui.layerList, name, result));
+    m_ProjectList.back()->setModified(true);
+    m_ProjectList.back()->updateTitle();
+
+    m_CurrentProject = m_ProjectList.back();
+
+    if (m_ProjectList.size() == 1)
+    {
+        addDockWidget(Qt::RightDockWidgetArea, m_CurrentProject);
+        splitDockWidget(ui.toolBar, m_CurrentProject, Qt::Horizontal);
+    }
+    else
+    {
+        tabifyDockWidget(m_ProjectList[0], m_CurrentProject);
+        m_CurrentProject->show();
+        m_CurrentProject->raise();
+    }
+
+    // Tab changed:
+    auto tab = findChildren<QTabBar*>();
+    if (tab.isEmpty())
         return;
 
-    if (!m_Canvas)
-    {
-        m_Canvas = new Canvas(this);
-        ui.centralWidget->layout()->addWidget(m_Canvas);
-    }
-    
-    m_Canvas->openImage(filepath);*/
+    connect(tab.back(), &QTabBar::currentChanged, this, [&](int index)
+        {
+            for (int i = 0; i < m_ProjectList.count(); ++i)
+            {
+                if (index != i)
+                    m_ProjectList[i]->hideItems();
+            }
+
+            m_ProjectList[index]->showItems();
+            m_ProjectList[index]->focusLastLayer();
+        });
 }
 
 void alp::Alpaint::saveProjectAction()
 {
-    /*if (!m_CurrentProject)
+    if (!m_CurrentProject)
         return;
 
     if (m_CurrentProject->isDefault())
         m_CurrentProject->saveNewProject();
     else
-        m_CurrentProject->saveChanges();*/
+        m_CurrentProject->saveChanges();
 }
 
 void alp::Alpaint::saveAsProjectAction()
 {
-   /* if (!m_CurrentProject)
+    if (!m_CurrentProject)
         return;
 
-    m_CurrentProject->saveNewProject();*/
+    m_CurrentProject->saveNewProject();
 }
 
 void alp::Alpaint::closeProjectAction()
 {
-    //if(!m_CurrentProject->modified())
-    //    m_CurrentProject->close();
-    //else
-    //{
-    //    // Todo: dialog for 'Do you want to save changes to ProjectName?'
-    //    // Save || Discard || Cancel
-    //    m_CurrentProject->close();
-    //}
+    if(!m_CurrentProject->modified())
+        m_CurrentProject->close();
+    else
+    {
+        auto message = QMessageBox::warning(this, "Alpaint", "Do you want to save changes to " + m_CurrentProject->getProjectName(), 
+            QMessageBox::Save | QMessageBox::Cancel);
+
+        if (message == QMessageBox::Save)
+            saveProjectAction();
+
+        m_CurrentProject->close();
+    }
 }
 
 void alp::Alpaint::resizeCanvasAction()

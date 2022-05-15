@@ -47,4 +47,14 @@ namespace alp
 				++it;
 		}
 	}
+
+	inline void clearLayer(std::vector<std::shared_ptr<Layer>>& layers)
+	{
+		for (auto it = layers.begin(); it < layers.end();)
+		{
+			delete it->get();
+			it = layers.erase(it);
+			++it;
+		}
+	}
 }

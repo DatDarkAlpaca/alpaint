@@ -1,6 +1,22 @@
 #include "pch.h"
 #include "ProjectDock.h"
 
+static void writeProjectData(QFile& file, const QString& projectName, std::vector<std::shared_ptr<alp::Layer>>& layers)
+{
+	QDataStream out(&file);
+	out.setVersion(QDataStream::Qt_6_2);
+
+	out << projectName;
+	out << layers.size();
+	
+	for (const auto& layer : layers)
+	{
+		out << layer->name;
+		out << layer->image;
+		out << layer->blendingMode;
+	}
+}
+
 alp::ProjectDock::ProjectDock(QWidget* parent, LayerList* layerList, const QSize& size)
 	: QDockWidget(parent), m_LayerListRef(layerList)
 {
@@ -11,6 +27,43 @@ alp::ProjectDock::ProjectDock(QWidget* parent, LayerList* layerList, const QSize
 	setupTitle();
 	setupLayer(size);
 	setupCanvas(parent, size);
+
+	m_TabIndex = s_Tab;
+	s_Tab++;
+}
+
+alp::ProjectDock::ProjectDock(QWidget* parent, LayerList* layerList, const QString& projectName, const std::vector<std::shared_ptr<alp::Layer>>& layer)
+	: QDockWidget(parent), m_LayerListRef(layerList)
+{
+	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+	setBaseSize(parent->width(), parent->height());
+	setAllowedAreas(Qt::AllDockWidgetAreas);
+
+	m_ProjectName = projectName;
+	m_Layers = layer;
+	m_Hidden = true;
+
+	setupTitle();
+	
+	connect(m_LayerListRef, &QListWidget::currentItemChanged, this, [=]() {
+		auto layerWidget = (LayerWidget*)m_LayerListRef->itemWidget(m_LayerListRef->currentItem());
+		if (layerWidget)
+			m_Canvas->selectLayer(layerWidget->layer);
+		});
+
+	connect(m_LayerListRef, &LayerList::onDrop, m_LayerListRef, [&]() {
+		if (m_Hidden)
+			return;
+
+		m_LayerListRef->afterDrop(m_Layers);
+		m_Canvas->update();
+		});
+
+	m_LayerListRef->viewport()->installEventFilter(this);
+
+	showItems();
+
+	setupCanvas(parent, m_Layers.back()->image.size());
 
 	m_TabIndex = s_Tab;
 	s_Tab++;
@@ -31,37 +84,42 @@ bool alp::ProjectDock::eventFilter(QObject* object, QEvent* event)
 
 void alp::ProjectDock::saveNewProject()
 {
-	//QString initialPath = QDir::currentPath() + "/" + m_ProjectName;
+	QString initialPath = QDir::currentPath() + "/" + m_ProjectName;
 
-			//auto path = QFileDialog::getSaveFileName(this, tr("Save As"), initialPath,
-			//	tr("PNG Files (*.png);;All Files (*)"));
+	auto path = QFileDialog::getSaveFileName(this, tr("Save As"), initialPath,
+											 tr("ALP Files (*.alp);;All Files (*)"));
 
-			//if (path.isEmpty())
-			//	return;
+	// Todo: get new project name.
 
-			//QFileInfo fileInfo(path);
-			//m_ProjectName = fileInfo.baseName();
-			//m_ProjectAbsPath = fileInfo.absolutePath();
+	if (path.isEmpty())
+		return;
 
-			//// canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
-			//
-			//m_Modified = false;
-			//m_IsDefault = false;
+	QFile file(path);
+	if (!file.open(QIODevice::WriteOnly))
+	{
+		QMessageBox::warning(this, tr("Unable to open the file."), file.errorString());
+		return;
+	}
 
-			//updateTitle();
+	writeProjectData(file, m_ProjectName, m_Layers);
 
-			//--unnamedCount;
+	--s_UnnamedCount;
+	m_Modified = false;
+	m_IsDefault = false;
+
+	updateTitle();
 }
 
 void alp::ProjectDock::saveChanges()
 {
-	//if (m_IsDefault)
-			//	return;
+	if (m_IsDefault)
+		return;
 
-			//// canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
-			//m_Modified = false;
-
-			//updateTitle();
+	QFile file(m_ProjectAbsPath + "/" + m_ProjectName + ".alp");
+	writeProjectData(file, m_ProjectName, m_Layers);
+	
+	m_Modified = false;
+	updateTitle();
 }
 
 void alp::ProjectDock::updateTitle()
@@ -169,7 +227,7 @@ void alp::ProjectDock::setupLayer(const QSize& size)
 
 		m_LayerListRef->afterDrop(m_Layers);
 		m_Canvas->update();
-		});
+	});
 
 	m_LayerListRef->viewport()->installEventFilter(this);
 }
