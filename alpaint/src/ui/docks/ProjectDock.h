@@ -14,7 +14,7 @@ namespace alp
 	public:
 		ProjectDock(QWidget* parent, LayerList* layerList, const QSize& size);
 
-		ProjectDock(QWidget* parent, LayerList* layerList, const QString& projectName, const std::vector<std::shared_ptr<alp::Layer>>& layer);
+		ProjectDock(QWidget* parent, LayerList* layerList, const QString& projectName, const QString& absPath, const std::vector<std::shared_ptr<alp::Layer>>& layer);
 
 	protected:
 		bool eventFilter(QObject* object, QEvent* event) override;

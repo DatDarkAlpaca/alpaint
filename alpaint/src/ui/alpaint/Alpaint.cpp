@@ -180,7 +180,10 @@ void alp::Alpaint::openProjectAction()
     for (int i = 0; i <= m_ProjectList.count() - 1; ++i)
         m_ProjectList[i]->hideItems();
 
-    m_ProjectList.push_back(new ProjectDock(this, ui.layerList, name, result));
+    QFileInfo info(path);
+    auto absPath = info.absolutePath();
+
+    m_ProjectList.push_back(new ProjectDock(this, ui.layerList, name, absPath, result));
     m_ProjectList.back()->setModified(true);
     m_ProjectList.back()->updateTitle();
 

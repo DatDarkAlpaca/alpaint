@@ -16,7 +16,7 @@ alp::ProjectDock::ProjectDock(QWidget* parent, LayerList* layerList, const QSize
 	s_Tab++;
 }
 
-alp::ProjectDock::ProjectDock(QWidget* parent, LayerList* layerList, const QString& projectName, const std::vector<std::shared_ptr<alp::Layer>>& layer)
+alp::ProjectDock::ProjectDock(QWidget* parent, LayerList* layerList, const QString& projectName, const QString& absPath, const std::vector<std::shared_ptr<alp::Layer>>& layer)
 	: QDockWidget(parent), m_LayerListRef(layerList)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
@@ -24,10 +24,12 @@ alp::ProjectDock::ProjectDock(QWidget* parent, LayerList* layerList, const QStri
 	setAllowedAreas(Qt::AllDockWidgetAreas);
 
 	m_ProjectName = projectName;
+	m_ProjectAbsPath = absPath;
 	m_Layers = layer;
 	m_Hidden = true;
+	m_IsDefault = false;
 
-	setupTitle();
+	setWindowTitle(m_ProjectName);
 	
 	connect(m_LayerListRef, &QListWidget::currentItemChanged, this, [=]() {
 		auto layerWidget = (LayerWidget*)m_LayerListRef->itemWidget(m_LayerListRef->currentItem());
