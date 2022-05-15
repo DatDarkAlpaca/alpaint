@@ -32,20 +32,6 @@ namespace alp
 		layers.insert(layers.begin() + after, element);
 	}
 
-	inline int findLayerIndex(const std::vector<std::shared_ptr<Layer>>& layers, const std::shared_ptr<Layer>& layer)
-	{
-		if (!layer)
-			return -1;
-
-		for (int i = 0; i < layers.size(); i++)
-		{
-			if (layer == layers[i])
-				return i;
-		}
-
-		return -1;
-	}
-
 	inline void deleteLayer(std::vector<std::shared_ptr<Layer>>& layers, const std::shared_ptr<Layer>& layer)
 	{
 		for (auto it = layers.begin(); it < layers.end();)

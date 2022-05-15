@@ -101,7 +101,7 @@ namespace alp
 			m_Layers.push_back(createNewLayer(size));
 			widget->selectLayer(m_Layers.back());
 
-			layerListRef->addItem(item);
+			layerListRef->insertItem(layerListRef->count(), item);			
 			layerListRef->setItemWidget(item, widget);
 
 			layerListRef->setCurrentRow(layerListRef->row(item));
@@ -122,7 +122,12 @@ namespace alp
 		bool eventFilter(QObject* object, QEvent* event) override
 		{
 			if (object == layerListRef->viewport() && event->type() == QEvent::Drop)
+			{
+				if (m_Hidden)
+					return false;
+
 				layerListRef->setIndexBefore(m_Layers);
+			}
 			
 			return QWidget::eventFilter(object, event);
 		}
@@ -147,6 +152,9 @@ namespace alp
 			});
 
 			connect(layerListRef, &LayerList::onDrop, layerListRef, [&]() {
+				if (m_Hidden)
+					return;
+
 				layerListRef->afterDrop(m_Layers);
 				m_Canvas->update();
 			});
@@ -178,6 +186,9 @@ namespace alp
 	public:
 		void showItems(QListWidgetItem* prevItem = nullptr, LayerWidget* prevWidget = nullptr)
 		{
+			if (!m_Hidden)
+				return;
+
 			for (auto layer : m_Layers)
 			{
 				LayerWidget* widget = new LayerWidget(layerListRef);
@@ -189,18 +200,21 @@ namespace alp
 				layerListRef->addItem(item);
 				layerListRef->setItemWidget(item, widget);
 
-				layerListRef->setCurrentRow(layerListRef->row(item));
 			}
+
+			layerListRef->setCurrentRow(layerListRef->count());
+
+			m_Hidden = false;
 		}
 
 		void hideItems()
 		{
-			for (int i = 0; i < layerListRef->count(); ++i)
-			{
-				auto item = layerListRef->item(i);
-				auto widget = (LayerWidget*)layerListRef->itemWidget(item);
-				layerListRef->takeItem(layerListRef->row(layerListRef->item(i)));
-			}
+			if (m_Hidden)
+				return;
+
+			layerListRef->clear();
+			m_Layers;
+			m_Hidden = true;
 		}
 
 	private:
@@ -211,6 +225,9 @@ namespace alp
 	private:
 		int m_TabIndex = 0;
 		static inline int s_Tab = 0;
+
+	private:
+		bool m_Hidden = false;
 
 	private:
 		std::vector<std::shared_ptr<Layer>> m_Layers = {};

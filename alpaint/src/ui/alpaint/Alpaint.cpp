@@ -93,6 +93,11 @@ void alp::Alpaint::newProjectAction()
 
     ui.centralWidget->setMaximumSize({ 0, 1000000 });
 
+    // Hide previous projects:
+    for (int i = 0; i <= m_ProjectList.count() - 1; ++i)
+        m_ProjectList[i]->hideItems();
+
+    // Create a new project:
     m_ProjectList.push_back(new ProjectDock(this, ui.layerList, data.documentSize));
     m_CurrentProject = m_ProjectList.back();
     
@@ -106,31 +111,22 @@ void alp::Alpaint::newProjectAction()
         tabifyDockWidget(m_ProjectList[0], m_CurrentProject);
         m_CurrentProject->show();
         m_CurrentProject->raise();
-
-        for (int i = 0; i < m_ProjectList.count(); ++i)
-        {           
-            std::cout << i << '\n';
-            m_ProjectList[i]->hideItems();
-        }
-
-        m_CurrentProject->showItems();
     }
 
+    // Tab changed:
     auto tab = findChildren<QTabBar*>();
     if (tab.isEmpty())
         return;
 
-    connect(tab.back(), &QTabBar::currentChanged, this, [&](int index) {
-        int foundIndex = -1;
-        for(const auto& project : m_ProjectList)
+    connect(tab.back(), &QTabBar::currentChanged, this, [&](int index) 
+    {       
+        for (int i = 0; i < m_ProjectList.count(); ++i)
         {
-            if (project->getIndex() != index)
-                project->hideItems();
-            else
-                foundIndex = index;
+            if (index != i)
+                m_ProjectList[i]->hideItems();
         }
 
-        m_ProjectList[foundIndex]->showItems();
+        m_ProjectList[index]->showItems();
     });
 }
 
