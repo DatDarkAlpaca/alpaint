@@ -106,7 +106,32 @@ void alp::Alpaint::newProjectAction()
         tabifyDockWidget(m_ProjectList[0], m_CurrentProject);
         m_CurrentProject->show();
         m_CurrentProject->raise();
+
+        for (int i = 0; i < m_ProjectList.count(); ++i)
+        {           
+            std::cout << i << '\n';
+            m_ProjectList[i]->hideItems();
+        }
+
+        m_CurrentProject->showItems();
     }
+
+    auto tab = findChildren<QTabBar*>();
+    if (tab.isEmpty())
+        return;
+
+    connect(tab.back(), &QTabBar::currentChanged, this, [&](int index) {
+        int foundIndex = -1;
+        for(const auto& project : m_ProjectList)
+        {
+            if (project->getIndex() != index)
+                project->hideItems();
+            else
+                foundIndex = index;
+        }
+
+        m_ProjectList[foundIndex]->showItems();
+    });
 }
 
 void alp::Alpaint::openProjectAction()

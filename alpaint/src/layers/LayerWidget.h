@@ -38,9 +38,10 @@ namespace alp
 		inline static unsigned int defaultCount = 0;
 
 	public:
+		QString layerName;
 		std::shared_ptr<Layer> layer = nullptr;
 		
-	private:
+	public:
 		::Ui::LayerWidget ui;
 	};
 }

@@ -22,6 +22,9 @@ namespace alp
 			setupTitle();
 			setupLayer(size);
 			setupCanvas(parent, size);
+
+			m_TabIndex = s_Tab;
+			s_Tab++;
 		}
 
 	public: // Slots
@@ -36,37 +39,37 @@ namespace alp
 	public:
 		void saveNewProject()
 		{
-			QString initialPath = QDir::currentPath() + "/" + m_ProjectName;
+			//QString initialPath = QDir::currentPath() + "/" + m_ProjectName;
 
-			auto path = QFileDialog::getSaveFileName(this, tr("Save As"), initialPath,
-				tr("PNG Files (*.png);;All Files (*)"));
+			//auto path = QFileDialog::getSaveFileName(this, tr("Save As"), initialPath,
+			//	tr("PNG Files (*.png);;All Files (*)"));
 
-			if (path.isEmpty())
-				return;
+			//if (path.isEmpty())
+			//	return;
 
-			QFileInfo fileInfo(path);
-			m_ProjectName = fileInfo.baseName();
-			m_ProjectAbsPath = fileInfo.absolutePath();
+			//QFileInfo fileInfo(path);
+			//m_ProjectName = fileInfo.baseName();
+			//m_ProjectAbsPath = fileInfo.absolutePath();
 
-			// canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
-			
-			m_Modified = false;
-			m_IsDefault = false;
+			//// canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
+			//
+			//m_Modified = false;
+			//m_IsDefault = false;
 		
-			updateTitle();
+			//updateTitle();
 
-			--unnamedCount;
+			//--unnamedCount;
 		}
 
 		void saveChanges()
 		{
-			if (m_IsDefault)
-				return;
+			//if (m_IsDefault)
+			//	return;
 
-			// canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
-			m_Modified = false;
+			//// canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
+			//m_Modified = false;
 
-			updateTitle();
+			//updateTitle();
 		}
   
 	public:
@@ -113,6 +116,8 @@ namespace alp
 
 		bool modified() const { return m_Modified; }
 
+		int getIndex() const { return m_TabIndex; }
+
 	protected:
 		bool eventFilter(QObject* object, QEvent* event) override
 		{
@@ -137,7 +142,8 @@ namespace alp
 
 			connect(layerListRef, &QListWidget::currentItemChanged, this, [=]() {
 				auto layerWidget = (LayerWidget*)layerListRef->itemWidget(layerListRef->currentItem());
-				m_Canvas->selectLayer(layerWidget->layer);
+				if(layerWidget)
+					m_Canvas->selectLayer(layerWidget->layer);
 			});
 
 			connect(layerListRef, &LayerList::onDrop, layerListRef, [&]() {
@@ -169,10 +175,42 @@ namespace alp
 			m_Canvas->selectLayer(m_Layers.back());
 		}
 
+	public:
+		void showItems(QListWidgetItem* prevItem = nullptr, LayerWidget* prevWidget = nullptr)
+		{
+			for (auto layer : m_Layers)
+			{
+				LayerWidget* widget = new LayerWidget(layerListRef);
+				QListWidgetItem* item = new QListWidgetItem();
+				item->setSizeHint(widget->sizeHint());
+
+				widget->selectLayer(layer);
+
+				layerListRef->addItem(item);
+				layerListRef->setItemWidget(item, widget);
+
+				layerListRef->setCurrentRow(layerListRef->row(item));
+			}
+		}
+
+		void hideItems()
+		{
+			for (int i = 0; i < layerListRef->count(); ++i)
+			{
+				auto item = layerListRef->item(i);
+				auto widget = (LayerWidget*)layerListRef->itemWidget(item);
+				layerListRef->takeItem(layerListRef->row(layerListRef->item(i)));
+			}
+		}
+
 	private:
 		bool m_IsDefault = true, m_Modified = true;
 		QString m_ProjectAbsPath, m_ProjectName;
 		inline static size_t unnamedCount = 0;
+		
+	private:
+		int m_TabIndex = 0;
+		static inline int s_Tab = 0;
 
 	private:
 		std::vector<std::shared_ptr<Layer>> m_Layers = {};

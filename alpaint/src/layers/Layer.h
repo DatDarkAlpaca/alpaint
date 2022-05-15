@@ -7,8 +7,7 @@ namespace alp
 	{
 	public:
 		Layer(const QImage& image = QImage(), QPainter::CompositionMode mode = QPainter::CompositionMode_SourceOver)
-			: image(image), blendingMode(mode) 
-		{ }
+			: image(image), blendingMode(mode) { }
 
 	public:
 		QImage image;

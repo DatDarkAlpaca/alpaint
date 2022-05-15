@@ -23,6 +23,12 @@ namespace alp
 
         void keyReleaseEvent(QKeyEvent* event) override;
         
+        bool eventFilter(QObject* object, QEvent* event) override
+        {
+            qDebug() << event << '\n';
+            return false;
+        }
+
     private:
         void connectTools();
 
