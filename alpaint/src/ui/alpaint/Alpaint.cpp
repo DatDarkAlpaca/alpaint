@@ -44,7 +44,7 @@ void alp::Alpaint::connectTools()
     });
 
     connect(ui.addLayerButton, &QToolButton::clicked, this, [&]() {
-        m_CurrentProject->addLayer(m_CurrentProject->getCanvas()->getCanvasSize());
+        m_CurrentProject->addNewLayer(m_CurrentProject->getCanvas()->getCanvasSize());
     });
 
     connect(ui.removeLayerButton, &QToolButton::clicked, this, [&]() {

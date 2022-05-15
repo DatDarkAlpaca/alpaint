@@ -111,6 +111,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ui\docks\ProjectDock.cpp" />
     <QtRcc Include="res\Alpaint.qrc" />
     <QtUic Include="res\Alpaint.ui" />
     <QtMoc Include="src\ui\alpaint\Alpaint.h" />

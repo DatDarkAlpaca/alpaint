@@ -12,227 +12,59 @@ namespace alp
 		Q_OBJECT
 
 	public:
-		ProjectDock(QWidget* parent, LayerList* layerList, const QSize& size)
-			: QDockWidget(parent), layerListRef(layerList)
-		{
-			setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-			setBaseSize(parent->width(), parent->height());
-			setAllowedAreas(Qt::AllDockWidgetAreas);
+		ProjectDock(QWidget* parent, LayerList* layerList, const QSize& size);
 
-			setupTitle();
-			setupLayer(size);
-			setupCanvas(parent, size);
-
-			m_TabIndex = s_Tab;
-			s_Tab++;
-		}
-
-	public: // Slots
-		void updateTitle()
-		{
-			if (m_Modified)
-				setWindowTitle(m_ProjectName + " *");
-			else
-				setWindowTitle(m_ProjectName);
-		}
+	protected:
+		bool eventFilter(QObject* object, QEvent* event) override;
 
 	public:
-		void saveNewProject()
-		{
-			//QString initialPath = QDir::currentPath() + "/" + m_ProjectName;
+		void saveNewProject();
 
-			//auto path = QFileDialog::getSaveFileName(this, tr("Save As"), initialPath,
-			//	tr("PNG Files (*.png);;All Files (*)"));
-
-			//if (path.isEmpty())
-			//	return;
-
-			//QFileInfo fileInfo(path);
-			//m_ProjectName = fileInfo.baseName();
-			//m_ProjectAbsPath = fileInfo.absolutePath();
-
-			//// canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
-			//
-			//m_Modified = false;
-			//m_IsDefault = false;
-		
-			//updateTitle();
-
-			//--unnamedCount;
-		}
-
-		void saveChanges()
-		{
-			//if (m_IsDefault)
-			//	return;
-
-			//// canvas->getPreparedImage().save(m_ProjectAbsPath + "/" + m_ProjectName + ".png");
-			//m_Modified = false;
-
-			//updateTitle();
-		}
+		void saveChanges();
   
 	public:
-		void deleteSelectedLayer()
-		{
-			if (layerListRef->count() <= 1)
-				return;
+		void updateTitle();
 
-			m_DefaultLayerAmount--;
+		void showItems();
 
-			deleteLayer(m_Layers, m_Canvas->getLayer());
+		void hideItems();
 
-			m_Canvas->update();
-			m_Canvas->selectLayer(m_Layers.back());
+		void deleteSelectedLayer();
 
-			layerListRef->takeItem(layerListRef->row(layerListRef->currentItem()));
+		void addNewLayer(const QSize& size);
 
-			layerListRef->setCurrentRow(layerListRef->count() - 1);
-			auto layer = (LayerWidget*)layerListRef->itemWidget(layerListRef->currentItem());
-			layer->updateLayer();
-		}
-
-		void addLayer(const QSize& size)
-		{
-			LayerWidget* widget = new LayerWidget(layerListRef);
-			QListWidgetItem* item = new QListWidgetItem();
-			item->setSizeHint(widget->sizeHint());
-
-			m_Layers.push_back(createNewLayer(size, "Layer - " + QString::number(m_DefaultLayerAmount)));
-			widget->selectLayer(m_Layers.back());
-			m_DefaultLayerAmount++;
-
-			layerListRef->insertItem(layerListRef->count(), item);			
-			layerListRef->setItemWidget(item, widget);
-
-			layerListRef->setCurrentRow(layerListRef->row(item));
-		}
-
-		void focusLastLayer()
-		{
-			layerListRef->setCurrentRow(m_LastSelected);
-		}
+		void focusLastLayer();
 
 	public:
-		Canvas* getCanvas() { return m_Canvas; }
+		void setModified(bool value) { m_Modified = value; }
 
 		bool isDefault() const { return m_IsDefault; }
-
-		void setModified(bool value) { m_Modified = value; }
 
 		bool modified() const { return m_Modified; }
 
 		int getIndex() const { return m_TabIndex; }
 
-	protected:
-		bool eventFilter(QObject* object, QEvent* event) override
-		{
-			if (object == layerListRef->viewport() && event->type() == QEvent::Drop)
-			{
-				if (m_Hidden)
-					return false;
-
-				layerListRef->setIndexBefore(m_Layers);
-			}
-			
-			return QWidget::eventFilter(object, event);
-		}
+		Canvas* getCanvas() { return m_Canvas; }
 
 	private:
-		void setupTitle()
-		{
-			m_ProjectName = "Untitled - " + QString::number(unnamedCount);
-			++unnamedCount;
+		void setupTitle();
 
-			setWindowTitle(m_ProjectName);
-		}
+		void setupLayer(const QSize& size);
 
-		void setupLayer(const QSize& size)
-		{
-			addLayer(size);
-
-			connect(layerListRef, &QListWidget::currentItemChanged, this, [=]() {
-				auto layerWidget = (LayerWidget*)layerListRef->itemWidget(layerListRef->currentItem());
-				if(layerWidget)
-					m_Canvas->selectLayer(layerWidget->layer);
-			});
-
-			connect(layerListRef, &LayerList::onDrop, layerListRef, [&]() {
-				if (m_Hidden)
-					return;
-
-				layerListRef->afterDrop(m_Layers);
-				m_Canvas->update();
-			});
-
-			layerListRef->viewport()->installEventFilter(this);
-		}
-
-		void setupCanvas(QWidget* parent, const QSize& size)
-		{
-			m_Canvas = new Canvas(this, size, m_Layers);
-			setWidget(m_Canvas);
-
-			connect(m_Canvas, &Canvas::projectModified, this, [&]() {
-				setModified(true);
-				updateTitle();
-			});
-
-			connect(m_Canvas, &Canvas::projectModified, this, [&]() {
-				if (!layerListRef->currentItem())
-					return;
-
-				LayerWidget* layer = (LayerWidget*)(layerListRef->itemWidget(layerListRef->currentItem()));
-				layer->updateLayer();
-			});
-
-			m_Canvas->selectLayer(m_Layers.back());
-		}
-
-	public:
-		void showItems(QListWidgetItem* prevItem = nullptr, LayerWidget* prevWidget = nullptr)
-		{
-			if (!m_Hidden)
-				return;
-
-			for (auto layer : m_Layers)
-			{
-				LayerWidget* widget = new LayerWidget(layerListRef);
-				QListWidgetItem* item = new QListWidgetItem();
-				item->setSizeHint(widget->sizeHint());
-
-				widget->selectLayer(layer);
-				widget->ui.layerName->setText(layer->name);
-
-				layerListRef->addItem(item);
-				layerListRef->setItemWidget(item, widget);
-			}
-
-			layerListRef->setCurrentRow(layerListRef->count());
-
-			m_Hidden = false;
-		}
-
-		void hideItems()
-		{
-			if (m_Hidden)
-				return;
-
-			m_LastSelected = layerListRef->row(layerListRef->currentItem());
-			layerListRef->clear();
-			m_Hidden = true;
-		}
+		void setupCanvas(QWidget* parent, const QSize& size);
 
 	private:
 		bool m_IsDefault = true, m_Modified = true;
 		QString m_ProjectAbsPath, m_ProjectName;
-		inline static size_t unnamedCount = 0;
+		inline static size_t s_UnnamedCount = 0;
+
+	private:
 		int m_DefaultLayerAmount = 0;
 		int m_LastSelected;
 
 	private:
+		static inline int s_Tab = 0;
 		int m_TabIndex = 0;
-		static inline int s_Tab = 0;	
 
 	private:
 		bool m_Hidden = false;
@@ -240,8 +72,6 @@ namespace alp
 	private:
 		std::vector<std::shared_ptr<Layer>> m_Layers = {};
 		Canvas* m_Canvas = nullptr;
-
-	private:
-		LayerList* layerListRef;
+		LayerList* m_LayerListRef;
 	};
 }
