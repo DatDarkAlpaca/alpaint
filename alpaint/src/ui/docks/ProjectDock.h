@@ -19,6 +19,12 @@ namespace alp
 	protected:
 		bool eventFilter(QObject* object, QEvent* event) override;
 
+		void closeEvent(QCloseEvent* event) override
+		{
+			m_LayerListRef->clear();
+			m_LayerListRef->update();
+		}
+
 	public:
 		void saveNewProject();
 
