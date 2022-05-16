@@ -8,6 +8,8 @@ alp::ProjectDock::ProjectDock(QWidget* parent, LayerList* layerList, const QSize
 	setBaseSize(parent->width(), parent->height());
 	setAllowedAreas(Qt::AllDockWidgetAreas);
 
+	setAttribute(Qt::WA_DeleteOnClose, true);
+
 	setupTitle();
 	setupLayer(size);
 	setupCanvas(parent, size);
@@ -22,6 +24,8 @@ alp::ProjectDock::ProjectDock(QWidget* parent, LayerList* layerList, const QStri
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 	setBaseSize(parent->width(), parent->height());
 	setAllowedAreas(Qt::AllDockWidgetAreas);
+
+	setAttribute(Qt::WA_DeleteOnClose, true);
 
 	m_ProjectName = projectName;
 	m_ProjectAbsPath = absPath;

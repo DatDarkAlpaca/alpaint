@@ -12,14 +12,8 @@ namespace alp
 		return result.toPoint();
 	}
 
-	inline bool isValid(std::vector<QPoint>&& visited, const QSize& pixmapSize, const QPoint& point)
+	inline bool isValid(const QSize& pixmapSize, const QPoint& point)
 	{
-		for (const auto& visitedPoint : visited)
-		{
-			if (point == visitedPoint)
-				return false;
-		}
-
 		if (point.x() < 0 || point.x() >= pixmapSize.width() ||
 			point.y() < 0 || point.y() >= pixmapSize.height())
 			return false;
@@ -29,8 +23,6 @@ namespace alp
 
 	inline void fill(const QPoint& point, QRgb oldColor, QPainter& painter, QImage& image)
 	{
-		std::vector<QPoint> visited;
-
 		std::deque<QPoint> queue;
 		queue.push_back(point);
 
@@ -39,16 +31,15 @@ namespace alp
 			auto currentPos = queue.front();
 			queue.pop_front();
 
-			if (!isValid(std::move(visited), image.size(), currentPos))
+			if (!isValid(image.size(), currentPos))
 				continue;
 
 			if (image.pixel(currentPos) == oldColor)
 			{
 				painter.drawPoint(currentPos);
-				visited.push_back(currentPos);
 
 				queue.push_back(QPoint(currentPos.x() + 1, currentPos.y()));
-				queue.push_back(QPoint(currentPos.x() - 1, currentPos.y()));
+				queue.push_back(QPoint(currentPos.x() - 1, currentPos.y()));				
 				queue.push_back(QPoint(currentPos.x(), currentPos.y() + 1));
 				queue.push_back(QPoint(currentPos.x(), currentPos.y() - 1));
 			}

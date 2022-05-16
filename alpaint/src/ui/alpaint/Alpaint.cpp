@@ -270,16 +270,16 @@ void alp::Alpaint::closeProjectAction()
         {
             auto project = *it;
             if (!project->visibleRegion().isEmpty())
-            {
-                project->close();
                 it = m_ProjectList.erase(it);
-            }
             else
                 ++it;
         }
+
+        delete m_CurrentProject;
     }
 
     ui.layerList->clear();
+    ui.layerList->update();
 
     if (m_ProjectList.isEmpty())
         ui.centralWidget->setMaximumSize({ 1000000, 1000000 });

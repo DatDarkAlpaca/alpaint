@@ -23,6 +23,8 @@ namespace alp
 	
 			if (usedColor.rgb() != oldColor)
 				fill(endPoint, oldColor, painter, image);
+
+			int end = 1;
 		}
 	};
 }
